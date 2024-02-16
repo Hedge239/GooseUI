@@ -15,14 +15,16 @@ namespace zephyr
 
         bool disableResize;
         bool disableMinimizeToggle;
-        bool disableMaximizeToggle;
         bool disableToolBar;
 
         // Default Values
         zWindowConfig() :
             displayTitle("ZephyrUI Window"),
             displayHeight(500),
-            displayWidth(500)
+            displayWidth(500),
+            disableResize(false),
+            disableMinimizeToggle(false),
+            disableToolBar(false)
         {}
     };
     

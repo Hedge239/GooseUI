@@ -32,6 +32,19 @@ namespace zephyr
         std::cout << "[ZephyrUI] zWindow.cpp -> CreateWindow: Creating Window -> " << _WindowConfig.className << std::endl;
 
         #ifdef _WIN32
+            lib::w32_CreateWindow(_WindowConfig);
+        #elif
+        #else
+            #error "Not Supported Operating System"
+        #endif
+    }
+
+    void zWindow::close()
+    {
+        std::cout << "[ZephyrUI] zWindow.cpp -> CreateWindow: Closeing Window -> " << _WindowConfig.className << std::endl;
+
+        #ifdef _WIN32
+            lib::w32_CloseWindow();
         #elif
         #else
             #error "Not Supported Operating System"
