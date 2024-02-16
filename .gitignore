@@ -1,0 +1,7 @@
+# Folders
+.build/
+.vscode/
+.old/
+
+# Files
+CMakePresets.json
