@@ -11,7 +11,7 @@ if(WIN32)
     message(STATUS "Operating System: Win32")
     message(STATUS "Display Server: Win32")
 
-    include(".buildtools/Cmake/platforms/win32.cmake")
+    include(".buildtools/cmake/platforms/win32.cmake")
 elseif(UNIX)
     message(STATUS "Operating System: UNIX")
 
