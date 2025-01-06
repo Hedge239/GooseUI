@@ -1,63 +1,92 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(ZephyrUI VERSION 0.0.1)
 
-option(ZEPHYR_BUILD_TESTS "Builds included examples/test projects" ON)
-option(ZEPHYR_X11_SUPPORT "Includes both X11 and Wayland support" ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "build_systems/cmake/modules")
 
-include(".buildtools/Cmake/Zephyr.cmake")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/.buildtools/Cmake/modules")
+include("build_systems/cmake/core.cmake")
+include("build_systems/cmake/widgets.cmake")
 
+# BUILD OPTIONS | Non-functional if commited out #
+
+    option(zSUPPORT_WAYLAND "Includes Wayland Support" ON)
+    option(zSUPPORT_X11 "Includes X11 Support" ON)
+    option(zSUPPORT_WINAPI "Includes Win32API Support" ON)
+    #option(ZSUPPORT_APPLE "Includes what ever apple uses" OFF)
+
+    #option(zSUPPORT_OPENGL "Includes inbedding OpenGL" OFF)
+    #option(zSUPPORT_VULKAN "Includes Inbedding Vulkan" OFF)
+
+    option(zBUILD_TESTS "Builds included examples & test applications" ON)
+
+# END BUILD OPTIONS #
+
+# Display Services
 if(WIN32)
-    message(STATUS "Operating System: Win32")
-    message(STATUS "Display Server: Win32")
+    message(STATUS "Detected OS: Windows")
 
-    include(".buildtools/cmake/platforms/win32.cmake")
-elseif(UNIX)
-    message(STATUS "Operating System: UNIX")
+    if(zSUPPORT_WINAPI)
+        message(STATUS "Display Service: Win32API")
+        set(hasDisplayService true)
 
-    if(ZEPHYR_X11_SUPPORT)
-        message(STATUS "Display Server: X11/WAYLAND HYBRID")
+        include("build_systems/cmake/platform/win32api.cmake")
+        add_compile_definitions(zUseWin32API)
+    endif()
 
-        include(".buildtools/Cmake/platforms/wayland.cmake")
-        include(".buildtools/Cmake/platforms/xorg.cmake")
+endif()
+
+if(UNIX AND NOT APPLE)
+    message(STATUS "Detected OS: UNIX Based")
+
+    if(zSUPPORT_X11)
+        message(STATUS "Display Service: X11")
+        set(hasDisplayService true)
 
         find_package(X11 REQUIRED)
-        find_package(Wayland REQUIRED)
 
-        list(APPEND ZEPHYR_DEP_INCLUDE "${X11_X11_INCLUDE_PATH}")
-        list(APPEND ZEPHYR_DEP_INCLUDE "${WAYLAND_INCLUDE_DIRS}")
+        list(APPEND zLIB_INCLUDE "${X11_X11_INCLUDE_PATH}")
+        list(APPEND zLIB_LIB "${X11_X11_LIB}")
+        list(APPEND zLIB_FLAGS "X11")
 
-        list(APPEND ZPEHYR_DEP_LIB "${X11_X11_LIB}")
-        list(APPEND ZEPHYR_DEP_SRC "${WAYLAND_LIBRARIES}")
-
-        list(APPEND BUILD_FLAGS "wayland-client")
-        list(APPEND BUILD_FLAGS "X11")
-
-        add_compile_definitions(X11_SUPPORT)
-    else()
-        message(STATUS "Display Server: WAYLAND")
-
-        include(".buildtools/Cmake/platforms/wayland.cmake")
-
-        find_package(Wayland REQUIRED)
-
-        list(APPEND ZEPHYR_DEP_INCLUDE "${WAYLAND_INCLUDE_DIRS}")
-        list(APPEND ZEPHYR_DEP_SRC "${WAYLAND_LIBRARIES}")
-
-        list(APPEND BUILD_FLAGS "wayland-client")
+        include("build_systems/cmake/platform/x11.cmake")
+        add_compile_definitions(zUseX11)
     endif()
-else()
-    message(FATAL_ERROR "Faild to find valid display service")
+
+    if(zSUPPORT_WAYLAND)
+        message(STATUS "Display Service: Wayland")
+        set(hasDisplayService true)
+
+        find_package(Wayland REQUIRED)
+
+        list(APPEND zLIB_INCLUDE "${WAYLAND_WAYLAND_INCLUDE_PATH}")
+        list(APPEND zLIB_LIB "${WAYLAND_WAYLAND_LIB}")
+        list(APPEND zLIB_FLAGS "wayland-client")
+
+        include("build_systems/cmake/platforms/wayland.cmake")
+        add_compile_definitions(zUseWayland)
+    endif()
+
 endif()
 
-set(ZEPHYR_SRC ${ZEPHYR_LIB_SRC} ${ZEPHYR_PLATFORM_SRC})
+if(APPLE)
+    message(STATUS "Detected OS: Apple")
+    message(FATAL_ERROR "Display Service: Unknown - Not Supported")
+endif()
 
-add_library(ZephyrUI ${ZEPHYR_SRC} "include")
-set_target_properties(ZephyrUI PROPERTIES OUTPUT_NAME "ZephyrUI" VERSION ${PROJECT_VERSION} SOVERSION "0" FOLDER "ZephyrUI")
+if(NOT hasDisplayService)
+    message(FATAL_ERROR "Fatal Error: Faild to find display service")
+endif()
 
-target_include_directories(ZephyrUI PRIVATE "include" ${ZEPHYR_DEP_INCLUDE})
-target_link_directories(ZephyrUI PRIVATE ${ZEPHYR_DEP_SRC} ${BUILD_FLAGS})
 
-if(ZEPHYR_BUILD_TESTS)
+# Lib
+set(zLIB_SRC ${zCORE} ${zWIDGETS} ${zPLATFORM})
+add_library(${PROJECT_NAME} ${zLIB_SRC} "include")
+
+target_include_directories(${PROJECT_NAME} PRIVATE "include" ${zLIB_INCLUDE})
+target_link_directories(${PROJECT_NAME} PRIVATE ${zLIB_LIB} ${zLIB_FLAGS})
+
+if(zBUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ZephyrUI" VERSION ${PROJECT_VERSION} SOVERSION "0" FOLDER "ZephyrUI")
