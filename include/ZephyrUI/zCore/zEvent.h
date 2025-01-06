@@ -1,11 +1,15 @@
 #ifndef _ZEVENT_H_
 #define _ZEVENT_H_
 
+#include <unordered_map>
+#include <any>
+#include <string>
+
 namespace zUI
 {
     namespace zCore
     {
-        enum class zEventType
+        /*enum class zEventType
         {
             None,
             WindowResize,
@@ -17,12 +21,13 @@ namespace zUI
             MouseMove,
             MouseClick,
             Custom
-        };
+        };*/
 
         struct zEvent
         {
-            zEventType EvtType;
-            void* data;
+            //zEventType EvtType;
+            //void* data;
+            std::unordered_map<std::string, std::any> data;
         };
     }
 }

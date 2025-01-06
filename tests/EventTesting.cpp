@@ -18,6 +18,7 @@ int main()
     });
 
     EvtDispatch.add(2, [](zUI::zCore::zEvent event) {
+        //std::string text = std::any_cast<std::string>(event.data.at("text")); - Need to figure a way to prevent a out_of_range error
         std::cout << "Lmao2" << std::endl;
     });
 

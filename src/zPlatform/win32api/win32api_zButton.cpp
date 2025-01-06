@@ -46,7 +46,8 @@ int Win32API_Button::getHeight() {return 0;}
 // Widget Management
 void Win32API_Button::onClick()
 {
-    zCore::zEvent evt{zCore::zEventType::ButtonPress, nullptr};
+    //zCore::zEvent evt{zCore::zEventType::ButtonPress, nullptr};
+    zCore::zEvent evt;
     _eventDispatcher.dispatch(_eventID, evt);
 }
 
