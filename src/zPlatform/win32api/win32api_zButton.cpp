@@ -9,8 +9,8 @@ using namespace Win32API;
 
 WNDPROC Win32API_Button::_OrgProc = nullptr;
 
-Win32API_Button::Win32API_Button(zUI::zWidget::zWindow* window, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
-    :  _eventDispatcher(EvtDispatcher)
+Win32API_Button::Win32API_Button(zUI::zWidget::zWindow* window, int eventID, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
+    :  _eventDispatcher(EvtDispatcher), _eventID(eventID)
 {
    _host = dynamic_cast<Win32API_Window*>(window);
    _hwnd = CreateWindow(
@@ -37,6 +37,7 @@ void Win32API_Button::setPos(int X, int Y) {}
 void Win32API_Button::setSize(int Width, int Height) {}
 
 // Returns
+int Win32API_Button::getEventID() {return 0;}
 int Win32API_Button::getX() {return 0;}
 int Win32API_Button::getY() {return 0;}
 int Win32API_Button::getWidth() {return 0;}
@@ -46,7 +47,7 @@ int Win32API_Button::getHeight() {return 0;}
 void Win32API_Button::onClick()
 {
     zCore::zEvent evt{zCore::zEventType::ButtonPress, nullptr};
-    _eventDispatcher.dispatch(evt);
+    _eventDispatcher.dispatch(_eventID, evt);
 }
 
 LRESULT CALLBACK Win32API_Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)

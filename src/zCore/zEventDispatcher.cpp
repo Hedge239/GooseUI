@@ -4,15 +4,12 @@ using namespace zUI;
 using namespace zCore;
 
 
-void zEventDispatcher::dispatch(const zEvent& zEvt)
+void zEventDispatcher::dispatch(const int& eventID, const zEvent& zEvt)
 {
-    if(zEventDispatcher::EventsObj.count(zEvt.EvtType))
+    if(zEventDispatcher::EventsObj.count(eventID))
     {
-        for(const auto& callback : zEventDispatcher::EventsObj[zEvt.EvtType])
-        {
-            callback(zEvt);
-        }
+        zEventDispatcher::EventsObj[eventID](zEvt);
     }
 }
 
-void zEventDispatcher::add(zEventType EvtType, std::function<void(zEvent)> EvtCallback) {zEventDispatcher::EventsObj[EvtType].push_back(EvtCallback);}
+void zEventDispatcher::add(const int& eventID, std::function<void(zEvent)> EvtCallback) {zEventDispatcher::EventsObj[eventID] = EvtCallback;}

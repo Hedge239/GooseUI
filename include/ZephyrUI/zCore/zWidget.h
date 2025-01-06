@@ -24,6 +24,8 @@ namespace zUI
             virtual void setSize(int Width, int Height) = 0;
 
             // Returns
+            virtual int getEventID() = 0;
+
             virtual int getX() = 0;
             virtual int getY() = 0;
             virtual int getWidth() = 0;

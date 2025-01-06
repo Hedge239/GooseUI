@@ -3,7 +3,7 @@
 
 #include "ZephyrUI/zCore/zEvent.h"
 
-#include <map>
+#include <unordered_map>
 #include <functional>
 
 namespace zUI
@@ -12,11 +12,11 @@ namespace zUI
     {
         class zEventDispatcher
         {
-            std::map<zEventType, std::vector<std::function<void(zEvent)>>> EventsObj;
+            std::unordered_map<int, std::function<void(zEvent)>> EventsObj;
 
             public:
-            void add(zEventType EvtType, std::function<void(zEvent)> EvtCallback);
-            void dispatch(const zEvent& zEvt);
+            void add(const int& eventID, std::function<void(zEvent)> EvtCallback);
+            void dispatch(const int& eventID, const zEvent& zEvt);
         };
     }
 }
