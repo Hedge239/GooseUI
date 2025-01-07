@@ -4,23 +4,84 @@ using namespace zUI;
 using namespace zPlatform;
 using namespace Win32API;
 
-Win32API_Window::Win32API_Window(const std::string& title, int width, int height)
+Win32API_Window::Win32API_Window(const std::string& title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height)
 {
     _hInstance = GetModuleHandle(nullptr);
 
-    // RegisterWindowClass
+    // Register WindowClass
     WNDCLASSW WindowClass = {0};
     WindowClass.lpfnWndProc = Win32API_Window::WindowProc;
     WindowClass.hInstance = _hInstance;
     WindowClass.lpszClassName = L"zWindow_Win32API";
     RegisterClassW(&WindowClass);
 
+    // Calculate zWindowPos
+    RECT screenSpace;
+    GetClientRect(GetDesktopWindow(), &screenSpace);
+
+    int screenWidth, screenHeight;
+    screenWidth = screenSpace.right;
+    screenHeight = screenSpace.bottom;
+
+    int posX, posY;
+    switch(windowPos)
+    {
+        case zUI::zCore::zEnumerations::SCREEN_TOP:
+            posX = (screenWidth - width) / 2;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_BOTTOM:
+            posX = (screenWidth - width) / 2;
+            posY = screenHeight - height;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_LEFT:
+            posY = (screenHeight - height) / 2;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_RIGHT:
+            posX = screenWidth - width;
+            posY = (screenHeight - height) / 2;
+        case zUI::zCore::zEnumerations::SCREEN_TOP_LEFT:
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_TOP_RIGHT:
+            posX = screenWidth - width;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_BOTTOM_LEFT:
+            posY = screenHeight - height;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_BOTTOM_RIGHT:
+            posX = screenWidth - width;
+            posY = screenHeight - height;
+            break;
+        case zUI::zCore::zEnumerations::SCREEN_CENTER:
+            posX = (screenWidth - width) / 2;
+            posY = (screenHeight - height) / 2;
+            break;
+
+        default:
+            break;
+    }
+
+    // Convert the ApplicationTitle from string to wstring
+    std::wstring ApplicationTitle;
+
+    if(title.empty()) 
+    {
+        ApplicationTitle = L"";
+    }else 
+    {
+        int wstring_length = MultiByteToWideChar(CP_UTF8, 0, title.c_str(), title.length(), NULL, 0);
+        std::wstring t_wideStringTo(wstring_length, L' ');
+        MultiByteToWideChar(CP_UTF8, 0, title.c_str(), title.length(), &t_wideStringTo[0], wstring_length);
+
+        ApplicationTitle = t_wideStringTo;
+    }
+
+    // Create Window
     _hwnd = CreateWindowW(
         L"zWindow_Win32API",
-        (LPCWSTR)title.c_str(),
+        ApplicationTitle.c_str(),
         WS_OVERLAPPEDWINDOW,
-        0,
-        0,
+        posX,
+        posY,
         width,
         height,
         NULL,
@@ -58,7 +119,6 @@ void Win32API_Window::draw() {}
 void Win32API_Window::HandelEvents()
 {
     MSG msg;
-    //while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         //TranslateMessage(&msg);

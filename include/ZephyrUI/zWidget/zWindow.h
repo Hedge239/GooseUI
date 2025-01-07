@@ -2,6 +2,7 @@
 #define _ZWINDOW_H_
 
 #include <string>
+#include "ZephyrUI/zCore/zEnumerations.h"
 
 namespace zUI
 {
@@ -31,7 +32,7 @@ namespace zUI
             virtual void HandelEvents() = 0;
         };
 
-        zWindow* createWindow(std::string title, int width, int height); // TODO: WindowPos
+        zWindow* createWindow(std::string title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height); // TODO: WindowPos
     }
 }
 

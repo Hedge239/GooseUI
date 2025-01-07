@@ -28,11 +28,6 @@ namespace zUI
                 LOCK_TO_LEFT,
                 LOCK_TO_RIGHT
             };
-
-            enum zEventType
-            {
-                BUTTON_PRESS
-            };
         }
     }
 }

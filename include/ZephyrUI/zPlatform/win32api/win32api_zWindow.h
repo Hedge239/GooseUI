@@ -19,7 +19,7 @@ namespace zUI
                 static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
                 public:
-                Win32API_Window(const std::string& title, int width, int height);
+                Win32API_Window(const std::string& title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height);
                 virtual ~Win32API_Window();
 
                 HWND getHwnd();

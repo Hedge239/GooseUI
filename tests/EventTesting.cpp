@@ -9,7 +9,7 @@ int main()
 {
     zUI::zCore::zEventDispatcher EvtDispatch;
 
-    zUI::zWidget::zWindow* TestWindow = zUI::zWidget::createWindow("EventTesting", 400, 500);
+    zUI::zWidget::zWindow* TestWindow = zUI::zWidget::createWindow("EventTesting", zUI::zCore::zEnumerations::SCREEN_CENTER, 400, 500);
     zUI::zWidget::zButton* Button1 = zUI::zWidget::createButton(TestWindow, 1, 10, 10, 50, 50, EvtDispatch);
     zUI::zWidget::zButton* Button2 = zUI::zWidget::createButton(TestWindow, 2, 60, 60, 50, 50, EvtDispatch);
 
