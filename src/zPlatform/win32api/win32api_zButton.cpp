@@ -1,3 +1,4 @@
+#include "ZephyrUI/zPlatform/win32api/win32api.h"
 #include "ZephyrUI/zPlatform/win32api/win32api_zButton.h"
 #include "ZephyrUI/zPlatform/win32api/win32api_zWindow.h"
 
@@ -9,8 +10,8 @@ using namespace Win32API;
 
 WNDPROC Win32API_Button::_OrgProc = nullptr;
 
-Win32API_Button::Win32API_Button(zUI::zWidget::zWindow* window, int eventID, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
-    :  _eventDispatcher(EvtDispatcher), _eventID(eventID)
+Win32API_Button::Win32API_Button(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
+    :  _eventDispatcher(EvtDispatcher), _eventID(eventID), _scale(zComponentScale), _Alignment(zComponentAlign)
 {
    _host = dynamic_cast<Win32API_Window*>(window);
    _hwnd = CreateWindow(
@@ -59,13 +60,22 @@ LRESULT CALLBACK Win32API_Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam
     {
         case WM_LBUTTONDOWN:
         {
-            if (button)
+            if(button)
             {
                 button->onClick(); 
             }
             
             break;
         }
+        case WM_SIZE:
+        {
+            RECT adjustedBounds = WidgetAPI::calculateScaleAndSize(button->_scale, button->_Alignment, hwnd, lParam);
+            
+            MoveWindow(hwnd, adjustedBounds.left, adjustedBounds.top, adjustedBounds.right - adjustedBounds.left, adjustedBounds.bottom - adjustedBounds.top, true);
+            break;
+        };
+
+        break;
     }
 
     return CallWindowProc(_OrgProc, hwnd, uMsg, wParam, lParam);

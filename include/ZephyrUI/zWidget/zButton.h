@@ -15,7 +15,7 @@ namespace zUI
             virtual void onClick() = 0;
         };
 
-        zButton* createButton(zWindow* window, int eventID, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
+        zButton* createButton(zWindow* window, int eventID, zCore::zEnumerations::zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
     }
 }
 

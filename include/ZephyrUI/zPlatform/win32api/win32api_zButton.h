@@ -19,13 +19,15 @@ namespace zUI
                 Win32API_Window* _host;
 
                 int _eventID; // Widget Identifier for events
+                int _Alignment; // Widget Positioning
+                zCore::zEnumerations::zComponentScale _scale; // Widget Scaling
                 zCore::zEventDispatcher& _eventDispatcher;
                 
                 protected:
                 static LRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 
                 public:
-                Win32API_Button(zUI::zWidget::zWindow* window, int evenID, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
+                Win32API_Button(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
 
                 // OVERIDES //
                 void setPos(int X, int Y) override;

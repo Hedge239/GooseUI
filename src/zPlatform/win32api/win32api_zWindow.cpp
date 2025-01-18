@@ -11,7 +11,9 @@ Win32API_Window::Win32API_Window(const std::string& title, zUI::zCore::zEnumerat
     // Register WindowClass
     WNDCLASSW WindowClass = {0};
     WindowClass.lpfnWndProc = Win32API_Window::WindowProc;
+    WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     WindowClass.hInstance = _hInstance;
+    WindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     WindowClass.lpszClassName = L"zWindow_Win32API";
     RegisterClassW(&WindowClass);
 
@@ -121,7 +123,7 @@ void Win32API_Window::HandelEvents()
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        //TranslateMessage(&msg);
+        TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 }
@@ -135,6 +137,18 @@ LRESULT CALLBACK Win32API_Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
             PostQuitMessage(0);
             return 0;
         }
+        case WM_SIZE: 
+        {
+            HWND hChild = GetWindow(hwnd, GW_CHILD);
+            while (hChild) 
+            {
+                SendMessage(hChild, WM_SIZE, wParam, lParam);
+                hChild = GetNextWindow(hChild, GW_HWNDNEXT);
+            }
+            
+            return 0;
+        }
+
         default:
             return DefWindowProcW(hwnd, uMsg, wParam, lParam);
     }

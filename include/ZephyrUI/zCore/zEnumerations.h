@@ -22,11 +22,19 @@ namespace zUI
 
             enum zComponentScale
             {
-                DOES_SCALE,
-                LOCK_TO_TOP,
-                LOCK_TO_BOTTOM,
-                LOCK_TO_LEFT,
-                LOCK_TO_RIGHT
+                SCALE_NONE,
+                SCALE_VERTICAL,
+                SCALE_HORIZONTAL,
+                SCALE_ALL
+            };
+
+            enum zComponentAlign
+            {
+                ALIGN_TOP = 1 << 0,
+                ALIGN_BOTTOM = 1 << 1,
+                ALIGN_LEFT = 1 << 2,
+                ALIGN_RIGHT = 1 << 3,
+                ALIGN_CENTER = 1 << 4
             };
         }
     }
