@@ -69,7 +69,8 @@ LRESULT CALLBACK Win32API_Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam
         }
         case WM_SIZE:
         {
-            RECT adjustedBounds = WidgetAPI::calculateScaleAndSize(button->_scale, button->_Alignment, hwnd, lParam);
+            RECT adjustedBounds = WidgetAPI::calculateScaleAndSize(button->_scale, button->_Alignment, hwnd);
+            RECT windowBounds; GetClientRect(GetParent(hwnd), &windowBounds);
             
             MoveWindow(hwnd, adjustedBounds.left, adjustedBounds.top, adjustedBounds.right - adjustedBounds.left, adjustedBounds.bottom - adjustedBounds.top, true);
             break;
