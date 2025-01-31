@@ -3,7 +3,9 @@
 
 // GLOBAL VARS //
 int g_distanceFromRight;
+int g_distanceFromLeft;
 int g_distanceFromBottom;
+int g_distanceFromTop;
 
 RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, HWND hwnd)
 {
@@ -14,15 +16,23 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
 
     MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (POINT*)&currentBounds, 2);
 
-    // Get Widget Size
+    adjustedBounds = currentBounds;
+    
+    // Get the widget Size
     int widgetWidth = currentBounds.right - currentBounds.left;
     int widgetHeight = currentBounds.bottom - currentBounds.top;
-    
-    // Get Distance From Right & Bottom - If 0, not my problem
+
+    // Set inital distances
     if(g_distanceFromRight == 0 )
     {
         g_distanceFromRight = windowBounds.right - currentBounds.right;
         if(g_distanceFromRight < 0) {g_distanceFromRight = -g_distanceFromRight;}
+    }
+
+    if(g_distanceFromLeft == 0 )
+    {
+        g_distanceFromLeft = windowBounds.left - currentBounds.left;
+        if(g_distanceFromLeft < 0) {g_distanceFromLeft = -g_distanceFromLeft;}
     }
 
     if(g_distanceFromBottom == 0)
@@ -31,31 +41,73 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
         if(g_distanceFromBottom < 0) {g_distanceFromBottom = -g_distanceFromBottom;}
     }
 
-    // Scale Manganagement
+    if(g_distanceFromTop == 0)
+    {
+        g_distanceFromTop = windowBounds.top - currentBounds.top;
+        if(g_distanceFromTop < 0) {g_distanceFromTop = -g_distanceFromTop;}
+    }
     
-    // Pos Mangeagement
-    if(zComponentAlign &zCore::zEnumerations::ALIGN_CENTER)
-    {
+    // Determine scaling
+    bool doVerticalScale, doHorizontalScale;
 
-    }else 
+    if(zComponentScale & zCore::zEnumerations::SCALE_HORIZONTAL) {doHorizontalScale = true;}
+    if(zComponentScale & zCore::zEnumerations::SCALE_VERTICAL) {doVerticalScale = true;}
+    if(zComponentScale & zCore::zEnumerations::SCALE_ALL) {doVerticalScale = true; doHorizontalScale = true;}
+
+    // With Scale - Left/Right/Top/Bottem
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && (zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && doHorizontalScale)
     {
-        if(zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT)
-        {
-            adjustedBounds.left = windowBounds.right - widgetWidth - g_distanceFromRight;
-            adjustedBounds.right = adjustedBounds.left + widgetWidth;
-            adjustedBounds.top = currentBounds.top;
-            adjustedBounds.bottom = adjustedBounds.top + widgetHeight;
-        }
-        else if(zComponentAlign & zCore::zEnumerations::ALIGN_LEFT)
-        {
-        }
+        // Left/Right
+        adjustedBounds.right = windowBounds.right - g_distanceFromRight;
     }
 
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && (zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && doVerticalScale)
+    {
+        // Top/Bottom
+        adjustedBounds.bottom = windowBounds.bottom - g_distanceFromBottom;
+    }
+
+
+    // No Scale - Left/Right
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && !(zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && !doHorizontalScale)
+    {
+        // Right
+        adjustedBounds.left = windowBounds.right - widgetWidth - g_distanceFromRight;
+        adjustedBounds.right = adjustedBounds.left + widgetWidth;
+    }
+
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && (zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && !doHorizontalScale)
+    {
+        // Left/Right
+        adjustedBounds.left = windowBounds.left + g_distanceFromLeft + ((windowBounds.right - windowBounds.left - g_distanceFromLeft - g_distanceFromRight) - widgetWidth) / 2;
+        adjustedBounds.right = adjustedBounds.left + widgetWidth;
+    }
+
+    // No Scale - Top/Bottom
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && !(zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && !doVerticalScale)
+    {
+        // Bottom
+        adjustedBounds.top = windowBounds.bottom - widgetHeight - g_distanceFromBottom;
+        adjustedBounds.bottom = adjustedBounds.top + widgetHeight;
+    }
+
+    if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && (zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && !doVerticalScale)
+    {
+        // Top/Bottom
+        adjustedBounds.top = windowBounds.top + g_distanceFromTop + ((windowBounds.bottom - windowBounds.top - g_distanceFromTop - g_distanceFromBottom) - widgetHeight) / 2;
+        adjustedBounds.bottom = adjustedBounds.top + widgetHeight;
+    }
+
+
+    // Debugging 
+    /*
     std::cout << "-------- Math --------" << std::endl;
     std::cout << "Width: " << widgetWidth << std::endl;
     std::cout << "Height: " << widgetHeight << std::endl;
     std::cout << "DistanceToRight: " << g_distanceFromRight << std::endl;
+    std::cout << "DistanceToLeft: " << g_distanceFromLeft << std::endl;
     std::cout << "DistanceToBottom: " << g_distanceFromBottom << std::endl;
+    std::cout << "DistanceToTop:" << g_distanceFromTop << std::endl;
     std::cout << "-------- Widget --------" << std::endl;
     std::cout << "Left: " << adjustedBounds.left << std::endl;
     std::cout << "Top: " << adjustedBounds.top << std::endl;
@@ -64,7 +116,7 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
     std::cout << "-------- Window --------" << std::endl;
     std::cout << "Right: " << windowBounds.right << std::endl;
     std::cout << "Bottom: " << windowBounds.bottom << std::endl;
+    */
 
     return adjustedBounds;
 }
-

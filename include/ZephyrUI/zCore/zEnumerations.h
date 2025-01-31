@@ -34,7 +34,6 @@ namespace zUI
                 ALIGN_BOTTOM = 1 << 1,
                 ALIGN_LEFT = 1 << 2,
                 ALIGN_RIGHT = 1 << 3,
-                ALIGN_CENTER = 1 << 4
             };
         }
     }
