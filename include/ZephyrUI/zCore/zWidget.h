@@ -22,6 +22,7 @@ namespace zUI
             // Events
             virtual void setPos(int X, int Y) = 0;
             virtual void setSize(int Width, int Height) = 0;
+            virtual void updateEdgeOffsets() = 0;
 
             // Returns
             virtual int getEventID() = 0;

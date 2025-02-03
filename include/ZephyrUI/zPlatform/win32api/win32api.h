@@ -13,7 +13,8 @@ namespace zUI
             class WidgetAPI // The soul purpose of this is to eliminate code that will be repeated
             {
                 public:
-                static RECT calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, HWND hwnd);
+                static RECT calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int initalDistance[4], HWND hwnd);
+                static int* getDistanceFromWindowEdges(HWND hwnd);
             };
         }
     }

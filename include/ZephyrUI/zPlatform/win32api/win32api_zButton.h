@@ -20,6 +20,7 @@ namespace zUI
 
                 int _eventID; // Widget Identifier for events
                 int _Alignment; // Widget Positioning
+                int _initalPos[4]; // Inital distance from window edges
                 zCore::zEnumerations::zComponentScale _scale; // Widget Scaling
                 zCore::zEventDispatcher& _eventDispatcher;
                 
@@ -32,6 +33,7 @@ namespace zUI
                 // OVERIDES //
                 void setPos(int X, int Y) override;
                 void setSize(int Width, int Height) override;
+                void updateEdgeOffsets() override;
 
                 int getEventID() override;
 
@@ -41,6 +43,7 @@ namespace zUI
                 int getHeight() override;
                 
                 void onClick() override;
+                void setLabel(std::string text) override;
             };
         }
     }

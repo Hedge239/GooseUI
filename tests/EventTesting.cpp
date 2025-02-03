@@ -17,6 +17,8 @@ int main()
         std::cout << "Lmao" << std::endl;
     });
 
+    Button1->setLabel("test");
+
     /*
     EvtDispatch.add(2, [](zUI::zCore::zEvent event) {
         //std::string text = std::any_cast<std::string>(event.data.at("text")); - Need to figure a way to prevent a out_of_range error

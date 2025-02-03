@@ -1,13 +1,36 @@
 #include "ZephyrUI/zPlatform/win32api/win32api.h"
-#include <iostream>
 
-// GLOBAL VARS //
-int g_distanceFromRight;
-int g_distanceFromLeft;
-int g_distanceFromBottom;
-int g_distanceFromTop;
+// Normally this would be a bad idea, but since I know there are only 4 ints and the user shouldent touch this. Were fine... for now
+int* zUI::zPlatform::Win32API::WidgetAPI::getDistanceFromWindowEdges(HWND hwnd)
+{
+    static int distances[4];
 
-RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, HWND hwnd)
+    RECT currentBounds, windowBounds;
+    GetClientRect(GetParent(hwnd), &windowBounds);
+    GetWindowRect(hwnd, &currentBounds);
+
+    MapWindowPoints(HWND_DESKTOP, GetParent(hwnd), (POINT*)&currentBounds, 2);
+
+    // Right
+    distances[0] = windowBounds.right - currentBounds.right;
+    if(distances[0] < 0) {distances[0] = -distances[0];}
+
+    // Left
+    distances[1] = windowBounds.left - currentBounds.left;
+    if(distances[1] < 0) {distances[1] = -distances[1];}
+
+    // Top
+    distances[2] = windowBounds.top - currentBounds.top;
+    if(distances[2] < 0) {distances[2] = -distances[2];}
+
+    // Bottom
+    distances[3] = windowBounds.bottom - currentBounds.bottom;
+    if(distances[3] < 0) {distances[3] = -distances[3];}
+
+    return distances;
+}
+
+RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int initalDistance[4], HWND hwnd)
 {
     // Get Widget & Window Size
     RECT currentBounds, adjustedBounds, windowBounds;
@@ -22,31 +45,6 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
     int widgetWidth = currentBounds.right - currentBounds.left;
     int widgetHeight = currentBounds.bottom - currentBounds.top;
 
-    // Set inital distances
-    if(g_distanceFromRight == 0 )
-    {
-        g_distanceFromRight = windowBounds.right - currentBounds.right;
-        if(g_distanceFromRight < 0) {g_distanceFromRight = -g_distanceFromRight;}
-    }
-
-    if(g_distanceFromLeft == 0 )
-    {
-        g_distanceFromLeft = windowBounds.left - currentBounds.left;
-        if(g_distanceFromLeft < 0) {g_distanceFromLeft = -g_distanceFromLeft;}
-    }
-
-    if(g_distanceFromBottom == 0)
-    {
-        g_distanceFromBottom = windowBounds.bottom - currentBounds.bottom;
-        if(g_distanceFromBottom < 0) {g_distanceFromBottom = -g_distanceFromBottom;}
-    }
-
-    if(g_distanceFromTop == 0)
-    {
-        g_distanceFromTop = windowBounds.top - currentBounds.top;
-        if(g_distanceFromTop < 0) {g_distanceFromTop = -g_distanceFromTop;}
-    }
-    
     // Determine scaling
     bool doVerticalScale, doHorizontalScale;
 
@@ -58,13 +56,13 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
     if((zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && (zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && doHorizontalScale)
     {
         // Left/Right
-        adjustedBounds.right = windowBounds.right - g_distanceFromRight;
+        adjustedBounds.right = windowBounds.right - initalDistance[0];
     }
 
     if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && (zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && doVerticalScale)
     {
         // Top/Bottom
-        adjustedBounds.bottom = windowBounds.bottom - g_distanceFromBottom;
+        adjustedBounds.bottom = windowBounds.bottom - initalDistance[3];
     }
 
 
@@ -72,14 +70,14 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
     if((zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && !(zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && !doHorizontalScale)
     {
         // Right
-        adjustedBounds.left = windowBounds.right - widgetWidth - g_distanceFromRight;
+        adjustedBounds.left = windowBounds.right - widgetWidth - initalDistance[0];
         adjustedBounds.right = adjustedBounds.left + widgetWidth;
     }
 
     if((zComponentAlign & zCore::zEnumerations::ALIGN_RIGHT) && (zComponentAlign & zCore::zEnumerations::ALIGN_LEFT) && !doHorizontalScale)
     {
         // Left/Right
-        adjustedBounds.left = windowBounds.left + g_distanceFromLeft + ((windowBounds.right - windowBounds.left - g_distanceFromLeft - g_distanceFromRight) - widgetWidth) / 2;
+        adjustedBounds.left = windowBounds.left + initalDistance[1] + ((windowBounds.right - windowBounds.left - initalDistance[1] - initalDistance[0]) - widgetWidth) / 2;
         adjustedBounds.right = adjustedBounds.left + widgetWidth;
     }
 
@@ -87,27 +85,28 @@ RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerat
     if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && !(zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && !doVerticalScale)
     {
         // Bottom
-        adjustedBounds.top = windowBounds.bottom - widgetHeight - g_distanceFromBottom;
+        adjustedBounds.top = windowBounds.bottom - widgetHeight - initalDistance[3];
         adjustedBounds.bottom = adjustedBounds.top + widgetHeight;
     }
 
     if((zComponentAlign & zCore::zEnumerations::ALIGN_BOTTOM) && (zComponentAlign & zCore::zEnumerations::ALIGN_TOP) && !doVerticalScale)
     {
         // Top/Bottom
-        adjustedBounds.top = windowBounds.top + g_distanceFromTop + ((windowBounds.bottom - windowBounds.top - g_distanceFromTop - g_distanceFromBottom) - widgetHeight) / 2;
+        adjustedBounds.top = windowBounds.top + initalDistance[2] + ((windowBounds.bottom - windowBounds.top - initalDistance[2] - initalDistance[3]) - widgetHeight) / 2;
         adjustedBounds.bottom = adjustedBounds.top + widgetHeight;
     }
 
 
     // Debugging 
+
     /*
     std::cout << "-------- Math --------" << std::endl;
     std::cout << "Width: " << widgetWidth << std::endl;
     std::cout << "Height: " << widgetHeight << std::endl;
-    std::cout << "DistanceToRight: " << g_distanceFromRight << std::endl;
-    std::cout << "DistanceToLeft: " << g_distanceFromLeft << std::endl;
-    std::cout << "DistanceToBottom: " << g_distanceFromBottom << std::endl;
-    std::cout << "DistanceToTop:" << g_distanceFromTop << std::endl;
+    std::cout << "DistanceToRight: " << initalDistance[0] << std::endl;
+    std::cout << "DistanceToLeft: " << initalDistance[1] << std::endl;
+    std::cout << "DistanceToBottom: " << initalDistance[2] << std::endl;
+    std::cout << "DistanceToTop:" << initalDistance[3] << std::endl;
     std::cout << "-------- Widget --------" << std::endl;
     std::cout << "Left: " << adjustedBounds.left << std::endl;
     std::cout << "Top: " << adjustedBounds.top << std::endl;
