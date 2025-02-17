@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.5.0)
 project(ZephyrUI VERSION 0.0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "build_systems/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/build_systems/cmake/modules")
 
-include("build_systems/cmake/core.cmake")
-include("build_systems/cmake/widgets.cmake")
+include("${CMAKE_SOURCE_DIR}/build_systems/cmake/core.cmake")
+include("${CMAKE_SOURCE_DIR}/build_systems/cmake/widgets.cmake")
 
 # BUILD OPTIONS | Non-functional if commited out #
 
@@ -29,7 +29,7 @@ if(WIN32)
         message(STATUS "Display Service: Win32API")
         set(hasDisplayService true)
 
-        include("build_systems/cmake/platform/win32api.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/win32api.cmake")
         add_compile_definitions(zUseWin32API)
     endif()
 
@@ -48,7 +48,7 @@ if(UNIX AND NOT APPLE)
         list(APPEND zLIB_LIB "${X11_X11_LIB}")
         list(APPEND zLIB_FLAGS "X11")
 
-        include("build_systems/cmake/platform/x11.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/x11.cmake")
         add_compile_definitions(zUseX11)
     endif()
 
@@ -62,7 +62,7 @@ if(UNIX AND NOT APPLE)
         list(APPEND zLIB_LIB "${WAYLAND_WAYLAND_LIB}")
         list(APPEND zLIB_FLAGS "wayland-client")
 
-        include("build_systems/cmake/platforms/wayland.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/wayland.cmake")
         add_compile_definitions(zUseWayland)
     endif()
 
