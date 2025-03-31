@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.10.0)
 project(ZephyrUI VERSION 0.0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
@@ -39,7 +39,7 @@ if(UNIX AND NOT APPLE)
     message(STATUS "Detected OS: UNIX Based")
 
     if(zSUPPORT_X11)
-        message(STATUS "Display Service: X11")
+        message(STATUS "Display Service Enabled: X11")
         set(hasDisplayService true)
 
         find_package(X11 REQUIRED)
@@ -53,13 +53,13 @@ if(UNIX AND NOT APPLE)
     endif()
 
     if(zSUPPORT_WAYLAND)
-        message(STATUS "Display Service: Wayland")
+        message(STATUS "Display Service Enabled: Wayland")
         set(hasDisplayService true)
 
         find_package(Wayland REQUIRED)
 
-        list(APPEND zLIB_INCLUDE "${WAYLAND_WAYLAND_INCLUDE_PATH}")
-        list(APPEND zLIB_LIB "${WAYLAND_WAYLAND_LIB}")
+        list(APPEND zLIB_INCLUDE "${WAYLAND_CLIENT_INCLUDE_PATH}")
+        list(APPEND zLIB_LIB "${WAYLAND_CLIENT_LIB}")
         list(APPEND zLIB_FLAGS "wayland-client")
 
         include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/wayland.cmake")

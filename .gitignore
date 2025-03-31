@@ -8,3 +8,6 @@ build/
 # Files
 CMakePresets.json
 .clangd
+
+# Experimentel - to be implimented in the future
+build_systems/cmake/modules/FindWayland.cmake
