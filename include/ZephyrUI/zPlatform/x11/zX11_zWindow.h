@@ -1,8 +1,8 @@
 #ifndef _ZX11_WINDOW_H_
 #define _ZX11_WINDOW_H_
 
-#include <X11/Xlib.h>
 #include "ZephyrUI/zWidget/zWindow.h"
+#include <X11/Xlib.h>
 
 namespace zUI
 {

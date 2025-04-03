@@ -1,16 +1,16 @@
-#ifndef _WIN32API_WINDOW_H_
-#define _WIN32API_WINDOW_H_
+#ifndef _ZWIN32_ZWINDOW_H_
+#define _ZWIN32_ZWINDOW_H_
 
-#include <windows.h>
 #include "ZephyrUI/zWidget/zWindow.h"
+#include <windows.h>
 
 namespace zUI
 {
     namespace zPlatform
     {
-        namespace Win32API
+        namespace zWin32
         {
-            class Win32API_Window : public zWidget::zWindow
+            class zWin32_zWindow : public zWidget::zWindow
             {
                 HWND _hwnd;
                 HINSTANCE _hInstance;
@@ -19,8 +19,8 @@ namespace zUI
                 static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
                 public:
-                Win32API_Window(const std::string& title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height);
-                virtual ~Win32API_Window();
+                zWin32_zWindow(const std::string& title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height);
+                virtual ~zWin32_zWindow();
 
                 HWND getHwnd();
 
@@ -44,4 +44,4 @@ namespace zUI
     }
 }
 
-#endif /*_WIN32API_WINDOW_H_*/
+#endif /*_ZWIN32_ZWINDOW_H_*/
