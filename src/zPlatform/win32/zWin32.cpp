@@ -1,7 +1,8 @@
-#include "ZephyrUI/zPlatform/win32api/win32api.h"
+#include "ZephyrUI/zPlatform/win32/zWin32.h"
 
 // Normally this would be a bad idea, but since I know there are only 4 ints and the user shouldent touch this. Were fine... for now
-int* zUI::zPlatform::Win32API::WidgetAPI::getDistanceFromWindowEdges(HWND hwnd)
+// Summery for my friends - the useage of this variable to contained making it unlikely to have issues (But I know you will break it!)
+int* zUI::zPlatform::zWin32::zWin32_WidgetAPI::getDistanceFromWindowEdges(HWND hwnd)
 {
     static int distances[4];
 
@@ -30,7 +31,7 @@ int* zUI::zPlatform::Win32API::WidgetAPI::getDistanceFromWindowEdges(HWND hwnd)
     return distances;
 }
 
-RECT zUI::zPlatform::Win32API::WidgetAPI::calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int initalDistance[4], HWND hwnd)
+RECT zUI::zPlatform::zWin32::zWin32_WidgetAPI::calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int initalDistance[4], HWND hwnd)
 {
     // Get Widget & Window Size
     RECT currentBounds, adjustedBounds, windowBounds;

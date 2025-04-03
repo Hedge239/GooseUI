@@ -1,5 +1,4 @@
 #include "ZephyrUI/zPlatform/x11/zX11_zWindow.h"
-#include <X11/Xlib.h>
 
 using namespace zUI;
 using namespace zPlatform;

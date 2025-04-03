@@ -1,8 +1,8 @@
 #ifndef _ZWINDOW_H_
 #define _ZWINDOW_H_
 
-#include <string>
 #include "ZephyrUI/zCore/zEnumerations.h"
+#include <string>
 
 namespace zUI
 {

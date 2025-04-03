@@ -19,24 +19,22 @@ include("${CMAKE_SOURCE_DIR}/build_systems/cmake/widgets.cmake")
 
     option(zBUILD_TESTS "Builds included examples & test applications" ON)
 
-# END BUILD OPTIONS #
-
 # Display Services
 if(WIN32)
-    message(STATUS "Detected OS: Windows")
+    message(STATUS "Detected OS: WINDOWS")
 
     if(zSUPPORT_WINAPI)
-        message(STATUS "Display Service: Win32API")
+        message(STATUS "Display Service Enabled: win32")
         set(hasDisplayService true)
 
         include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/win32api.cmake")
-        add_compile_definitions(zUseWin32API)
+        add_compile_definitions(zUseWin32)
     endif()
 
 endif()
 
 if(UNIX AND NOT APPLE)
-    message(STATUS "Detected OS: UNIX Based")
+    message(STATUS "Detected OS: LINUX")
 
     if(zSUPPORT_X11)
         message(STATUS "Display Service Enabled: X11")
@@ -70,13 +68,12 @@ endif()
 
 if(APPLE)
     message(STATUS "Detected OS: Apple")
-    message(FATAL_ERROR "Display Service: Unknown - Not Supported")
+    message(FATAL_ERROR "Display Service Enabled: N/A")
 endif()
 
 if(NOT hasDisplayService)
     message(FATAL_ERROR "Fatal Error: Faild to find display service")
 endif()
-
 
 # Lib
 set(zLIB_SRC ${zCORE} ${zWIDGETS} ${zPLATFORM})

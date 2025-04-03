@@ -1,22 +1,23 @@
-#ifndef _WIN32API_ZBUTTON_H_
-#define _WIN32API_ZBUTTON_H_
+#ifndef _ZWIN32_ZBUTTON_H_
+#define _ZWIN32_ZBUTTON_H_
 
-#include <windows.h>
 #include "ZephyrUI/zWidget/zButton.h"
+#include <windows.h>
 
 namespace zUI
 {
     namespace zPlatform
     {
-        namespace Win32API
+        namespace zWin32
         {
-            class Win32API_Window;
+            // FORWARD DECLERATION
+            class zWin32_zWindow;
 
-            class Win32API_Button : public zWidget::zButton
+            class zWin32_zButton : public zWidget::zButton
             {
                 HWND _hwnd;
                 static WNDPROC _OrgProc; 
-                Win32API_Window* _host;
+                zWin32_zWindow* _host;
 
                 int _eventID; // Widget Identifier for events
                 int _Alignment; // Widget Positioning
@@ -28,7 +29,7 @@ namespace zUI
                 static LRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 
                 public:
-                Win32API_Button(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
+                zWin32_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
 
                 // OVERIDES //
                 void setPos(int X, int Y) override;
@@ -49,4 +50,4 @@ namespace zUI
     }
 }
 
-#endif /*_WIN32API_ZBUTTON_H_*/
+#endif /*_ZWIN32_ZBUTTON_H_*/

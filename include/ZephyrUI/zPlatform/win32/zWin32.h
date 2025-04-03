@@ -1,16 +1,16 @@
-#ifndef _WIN32API_H_
-#define _WIN32API_H_
+#ifndef _ZWIN32_H_
+#define _ZWIN32_H_
 
-#include <Windows.h>
 #include "ZephyrUI/zCore/zEnumerations.h"
+#include <Windows.h>
 
 namespace zUI
 {
     namespace zPlatform
     {
-        namespace Win32API
+        namespace zWin32
         {
-            class WidgetAPI // The soul purpose of this is to eliminate code that will be repeated
+            class zWin32_WidgetAPI
             {
                 public:
                 static RECT calculateScaleAndSize(zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int initalDistance[4], HWND hwnd);
@@ -20,4 +20,4 @@ namespace zUI
     }
 }
 
-#endif /*_WIN32API_H_*/
+#endif /*_ZWIN32_H_*/
