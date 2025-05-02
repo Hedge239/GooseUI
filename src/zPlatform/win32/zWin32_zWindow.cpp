@@ -115,7 +115,11 @@ void zWin32_zWindow::show()
 }
 
 void zWin32_zWindow::hide() {}
-void zWin32_zWindow::destroy() {}
+void zWin32_zWindow::destroy() 
+{
+    DestroyWindow(_hwnd);
+}
+
 void zWin32_zWindow::draw() {}
 
 void zWin32_zWindow::HandelEvents()
