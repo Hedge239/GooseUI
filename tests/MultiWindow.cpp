@@ -43,6 +43,8 @@ int main()
         if(g_secondWindowExist)
         {
             g_SecondWindow->destroy();
+            g_SecondWindow = nullptr;
+            
             g_secondWindowExist = false;
         }
     });
