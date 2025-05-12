@@ -1,3 +1,3 @@
-set(
-    zPLATFORM
+list(
+    APPEND zPLATFORM
 )

@@ -27,7 +27,7 @@ if(WIN32)
         message(STATUS "Display Service Enabled: win32")
         set(hasDisplayService true)
 
-        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/win32api.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/win32api.cmake" REQUIRED)
         add_compile_definitions(zUseWin32)
     endif()
 
@@ -42,11 +42,11 @@ if(UNIX AND NOT APPLE)
 
         find_package(X11 REQUIRED)
 
-        list(APPEND zLIB_INCLUDE "${X11_X11_INCLUDE_PATH}")
-        list(APPEND zLIB_LIB "${X11_X11_LIB}")
+        list(APPEND zLIB_INCLUDE "${X11_INCLUDE_DIR}")
+        list(APPEND zLIB_LIB "${X11_LIBRARIES}")
         list(APPEND zLIB_FLAGS "X11")
 
-        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/x11.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/x11.cmake" REQUIRED)
         add_compile_definitions(zUseX11)
     endif()
 
@@ -60,7 +60,7 @@ if(UNIX AND NOT APPLE)
         list(APPEND zLIB_LIB "${WAYLAND_CLIENT_LIB}")
         list(APPEND zLIB_FLAGS "wayland-client")
 
-        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/wayland.cmake")
+        include("${CMAKE_SOURCE_DIR}/build_systems/cmake/platform/wayland.cmake" REQUIRED)
         add_compile_definitions(zUseWayland)
     endif()
 
@@ -80,7 +80,8 @@ set(zLIB_SRC ${zCORE} ${zWIDGETS} ${zPLATFORM})
 add_library(${PROJECT_NAME} ${zLIB_SRC} "include")
 
 target_include_directories(${PROJECT_NAME} PRIVATE "include" ${zLIB_INCLUDE})
-target_link_directories(${PROJECT_NAME} PRIVATE ${zLIB_LIB} ${zLIB_FLAGS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${zLIB_LIB})
+target_link_directories(${PROJECT_NAME} PRIVATE ${zLIB_FLAGS})
 
 if(zBUILD_TESTS)
     add_subdirectory(tests)
