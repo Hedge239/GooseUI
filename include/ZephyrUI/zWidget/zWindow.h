@@ -32,7 +32,7 @@ namespace zUI
             virtual void HandelEvents() = 0;
         };
 
-        zWindow* createWindow(std::string title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height); // TODO: WindowPos
+        zWindow* createWindow(std::string title, zUI::zCore::zEnumerations::zWindowPos windowPos, int width, int height);
     }
 }
 
