@@ -2,6 +2,7 @@
 #define _ZX11_WINDOW_H_
 
 #include "ZephyrUI/zWidget/zWindow.h"
+#include <X11/X.h>
 #include <X11/Xlib.h>
 
 namespace zUI
@@ -20,6 +21,7 @@ namespace zUI
                 virtual ~zX11_zWindow();
 
                 Display* getDisplay();
+                Window getWindow();
 
                 // OVERIDES //
                 void setTitle(const std::string& title) override;
