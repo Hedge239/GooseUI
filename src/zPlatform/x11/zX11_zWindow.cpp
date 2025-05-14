@@ -72,7 +72,7 @@ zX11_zWindow::zX11_zWindow(const std::string& title, zUI::zCore::zEnumerations::
     );
 
     // Set window defaults & inputEvents
-    XSelectInput(_display, _window, ExposureMask | KeyPressMask);
+    XSelectInput(_display, _window, ExposureMask | ButtonPressMask | StructureNotifyMask);
     XStoreName(_display, _window, title.c_str());
 }
 
@@ -87,6 +87,8 @@ void zX11_zWindow::setTitle(const std::string& title) {}
 void zX11_zWindow::setSize(int width, int height) {}
 
 // Returns
+Display* zX11_zWindow::getDisplay() {return _display;}
+Window zX11_zWindow::getWindow() { return _window;}
 int zX11_zWindow::getPosX() {return 0;}
 int zX11_zWindow::getPosY() {return 0;}
 int zX11_zWindow::getWidth() {return 0;}
