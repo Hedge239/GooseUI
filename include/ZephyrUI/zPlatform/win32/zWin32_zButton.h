@@ -32,6 +32,8 @@ namespace zUI
                 zWin32_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
 
                 // OVERIDES //
+                bool handelEvent(void* eventMsg) override;
+                
                 void setPos(int X, int Y) override;
                 void setSize(int Width, int Height) override;
                 void updateEdgeOffsets() override;
