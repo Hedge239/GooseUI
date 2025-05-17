@@ -19,8 +19,8 @@ zX11_zButton::zX11_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zE
         _window = XCreateSimpleWindow(
             _host->getDisplay(),
             _host->getWindow(),
-            (400 - Width) / 2,
-            (300 - Height) / 2,
+            _X,
+            _Y,
             Width,
             Height,
             1,
