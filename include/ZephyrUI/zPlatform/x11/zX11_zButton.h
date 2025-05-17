@@ -18,6 +18,9 @@ namespace zUI
                 zX11_zWindow* _host;
                 Window _window;
 
+                int _X, _Y;
+                int _width, _height;
+
                 int _eventID; // Widget Identifier for events
                 int _Alignment; // Widget Positioning
                 int _initalPos[4]; // Inital distance from window edges
@@ -28,6 +31,8 @@ namespace zUI
                 zX11_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher);
 
                 // OVERIDES //
+                bool handelEvent(void* eventMsg) override;
+
                 void setPos(int X, int Y) override;
                 void setSize(int Width, int Height) override;
                 void updateEdgeOffsets() override;
