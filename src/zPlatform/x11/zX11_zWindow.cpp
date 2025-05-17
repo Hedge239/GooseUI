@@ -1,4 +1,5 @@
 #include "ZephyrUI/zPlatform/x11/zX11_zWindow.h"
+#include "ZephyrUI/zCore/zWidget.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -104,22 +105,20 @@ void zX11_zWindow::hide() {}
 void zX11_zWindow::destroy() {}
 void zX11_zWindow::draw() {}
 
-void eventLoop(const XEvent& event);
+void zX11_zWindow::addToEventLoop(zCore::zWidget* widget) {_childrenWidgets.push_back(widget);}
+
 void zX11_zWindow::HandelEvents()
 {
     while(true)
     {
         XEvent event;
         XNextEvent(_display, &event);
-        eventLoop(event);
-    }
-}
-
-void eventLoop(const XEvent& event)
-{
-    switch (event.type) 
-    {
-        default:
+        
+        // Passthrough to widgets
+        for(auto& widget : _childrenWidgets)
+        {
+            if(widget->handelEvent(&event))
             break;
+        }
     }
 }

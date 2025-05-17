@@ -20,6 +20,8 @@ namespace zUI
             virtual ~zWidget() = default;
 
             // Events
+            virtual bool handelEvent(void*) =0; // X11 Only
+
             virtual void setPos(int X, int Y) = 0;
             virtual void setSize(int Width, int Height) = 0;
             virtual void updateEdgeOffsets() = 0;
