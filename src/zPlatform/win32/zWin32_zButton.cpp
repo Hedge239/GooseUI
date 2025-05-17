@@ -60,6 +60,8 @@ int zWin32_zButton::getWidth() {return 0;}
 int zWin32_zButton::getHeight() {return 0;}
 
 // Widget Management
+bool zWin32_zButton::handelEvent(void* eventMsg) {return false;}; // Not used for windows, we just subclass the proc
+
 void zWin32_zButton::onClick()
 {
     //zCore::zEvent evt{zCore::zEventType::ButtonPress, nullptr};
