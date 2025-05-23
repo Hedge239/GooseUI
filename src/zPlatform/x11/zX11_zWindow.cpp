@@ -84,7 +84,7 @@ zX11_zWindow::~zX11_zWindow()
 }
 
 // Window Settings
-void zX11_zWindow::setTitle(const std::string& title) {}
+void zX11_zWindow::setTitle(const std::string& title) {XStoreName(_display, _window, title.c_str());}
 void zX11_zWindow::setSize(int width, int height) {}
 
 // Returns
@@ -102,7 +102,7 @@ void zX11_zWindow::show()
 }
 
 void zX11_zWindow::hide() {}
-void zX11_zWindow::destroy() {}
+void zX11_zWindow::destroy() {XDestroyWindow(_display, _window);}
 void zX11_zWindow::draw() {}
 
 void zX11_zWindow::addToEventLoop(zCore::zWidget* widget) {_childrenWidgets.push_back(widget);}

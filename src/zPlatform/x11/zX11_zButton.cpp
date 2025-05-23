@@ -2,7 +2,6 @@
 #include "ZephyrUI/zPlatform/x11/zX11_zWindow.h"
 
 #include "ZephyrUI/zCore/zEventDispatcher.h"
-#include "ZephyrUI/zCore/zUtility.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -10,7 +9,6 @@
 using namespace zUI;
 using namespace zPlatform;
 using namespace zX11;
-
 
 zX11_zButton::zX11_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
     :  _eventDispatcher(EvtDispatcher), _eventID(eventID), _scale(zComponentScale), _Alignment(zComponentAlign), _X(X), _Y(Y), _width(Width), _height(Height)
@@ -42,11 +40,11 @@ void zX11_zButton::setSize(int Width, int Height) {}
 void zX11_zButton::setLabel(std::string text) {}
 
 // Returns
-int zX11_zButton::getEventID() {return 0;}
-int zX11_zButton::getX() {return 0;}
-int zX11_zButton::getY() {return 0;}
-int zX11_zButton::getWidth() {return 0;}
-int zX11_zButton::getHeight() {return 0;}
+int zX11_zButton::getEventID() {return _eventID;}
+int zX11_zButton::getX() {return _X;}
+int zX11_zButton::getY() {return _Y;}
+int zX11_zButton::getWidth() {return _width;}
+int zX11_zButton::getHeight() {return _height;}
 
 // Widget Management
 bool zX11_zButton::handelEvent(void* eventMsg)
@@ -55,12 +53,10 @@ bool zX11_zButton::handelEvent(void* eventMsg)
 
     if(event->type == ButtonPress)
     {
-        int eventX = event->xbutton.x;
-        int eventY = event->xbutton.y;
-
-        if(zCore::zUtility::contains(_X, _Y, _width, _height, eventX, eventY))
+        // Dang it was this easy
+        if(event->xany.window == _window)
         {
-            onClick();
+            this->onClick();
             return True;
         }
     }
