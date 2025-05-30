@@ -10,6 +10,7 @@ using namespace zUI;
 using namespace zPlatform;
 using namespace zX11;
 
+
 zX11_zButton::zX11_zButton(zUI::zWidget::zWindow* window, int eventID, zCore::zEnumerations::zComponentScale zComponentScale, int zComponentAlign, int X, int Y, int Width, int Height, zCore::zEventDispatcher& EvtDispatcher)
     :  _eventDispatcher(EvtDispatcher), _eventID(eventID), _scale(zComponentScale), _Alignment(zComponentAlign), _X(X), _Y(Y), _width(Width), _height(Height)
     {
