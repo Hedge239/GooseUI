@@ -1,13 +1,13 @@
-# Folders
+# Build
 .build/
 build/
-.cache
-.vscode/
 .old/
 
-# Files
-CMakePresets.json
+# Visual Studio Code
 .clangd
+.cache
+.vscode/
 
-# Experimentel - to be implimented in the future
-build_systems/cmake/modules/FindWayland.cmake
+# CMake
+CMakePresets.json
+cmake/modules

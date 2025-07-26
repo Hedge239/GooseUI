@@ -1,6 +1,4 @@
-link_libraries(ZephyrUI)
+link_libraries(GooseUI)
 include_directories("../include")
 
-#add_executable(PosAndScaleTest PosAndScale.cpp)
-#add_executable(MultiWindowTest MultiWindow.cpp)
-add_executable(EventTesting EventTesting.cpp)
+add_executable(WindowTest "WindowTest.cpp")
