@@ -1,14 +1,13 @@
-# ZephyrUI
+# GooseUI
 
-ZephyrUI is a open-source library for creating cross-platform GUI in C++
+Previously named "ZephyrUI", GooseUI is a open-source C++ library. 
 
-## Features
-- Its a hobby project
-- Made in C++
+## Why GooseUI
+Honestly, there is no technical reason to pick GooseUI over other options. After all one guys is working on it do to a yearning for new knowledge and personal use. The only possible real-world advantage is its licensing. Plus, it has a pretty funny name :3
 
-## Useage
-todo
+## Getting Started
+(Coming once a stable build is ready)
 
 ## License
-JACE is licensed under the MIT License, see [LICENSE.txt](https://github.com/Hedge239/ZephyrUI/blob/main/LICENSE.txt) for more information
+JACE is licensed under the MIT License, see [LICENSE.txt](https://github.com/Hedge239/GooseUI/blob/main/LICENSE.txt) for more information
 > Copyright (c) 2023-2025 Lucas I Kohorst

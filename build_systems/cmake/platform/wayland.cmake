@@ -1,3 +1,0 @@
-list(
-    APPEND zPLATFORM
-)
