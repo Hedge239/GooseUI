@@ -1,4 +1,7 @@
-# GooseUI
+# GooseUI -- A Cross-platform GUI Library
+Latest Release: n/a | License [MIT](https://github.com/Hedge239/GooseUI/blob/main/LICENSE.txt)
+
+---
 
 Previously named "ZephyrUI", GooseUI is a open-source C++ library. 
 
