@@ -4,6 +4,7 @@
 
 #include "GooseUI/core/eventDispatcher.h"
 
+
 WNDPROC goose::platform::gWin32::gWin32_button::_OrgProc = nullptr;
 
 namespace goose::platform::gWin32 // INTERNAL

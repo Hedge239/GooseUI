@@ -19,20 +19,21 @@
     #endif
 
     #ifndef GooseUI_UseX11
+        #include "GooseUI/platform/xorg/widgets/xorg_button.h"
+        #define XORG_API goose::platform::gXOrg::gXOrg_button(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height);
     #endif
-    /*
-    goose::widget::button* goose::widget::createWindow(std::string title, goose::core::enumerations::windowPos posistion, int width, int height)
+    
+    goose::widget::button* goose::widget::createButton(window *window, int eventID, goose::core::eventDispatcher &evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
     {
-        
+        /*
         if(std::string(std::getenv("XDG_SESSION_TYPE")) == "x11")
         {
             return new XORG_API; 
-        }
+        }*/
         
-
         return new XORG_API; // TODO: Replace with wayland
     }
-    */
+    
 
 #else
 
