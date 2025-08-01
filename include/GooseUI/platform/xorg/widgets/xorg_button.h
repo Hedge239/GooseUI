@@ -18,20 +18,18 @@ namespace goose
                 gXOrg_window* _host;
                 Window _window;
 
-                int _X, _Y;
-                int _width, _height;
-
                 int _eventID;
-                int _Alignment;
+                int _alignment;
                 int _initalPos[4];
-                core::enumerations::componentScale _scale;
+
+                core::enumerations::componentScale _scaleing;
                 core::eventDispatcher& _evtDispatcher;
 
                 public:
                 gXOrg_button(widget::window* window, int eventID, core::eventDispatcher& evtDispatcher, core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int width, int height);
 
                 // OVERIDES //
-                bool handelEvent(void*) override;
+                bool handelEvent(void* evtMsg) override;
 
                 void updateEdgeOffsets() override;
                 void setSize(int Width, int Height) override;

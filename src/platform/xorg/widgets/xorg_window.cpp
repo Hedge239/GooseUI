@@ -6,6 +6,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 
+
 namespace goose::platform::gXOrg
 {
     gXOrg_window::gXOrg_window(const std::string& title, goose::core::enumerations::windowPos posistion, int width, int height)

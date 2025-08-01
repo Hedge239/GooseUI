@@ -18,7 +18,7 @@ namespace goose
             virtual ~widget_base() = default;
 
             // Events
-            virtual bool handelEvent(void*) = 0;
+            virtual bool handelEvent(void* evtMsg) = 0;
 
             virtual void updateEdgeOffsets() = 0;
             virtual void setSize(int Width, int Height) = 0;
