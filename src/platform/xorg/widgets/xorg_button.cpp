@@ -32,7 +32,7 @@ namespace goose::platform::gXOrg
     void gXOrg_button::setSize(int width, int height) {}
     void gXOrg_button::setPosistion(int X, int Y) {}
     void gXOrg_button::setLabel(std::string label) {}
-    void gXOrg_button::setVisibility(bool isVisible) {}
+    void gXOrg_button::setVisibility(bool isVisible) { if(!isVisible) {XUnmapWindow(_host->getDisplay(), _window);} else {XMapWindow(_host->getDisplay(), _window);} }
 
     // WIDGET MANAGEMENT
     void gXOrg_button::updateEdgeOffsets() {}
