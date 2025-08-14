@@ -3,6 +3,8 @@
 
 #include <GooseUI/core/eventDispatcher.h>
 
+#include <X11/Xutil.h>
+
 
 namespace goose::platform::gXOrg
 {
@@ -29,10 +31,25 @@ namespace goose::platform::gXOrg
     }
 
     // WIDGET SETTINGS
-    void gXOrg_button::setSize(int width, int height) {}
-    void gXOrg_button::setPosistion(int X, int Y) {}
-    void gXOrg_button::setLabel(std::string label) {}
-    void gXOrg_button::setVisibility(bool isVisible) { if(!isVisible) {XUnmapWindow(_host->getDisplay(), _window);} else {XMapWindow(_host->getDisplay(), _window);} }
+    void gXOrg_button::setSize(int width, int height) 
+    {
+        XSizeHints sizeHints;
+        sizeHints.flags = PSize;
+        sizeHints.width = width;
+        sizeHints.height = height;
+
+        XSetNormalHints(_host->getDisplay(), _window, &sizeHints);
+        XResizeWindow(_host->getDisplay(), _window, width, height);
+        XFlush(_host->getDisplay());
+    }
+
+    void gXOrg_button::setLabel(std::string label) 
+    {
+        // AGHSHASHGSSASD, idk
+    }
+
+    void gXOrg_button::setPosistion(int X, int Y) { XMoveWindow(_host->getDisplay(), _window, X, Y); XFlush(_host->getDisplay()); }
+    void gXOrg_button::setVisibility(bool isVisible) { if(isVisible) { XMapWindow(_host->getDisplay(), _window); } else { XUnmapWindow(_host->getDisplay(), _window); } }
 
     // WIDGET MANAGEMENT
     void gXOrg_button::updateEdgeOffsets() {}
@@ -57,10 +74,10 @@ namespace goose::platform::gXOrg
     }
 
     // WIDGET RETURNS
-    int gXOrg_button::getX() { return 0; }
-    int gXOrg_button::getY() { return 0; }
-    int gXOrg_button::getWidth() { return 0; }
-    int gXOrg_button::getHeight() { return 0; }
+    int gXOrg_button::getX() { XWindowAttributes windowAtr; XGetWindowAttributes(_host->getDisplay(), _window, &windowAtr); return windowAtr.x; }
+    int gXOrg_button::getY() { XWindowAttributes windowAtr; XGetWindowAttributes(_host->getDisplay(), _window, &windowAtr); return windowAtr.y; }
+    int gXOrg_button::getWidth() { XWindowAttributes windowAtr; XGetWindowAttributes(_host->getDisplay(), _window, &windowAtr); return windowAtr.width; }
+    int gXOrg_button::getHeight() { XWindowAttributes windowAtr; XGetWindowAttributes(_host->getDisplay(), _window, &windowAtr); return windowAtr.height; }
 
     int gXOrg_button::getEventID() { return _eventID; }
 }

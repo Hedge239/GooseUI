@@ -29,6 +29,8 @@ int main()
         50, 50
     );
 
+    ExampleButton->setLabel("balls");
+
     evtDispatch.add(1, [&](goose::core::event::event evt){
         std::cout << "ID: 1" << std::endl;
         ExampleButton->setPosistion(100, 100);
