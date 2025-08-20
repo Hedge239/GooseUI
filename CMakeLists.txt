@@ -42,15 +42,21 @@ endif()
 if(UNIX AND NOT APPLE)
     message(STATUS "[GooseUI] -- Detected OS: UNIX")
 
+    find_package(Freetype REQUIRED)
+    list(APPEND GOOSEUI_INCLUDE "${FREETYPE_INCLUDE_DIR}")
+    list(APPEND GOOSEUI_LIBRARY "${FREETYPE_LIB}")
+    list(APPEND GOOSEUI_FLAGS "fontconfig" "freetype2")
+
     if(GOOSEUI_SUPPORT_XORG)
         message(STATUS "[GooseUI] -- Display Service Enabled: X11")
         set(GOOSEUI_HONK true)
 
         find_package(X11 REQUIRED)
+        find_package(Xft REQUIRED)
 
-        list(APPEND GOOSEUI_INCLUDE "${X11_INCLUDE_DIR}")
-        list(APPEND GOOSEUI_LIBRARY "${X11_LIBRARIES}")
-        list(APPEND GOOSEUI_FLAGS "X11")
+        list(APPEND GOOSEUI_INCLUDE "${X11_INCLUDE_DIR}" "${XFT_INCLUDE_DIR}")
+        list(APPEND GOOSEUI_LIBRARY "${X11_LIBRARIES}" "${XFT_LIB}")
+        list(APPEND GOOSEUI_FLAGS "X11" "xft")
 
         include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/xorg.cmake" REQUIRED)
         add_compile_definitions(GooseUI_UseXorg)
@@ -62,8 +68,8 @@ if(UNIX AND NOT APPLE)
 
         find_package(Wayland REQUIRED)
 
-        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_CLIENT_INCLUDE_DIR}")
-        list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIBRARIES}")
+        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_INCLUDE_DIR}")
+        list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
         list(APPEND GOOSEUI_FLAGS "wayland-client")
 
         include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/wayland.cmake" REQUIRED)
