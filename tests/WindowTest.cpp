@@ -26,10 +26,10 @@ int main()
         goose::core::enumerations::SCALE_ALL, 
         goose::core::enumerations::ALIGN_LEFT | goose::core::enumerations::ALIGN_RIGHT | goose::core::enumerations::ALIGN_BOTTOM | goose::core::enumerations::ALIGN_TOP,
         60, 50, 
-        50, 50
+        100, 50
     );
 
-    ExampleButton->setLabel("balls");
+    ExampleButton->setLabel("Example Button");
 
     evtDispatch.add(1, [&](goose::core::event::event evt){
         std::cout << "ID: 1" << std::endl;
