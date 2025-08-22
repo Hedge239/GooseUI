@@ -4,6 +4,7 @@
 #include "GooseUI/widgets/button.h"
 
 #include <X11/Xlib.h>
+#include <X11/Xft/Xft.h>
 
 namespace goose 
 {
@@ -17,6 +18,11 @@ namespace goose
             {
                 gXOrg_window* _host;
                 Window _window;
+
+                XftFont *_font;
+                XftColor _fontColor;
+
+                std::string _label;
 
                 int _eventID;
                 int _alignment;

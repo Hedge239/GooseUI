@@ -1,10 +1,11 @@
 #include "GooseUI/platform/xorg/widgets/xorg_button.h"
 #include "GooseUI/platform/xorg/widgets/xorg_window.h"
 
-#include <GooseUI/core/eventDispatcher.h>
+#include "GooseUI/core/eventDispatcher.h"
 
 #include <X11/Xutil.h>
-
+#include <X11/Xft/Xft.h>
+#include <stdio.h>
 
 namespace goose::platform::gXOrg
 {
@@ -43,9 +44,24 @@ namespace goose::platform::gXOrg
         XFlush(_host->getDisplay());
     }
 
+    XftFont *xftFont;
+    XftColor xftcolor;
+
     void gXOrg_button::setLabel(std::string label) 
     {
-        // AGHSHASHGSSASD, idk
+        // TODO: Dynamic Scaleing
+        xftFont = XftFontOpenName(_host->getDisplay(), DefaultScreen(_host->getDisplay()), "DejaVu Sans:size=10");
+        if(!xftFont) { printf("[GooseUI] -- Faild to get font\n"); }
+
+        _label = label;
+
+        XRenderColor xrcol;
+        xrcol.red   = 0xffff;
+        xrcol.green = 0xffff;
+        xrcol.blue  = 0xffff;
+        xrcol.alpha = 0xffff;
+        
+        XftColorAllocValue(_host->getDisplay(), DefaultVisual(_host->getDisplay(), DefaultScreen(_host->getDisplay())), DefaultColormap(_host->getDisplay(), DefaultScreen(_host->getDisplay())), &xrcol, &xftcolor);
     }
 
     void gXOrg_button::setPosistion(int X, int Y) { XMoveWindow(_host->getDisplay(), _window, X, Y); XFlush(_host->getDisplay()); }
@@ -67,6 +83,15 @@ namespace goose::platform::gXOrg
         if(event->type == ButtonPress && event->xany.window == _window)
         {
             this->onClick();
+            return true;
+        }
+
+        if(event->type == Expose && !_label.empty())
+        {
+            XftDraw *draw = XftDrawCreate(_host->getDisplay(), _window, DefaultVisual(_host->getDisplay(), DefaultScreen(_host->getDisplay())), DefaultColormap(_host->getDisplay(), DefaultScreen(_host->getDisplay())));
+
+            XftDrawStringUtf8(draw, &xftcolor, xftFont, this->getX() / 2, this->getY() / 2, reinterpret_cast<const FcChar8*>(_label.c_str()), strlen(_label.c_str()));
+            XftDrawDestroy(draw);
             return true;
         }
 
