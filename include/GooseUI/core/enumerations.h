@@ -35,6 +35,12 @@ namespace goose
                 ALIGN_LEFT = 1 << 2,
                 ALIGN_RIGHT = 1 << 3
             };
+
+            enum graphicsBackend
+            {
+                opengl,
+                vulkan
+            };
         }
     }
 }

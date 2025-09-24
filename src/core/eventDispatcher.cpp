@@ -1,12 +1,14 @@
 #include "GooseUI/core/eventDispatcher.h"
 
-
-void goose::core::eventDispatcher::dispatch(const int& eventID, const event::event& Evt)
+namespace goose::core::event
 {
-    if(goose::core::eventDispatcher::EventsObj.count(eventID))
+    void dispatcher::dispatch(const int& eventID, const event& Evt)
     {
-        goose::core::eventDispatcher::EventsObj[eventID](Evt);
+        if(dispatcher::EventsObj.count(eventID))
+        {
+            dispatcher::EventsObj[eventID](Evt);
+        }
     }
-}
 
-void goose::core::eventDispatcher::add(const int& eventID, std::function<void(event::event)> EvtCallback) {goose::core::eventDispatcher::EventsObj[eventID] = EvtCallback;}
+    void dispatcher::add(const int& eventID, std::function<void(event)> EvtCallback) { dispatcher::EventsObj[eventID] = EvtCallback; }
+}

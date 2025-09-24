@@ -1,5 +1,5 @@
 set(
     GOOSEUI_WIDGETS
-    "src/widgets/window.cpp"
-    "src/widgets/button.cpp"
+    "src/widgets/base/window.cpp"
+    "src/widgets/buttons/boxButton.cpp"
 )

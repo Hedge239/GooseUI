@@ -11,3 +11,6 @@ build/
 # CMake
 CMakePresets.json
 cmake/modules
+
+# Testing files
+/test
