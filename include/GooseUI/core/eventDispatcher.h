@@ -10,14 +10,17 @@ namespace goose
 {
     namespace core 
     {
-        class eventDispatcher
+        namespace event 
         {
-            std::unordered_map<int, std::function<void(event::event)>> EventsObj;
+            class dispatcher
+            {
+                std::unordered_map<int, std::function<void(event)>> EventsObj;
 
-            public:
-            void add(const int& eventID, std::function<void(event::event)> EvtCallback);
-            void dispatch(const int& eventID, const event::event& Evt);
-        };
+                public:
+                void add(const int& eventID, std::function<void(event)> EvtCallback);
+                void dispatch(const int& eventID, const event& Evt);
+            };
+        }
     }
 }
 
