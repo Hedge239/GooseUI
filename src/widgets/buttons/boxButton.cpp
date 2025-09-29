@@ -8,7 +8,7 @@ namespace goose::widgets::buttons
         : _host(window), _eventID(eventID), _evtDispatcher(evtDispatcher), _scaleMethod(componentScaleing), _alignment(componentAlign), _posX(X), _posY(Y), _width(Width), _height(Height) { _isVisible = true; _isPressed = false; _outlineSize = 1; _color = { 0.85f, 0.85f, 0.85f, 1.0f }; }
 
     boxButton* createBoxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
-        { return new  boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
+        { return new boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
 
     // Widget Specific Functions
     void boxButton::setLabel(std::string label) { _label = label; }

@@ -1,7 +1,7 @@
 #ifndef _GOOSEUI_EVENTLOOP_H_
 #define _GOOSEUI_EVENTLOOP_H_
 
-#include <vector>
+#include <initializer_list>
 
 namespace goose
 {

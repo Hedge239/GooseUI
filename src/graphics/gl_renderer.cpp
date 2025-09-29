@@ -81,6 +81,11 @@ namespace goose::graphics::gl // EXTERNAL
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
+
+    void glRenderer::drawText(core::font::atlas* atlas, const std::string& text, float X, float Y, const core::templates::renderBase::color& C)
+    {
+        
+    }
 }
 
 namespace goose::graphics::gl // INTERAL
