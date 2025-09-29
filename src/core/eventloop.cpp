@@ -1,6 +1,8 @@
 #include "GooseUI/core/eventloop.h"
 #include "GooseUI/widgets/base/window.h"
 
+#include <vector>
+
 #if defined(_WIN32)
     #include <windows.h>
 #else
