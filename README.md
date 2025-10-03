@@ -10,12 +10,13 @@ Honestly, there is no technical reason to pick GooseUI over other options. After
 
 ## Requirements
 Windows
-- OpenGL Or/And Vulkan
+- OpenGL and/or Vulkan
 
 Linux
-- OpenGL Or/And Vulkan
-- X11 (Optional)
+- OpenGL and/or Vulkan
 - Wayland
+- FreeType2
+- X11 (Optional)
 
 ## Getting Started
 (Coming once a stable build is ready)
