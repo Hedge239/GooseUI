@@ -5,4 +5,6 @@
 #include "GooseUI/core/eventDispatcher.h"
 #include "GooseUI/core/enumerations.h"
 
+#include "GooseUI/graphics/font.h"
+
 #endif /*_GOOSEUI_GOOSEUI_H_*/

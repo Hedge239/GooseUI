@@ -6,7 +6,7 @@
 #endif
 
 #if GOOSEUI_ENABLE_OPENGL
-    #include "GooseUI/graphics/gl_renderer.h"
+    #include "GooseUI/graphics/gl/gl_renderer.h"
 #endif
 
 #endif /*_GOOSEUI_CONTEXT_H_*/

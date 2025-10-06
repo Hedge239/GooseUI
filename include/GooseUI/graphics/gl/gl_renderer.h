@@ -64,7 +64,6 @@ namespace goose
                 void endFrame() override;
 
                 void drawRect(float X, float Y, float W, float H, const core::templates::renderBase::color& C) override;
-                void drawText(core::font::atlas* atlas, const std::string& text, float X, float Y, const core::templates::renderBase::color& C) override;
             };
         }
     }

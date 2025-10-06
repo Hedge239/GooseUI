@@ -1,17 +1,10 @@
 #ifndef _GOOSEUI_RENDERBASE_H_
 #define _GOOSEUI_RENDERBASE_H_
 
-#include <string>
-
 namespace goose
 {
     namespace core 
     {
-        namespace font
-        {
-            class atlas; // FORWARD DECLERATION
-        }
-
         namespace templates
         {
             namespace renderBase
@@ -26,8 +19,8 @@ namespace goose
                     virtual void beginFrame(int windowWidth, int windowHeight, color bgColor) = 0;
                     virtual void endFrame() = 0;
 
+                    // DrawCalls
                     virtual void drawRect(float X, float Y, float W, float H, const color& C) = 0;
-                    virtual void drawText(font::atlas* atlas, const std::string& text, float X, float Y, const color& C) = 0;
                 };
             }
         }
