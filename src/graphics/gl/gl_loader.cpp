@@ -1,4 +1,4 @@
-#include "GooseUI/graphics/gl_loader.h"
+#include "GooseUI/graphics/gl/gl_loader.h"
 
 #include <stdio.h>
 

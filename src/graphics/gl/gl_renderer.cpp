@@ -1,5 +1,5 @@
-#include "GooseUI/graphics/gl_renderer.h"
-#include "GooseUI/graphics/gl_loader.h"
+#include "GooseUI/graphics/gl/gl_renderer.h"
+#include "GooseUI/graphics/gl/gl_loader.h"
 
 #include <stdio.h>
 
@@ -80,11 +80,6 @@ namespace goose::graphics::gl // EXTERNAL
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    }
-
-    void glRenderer::drawText(core::font::atlas* atlas, const std::string& text, float X, float Y, const core::templates::renderBase::color& C)
-    {
-        
     }
 }
 
