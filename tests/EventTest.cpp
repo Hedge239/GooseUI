@@ -36,8 +36,8 @@ int main()
         evtDispatch, 
         goose::core::enumerations::SCALE_ALL,
         goose::core::enumerations::ALIGN_LEFT | goose::core::enumerations::ALIGN_RIGHT | goose::core::enumerations::ALIGN_BOTTOM | goose::core::enumerations::ALIGN_TOP,
-        100, 100, 
-        50, 50
+        120, 105, 
+        50, 80
     );
     
     /*ExampleButton2 = goose::widgets::buttons::createBoxButton(
