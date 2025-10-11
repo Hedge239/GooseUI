@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-static const char* vertexSrc = R"(
+static const char* texture_vertexSrc = R"(
 #version 330 core
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aTexCoords;
@@ -22,7 +22,7 @@ void main() {
 }
 )";
 
-static const char* fragmentSrc = R"(
+static const char* texture_fragmentSrc = R"(
 #version 330 core
 in vec2 TexCoords;
 in vec4 vColor;
@@ -33,6 +33,29 @@ uniform sampler2D text;
 void main() {
     vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
     FragColor = vColor * sampled;
+}
+)";
+
+static const char* basic_vertexSrc = R"(
+#version 330 core
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec4 aColor;
+
+out vec4 vColor;
+
+void main() {
+    gl_Position = vec4(aPos, 0.0, 1.0);
+    vColor = aColor;
+}
+)";
+
+static const char* basic_fragmentSrc = R"(
+#version 330 core
+in vec4 vColor;
+out vec4 FragColor;
+
+void main() {
+    FragColor = vColor;
 }
 )";
 
@@ -58,7 +81,7 @@ namespace goose::graphics::gl // EXTERNAL
             atlas.setID(id);
         }
 
-        glUseProgram(_shader);
+        glUseProgram(_textureShader.shader);
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, atlas.getID());
@@ -86,7 +109,7 @@ namespace goose::graphics::gl // EXTERNAL
 
         glViewport(0, 0, windowWidth, windowHeight);
 
-        int localResolution = glGetUniformLocation(_shader, "uResolution");
+        int localResolution = glGetUniformLocation(_basicShader.shader, "uResolution");
         glUniform2f(localResolution, (float)windowWidth, (float)windowHeight);
     }
 
@@ -113,17 +136,17 @@ namespace goose::graphics::gl // EXTERNAL
             { x0, y1, u0, v1, C.R, C.G, C.B, C.A },
         };
 
-        glUseProgram(_shader);
+        glUseProgram(_textureShader.shader);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ID);
     
-        GLint texLocation = glGetUniformLocation(_shader, "text");
+        GLint texLocation = glGetUniformLocation(_textureShader.shader, "text");
         glUniform1i(texLocation, 0);
 
-        glBindVertexArray(_vao);
+        glBindVertexArray(_textureShader.vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, _textureShader.vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -133,21 +156,21 @@ namespace goose::graphics::gl // EXTERNAL
     {
         float x0 = (2.0f * X) / _windowWidth - 1.0f;
         float x1 = (2.0f * (X + W)) / _windowWidth - 1.0f;
-        
-        float y0 =  1.0f - 2.0f * (Y) / _windowHeight;
-        float y1 =  1.0f - 2.0f * (Y + H) / _windowHeight;
+    
+        float y0 = 1.0f - 2.0f * Y / _windowHeight;
+        float y1 = 1.0f - 2.0f * (Y + H) / _windowHeight;
 
         float vertices[] = {
-        x0, y0, C.R, C.G, C.B, C.A,
-        x1, y0, C.R, C.G, C.B, C.A,
-        x1, y1, C.R, C.G, C.B, C.A,
-        x0, y1, C.R, C.G, C.B, C.A,
+            x0, y0, C.R, C.G, C.B, C.A,
+            x1, y0, C.R, C.G, C.B, C.A,
+            x1, y1, C.R, C.G, C.B, C.A,
+            x0, y1, C.R, C.G, C.B, C.A,
         };
 
-        glUseProgram(_shader);
-        glBindVertexArray(_vao);
+        glUseProgram(_basicShader.shader);
+        glBindVertexArray(_basicShader.vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, _basicShader.vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -165,41 +188,61 @@ namespace goose::graphics::gl // INTERAL
         // initilize Resources
         if(!_context)
         {
-            const size_t vertexBufferSize = 6 * 8 * sizeof(float);
-            unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
+            // Basic
+            glGenVertexArrays(1, &_basicShader.vao);
+            glBindVertexArray(_basicShader.vao);
 
-            glGenVertexArrays(1, &_vao);
-            glBindVertexArray(_vao);
+            glGenBuffers(1, &_basicShader.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, _basicShader.vbo);
+            glBufferData(GL_ARRAY_BUFFER, 4 * 6 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
-            glGenBuffers(1, &_vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-            glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, nullptr, GL_DYNAMIC_DRAW);
-
-            glGenBuffers(1, &_ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+            unsigned int indices[] = {0, 1, 2, 2, 3, 0};
+            glGenBuffers(1, &_basicShader.ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _basicShader.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(0);
+
+            glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            _basicShader.shader = _createShaderProgram(basic_vertexSrc, basic_fragmentSrc);
+            glBindVertexArray(0);
+
+            // Texture
+            glGenVertexArrays(1, &_textureShader.vao);
+            glBindVertexArray(_textureShader.vao);
+
+            glGenBuffers(1, &_textureShader.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, _textureShader.vbo);
+            glBufferData(GL_ARRAY_BUFFER, 6 * 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(0);
-    
+
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(2 * sizeof(float)));
             glEnableVertexAttribArray(1);
-    
+
             glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
             glEnableVertexAttribArray(2);
 
-            _shader = _createShaderProgram(vertexSrc, fragmentSrc);
-
+            _textureShader.shader = _createShaderProgram(texture_vertexSrc, texture_fragmentSrc);
             glBindVertexArray(0);
         }
     }
 
     glRenderer::~glRenderer()
     {
-        glDeleteBuffers(1, &_vbo);
-        glDeleteBuffers(1, &_ebo);
-        glDeleteVertexArrays(1, &_vao);
-        glDeleteProgram(_shader);
+        glDeleteBuffers(1, &_textureShader.vbo);
+        glDeleteBuffers(1, &_textureShader.ebo);
+        glDeleteVertexArrays(1, &_textureShader.vao);
+        glDeleteProgram(_textureShader.shader);
+
+        glDeleteBuffers(1, &_textureShader.vbo);
+        glDeleteBuffers(1, &_textureShader.ebo);
+        glDeleteVertexArrays(1, &_basicShader.vao);
+        glDeleteProgram(_textureShader.shader);
     }
 
     unsigned int glRenderer::_compileShader(const std::string& shader, unsigned int type)

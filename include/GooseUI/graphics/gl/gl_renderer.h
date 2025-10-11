@@ -32,6 +32,14 @@ namespace goose
                 #endif
             };
 
+            struct shader
+            {
+                unsigned int shader = 0;
+                unsigned int vbo = 0;
+                unsigned int ebo = 0;
+                unsigned int vao = 0;
+            };
+
             class glRenderer : public core::templates::renderBase::renderer
             {
                 glRenderer();
@@ -42,10 +50,8 @@ namespace goose
 
                 glContext* _context = nullptr;
 
-                unsigned int _vao = 0;
-                unsigned int _vbo = 0;
-                unsigned int _ebo = 0;
-                unsigned int _shader = 0;
+                shader _textureShader;
+                shader _basicShader;
 
                 unsigned int _windowWidth = 0;
                 unsigned int _windowHeight = 0;
