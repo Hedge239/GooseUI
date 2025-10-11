@@ -51,6 +51,8 @@ if(WIN32)
     message(STATUS "[GooseUI] -- OS: Windows")
     message(STATUS "[GooseUI] -- Display Service: windows.h")
 
+    list(APPEND GOOSEUI_LIBRARY "dwrite")
+
     include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/win32.cmake" REQUIRED)
 endif()
 

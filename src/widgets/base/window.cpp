@@ -1,6 +1,5 @@
 #include "GooseUI/widgets/base/window.h"
 
-
 #if defined(_WIN32)
 
     #include "GooseUI/platform/win32/win32_window.h"

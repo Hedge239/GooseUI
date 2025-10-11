@@ -32,6 +32,11 @@
 #define GL_VERTEX_SHADER 0x8B31
 #define GL_FRAGMENT_SHADER 0x8B30
 #define GL_ELEMENT_ARRAY_BUFFER 0x8893
+#define GL_TEXTURE_SWIZZLE_RGBA 0x8E46
+#define GL_TEXTURE0 0x84C0
+#define GL_BGRA 0x80E1
+#define GL_R8 0x8229
+#define GL_CLAMP_TO_EDGE 0x812F
 
 namespace goose
 {
@@ -74,6 +79,8 @@ namespace goose
             typedef void(APIENTRY* PFNGLDRAWELEMENTSPROC)(GLenum mode, GLsizei count, GLenum type, const void *indices);
             typedef void(APIENTRY* PFNGLDELETESHADERPROC)(GLuint shader);
             typedef void(APIENTRY* PFNGLBUFFERSUBDATAPROC)(GLenum target, GLintptr offset, GLsizeiptr size, const void *data);
+            typedef void(APIENTRY* PFNGLACTIVETEXTUREPROC)(GLenum texture);
+            typedef void(APIENTRY* PFNGLUNIFORM1IPROC)(GLint location, GLint v0);
 
             // OpenGL Variables
             extern PFNGLDELETESHADERPROC glDeleteShader;
@@ -103,6 +110,8 @@ namespace goose
             extern PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
             extern PFNGLDELETEPROGRAMPROC glDeleteProgram; 
             extern PFNGLBUFFERSUBDATAPROC glBufferSubData;
+            extern PFNGLACTIVETEXTUREPROC glActiveTexture;
+            extern PFNGLUNIFORM1IPROC glUniform1i;
 
             // Loader Variables
             int isloaded();

@@ -11,7 +11,7 @@
 
 namespace goose
 {
-    namespace core
+    namespace graphics
     {
         namespace font
         {
@@ -60,9 +60,13 @@ namespace goose
                 glContext& getContext();
                 void setContext(glContext* context);
 
+                // Overides
+                void uploadFontAtlas(graphics::font::atlas& atlas) override;
+
                 void beginFrame(int windowWidth, int windowHeight, core::templates::renderBase::color color) override;
                 void endFrame() override;
 
+                void drawTextureQuad(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const core::templates::renderBase::color& C) override;
                 void drawRect(float X, float Y, float W, float H, const core::templates::renderBase::color& C) override;
             };
         }

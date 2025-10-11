@@ -90,6 +90,8 @@ namespace goose::graphics::gl
     PFNGLDRAWELEMENTSPROC glDrawElements = nullptr;
     PFNGLDELETESHADERPROC glDeleteShader = nullptr;
     PFNGLBUFFERSUBDATAPROC glBufferSubData = nullptr;
+    PFNGLACTIVETEXTUREPROC glActiveTexture = nullptr;
+    PFNGLUNIFORM1IPROC glUniform1i = nullptr;
 
     int isloaded()
     {
@@ -132,6 +134,8 @@ namespace goose::graphics::gl
         glDrawElements = (PFNGLDRAWELEMENTSPROC) getProcAddress("glDrawElements");
         glDeleteShader = (PFNGLDELETESHADERPROC) getProcAddress("glDeleteShader");
         glBufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
+        glActiveTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
+        glUniform1i = (PFNGLUNIFORM1IPROC) getProcAddress("glUniform1i");
 
         return 1;
     }
