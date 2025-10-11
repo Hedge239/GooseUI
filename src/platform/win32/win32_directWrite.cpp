@@ -113,7 +113,7 @@ namespace goose::platform::gWin32
         int height = bounds.bottom - bounds.top;
         if(width <= 0 || height <= 0) { static graphics::font::glyph empty{}; return empty; }
 
-        std::vector<uint8_t> bitmap(bitmapWidth * bitmapHeight, 0);
+        std::vector<BYTE> bitmap(bitmapWidth * bitmapHeight);
         analysis->CreateAlphaTexture(DWRITE_TEXTURE_CLEARTYPE_3x1, &bounds, bitmap.data(), (UINT32)bitmap.size());
         
         float u0, u1, v0, v1;

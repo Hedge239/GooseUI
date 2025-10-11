@@ -9,7 +9,7 @@ namespace goose::widgets::buttons
     boxButton::boxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
         : _host(window), _eventID(eventID), _evtDispatcher(evtDispatcher), _scaleMethod(componentScaleing), _alignment(componentAlign), _posX(X), _posY(Y), _width(Width), _height(Height) { _isVisible = true; _isPressed = false; _outlineSize = 1; _color = { 0.85f, 0.85f, 0.85f, 1.0f }; 
         arial = goose::graphics::font::createFont(); //TMP
-        arial->load("ARIAL.TTF", 200);//TMP
+        arial->load("ARIAL.TTF", 15);//TMP
     }
 
     boxButton* createBoxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
@@ -27,7 +27,7 @@ namespace goose::widgets::buttons
 
         //if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         //renderer.drawRect(_posX, _posY, _width, _height, _color);
-        graphics::text::draw(renderer, arial.get(), "Hi Mom!", _posX, _posY, { 0.0f, 0.0f, 0.0f, 1.0f }); //TMP
+        graphics::text::draw(renderer, arial.get(), "Hello World", _posX, _posY, { 0.0f, 0.0f, 0.0f, 1.0f }); //TMP
     }
 
     void boxButton::handelEvent(core::event::event evtData)

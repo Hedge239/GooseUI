@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 
-
 static const char* texture_vertexSrc = R"(
 #version 330 core
 layout(location = 0) in vec2 aPos;
@@ -86,13 +85,19 @@ namespace goose::graphics::gl // EXTERNAL
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, atlas.getID());
 
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E42, GL_ONE);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E43, GL_ONE);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E44, GL_ONE);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E45, GL_RED);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, atlas.getWidth(), atlas.getHeight(), 0, GL_RED, GL_UNSIGNED_BYTE, atlas.getPixels().data());
-
+        
         atlas.uploaded();
     }
 
@@ -125,7 +130,6 @@ namespace goose::graphics::gl // EXTERNAL
         float y0 = 1.0f - 2.0f * Y / _windowHeight;
         float y1 = 1.0f - 2.0f * (Y + H) / _windowHeight;
 
-        // Vertex data: x, y, u, v, r, g, b, a
         float vertices[6][8] = {
             { x0, y0, u0, v0, C.R, C.G, C.B, C.A },
             { x1, y0, u1, v0, C.R, C.G, C.B, C.A },
@@ -137,6 +141,7 @@ namespace goose::graphics::gl // EXTERNAL
         };
 
         glUseProgram(_textureShader.shader);
+        glBindVertexArray(_textureShader.vao);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ID);
@@ -144,10 +149,9 @@ namespace goose::graphics::gl // EXTERNAL
         GLint texLocation = glGetUniformLocation(_textureShader.shader, "text");
         glUniform1i(texLocation, 0);
 
-        glBindVertexArray(_textureShader.vao);
-
         glBindBuffer(GL_ARRAY_BUFFER, _textureShader.vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
