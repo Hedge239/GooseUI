@@ -34,19 +34,3 @@ namespace goose
 }
 
 #endif /*_GOOSEUI_TEXT_H_*/
-
-/*
-    r->bindTexture(font->atlas()->getTextureID());
-    for (auto& p : layout.getGlyphs()) {
-        const Glyph* g = p.glyph;
-        r->drawTexturedQuad(x + p.x, y - p.y, g->width, g->height, g->u0, g->v0, g->u1, g->v1, c);
-    }
-
-    --
-    
-    atlas->uploadToGPU(renderer);  // Calls the renderer backend function
-
-    renderer->bindTexture(atlas->getTextureID());
-    for (auto& g : layout.getGlyphs())
-    renderer->drawTexturedQuad(...);
-*/
