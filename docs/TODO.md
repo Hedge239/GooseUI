@@ -6,13 +6,15 @@
   - [ ] Native Wayland Support
   - [ ] Native X11 Support
   - [ ] ? Native MacOS Support
+
 - [ ] Vulkan implimentation
   - [ ] Native Wayland Support
   - [ ] Native X11 Support
   - [ ] ? Native MacOS Support
   - [ ] Native Win32 Support
+
 - [ ] Vulkan SDF Unicode Font bitmap generator & rendering [DirectWrite/Freetype]
-- [ ] Widget Posistion and Scale Management
+- [ ] OpenGL Unicode Font bitmap generator & rendering [Freetype]
 
 #### Non-Priority
 
@@ -32,10 +34,11 @@
 
 ## In Progress
 
-- [ ] Multi-Platform font base
-- [ ] OpenGL SDF Unicode Font bitmap generator & rendering [DirectWrite/Freetype] (Overkill I know)
+- [ ] Widget Posistion and Scale Management
 
 ## Completed
 
+- [x] Multi-Platform font base
+- [x] OpenGL Unicode Font bitmap generator & rendering [DirectWrite]
 - [x] Baisc Functions
 - [x] Win32 OpenGL Support
