@@ -92,6 +92,7 @@ namespace goose::graphics::gl
     PFNGLBUFFERSUBDATAPROC glBufferSubData = nullptr;
     PFNGLACTIVETEXTUREPROC glActiveTexture = nullptr;
     PFNGLUNIFORM1IPROC glUniform1i = nullptr;
+    PFNGLBLENDEQUATIONPROC glBlendEquation = nullptr;
 
     int isloaded()
     {
@@ -136,6 +137,7 @@ namespace goose::graphics::gl
         glBufferSubData = (PFNGLBUFFERSUBDATAPROC) getProcAddress("glBufferSubData");
         glActiveTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
         glUniform1i = (PFNGLUNIFORM1IPROC) getProcAddress("glUniform1i");
+        glBlendEquation = (PFNGLBLENDEQUATIONPROC) getProcAddress("glBlendEquation");
 
         return 1;
     }

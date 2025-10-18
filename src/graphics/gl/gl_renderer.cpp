@@ -30,8 +30,8 @@ out vec4 FragColor;
 uniform sampler2D text;
 
 void main() {
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
-    FragColor = vColor * sampled;
+    float alpha = texture(text, TexCoords).r;
+    FragColor = vec4(vColor.rgb, alpha);
 }
 )";
 
@@ -69,7 +69,7 @@ namespace goose::graphics::gl // EXTERNAL
         static glRenderer instance;
         return instance;
     }
-
+    
     void glRenderer::uploadFontAtlas(graphics::font::atlas& atlas)
     {
         if(atlas.isUploaded()) { return; }
@@ -80,24 +80,22 @@ namespace goose::graphics::gl // EXTERNAL
             atlas.setID(id);
         }
 
-        glUseProgram(_textureShader.shader);
-        
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, atlas.getID());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexParameteri(GL_TEXTURE_2D, 0x8E42, GL_ONE);
-        glTexParameteri(GL_TEXTURE_2D, 0x8E43, GL_ONE);
-        glTexParameteri(GL_TEXTURE_2D, 0x8E44, GL_ONE);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E42, GL_RED);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E43, GL_RED);
+        glTexParameteri(GL_TEXTURE_2D, 0x8E44, GL_RED);
         glTexParameteri(GL_TEXTURE_2D, 0x8E45, GL_RED);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, atlas.getWidth(), atlas.getHeight(), 0, GL_RED, GL_UNSIGNED_BYTE, atlas.getPixels().data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, atlas.getWidth(), atlas.getHeight(), 0, GL_RED, GL_UNSIGNED_BYTE, atlas.getPixels().data());
+
         atlas.uploaded();
     }
 
@@ -245,7 +243,7 @@ namespace goose::graphics::gl // INTERAL
 
         glDeleteBuffers(1, &_textureShader.vbo);
         glDeleteBuffers(1, &_textureShader.ebo);
-        glDeleteVertexArrays(1, &_basicShader.vao);
+        glDeleteVertexArrays(1, &_textureShader.vao);
         glDeleteProgram(_textureShader.shader);
     }
 

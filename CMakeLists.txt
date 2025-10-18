@@ -17,6 +17,7 @@ option(GOOSEUI_BUILD_EXAMPLES "Builds included examples & test applications" ON)
 
 include("${CMAKE_SOURCE_DIR}/cmake/.cmake/core.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/.cmake/widgets.cmake")
+
 # Graphic Services
 if(GOOSEUI_USE_OPENGL)
     find_package(OpenGL)
