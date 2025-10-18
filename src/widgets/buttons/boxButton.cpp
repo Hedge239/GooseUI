@@ -9,7 +9,7 @@ namespace goose::widgets::buttons
     boxButton::boxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
         : _host(window), _eventID(eventID), _evtDispatcher(evtDispatcher), _scaleMethod(componentScaleing), _alignment(componentAlign), _posX(X), _posY(Y), _width(Width), _height(Height) { _isVisible = true; _isPressed = false; _outlineSize = 1; _color = { 0.85f, 0.85f, 0.85f, 1.0f }; 
         arial = goose::graphics::font::createFont(); //TMP
-        arial->load("ARIAL.TTF", 15);//TMP
+        arial->load("ARIAL.TTF", 12);//TMP
     }
 
     boxButton* createBoxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
