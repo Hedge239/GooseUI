@@ -97,7 +97,7 @@ namespace goose::platform::gWin32
             &dRun,
             1.0f,
             &transform,
-            DWRITE_RENDERING_MODE_ALIASED,
+            DWRITE_RENDERING_MODE_NATURAL,
             DWRITE_MEASURING_MODE_NATURAL, 
             0,
             0,
@@ -107,19 +107,29 @@ namespace goose::platform::gWin32
         
         // Create the Outline
         RECT bounds;
-        analysis->GetAlphaTextureBounds(DWRITE_TEXTURE_ALIASED_1x1, &bounds);
+        analysis->GetAlphaTextureBounds(DWRITE_TEXTURE_CLEARTYPE_3x1, &bounds);
 
         int width = bounds.right - bounds.left;
         int height = bounds.bottom - bounds.top;
         if(width <= 0 || height <= 0) { static graphics::font::glyph empty{}; return empty; }
+        
+        // Create and Convert bitmap to Grayscale
+        std::vector<BYTE> bitmap(width * height * 3);
+        std::vector<BYTE> bitmap_grayScale(width * height);
+        analysis->CreateAlphaTexture(DWRITE_TEXTURE_CLEARTYPE_3x1, &bounds, bitmap.data(), (UINT32)bitmap.size());
 
-        std::vector<BYTE> bitmap(width * height);
-        analysis->CreateAlphaTexture(DWRITE_TEXTURE_ALIASED_1x1, &bounds, bitmap.data(), (UINT32)bitmap.size());
+        for (int i = 0; i < width * height; ++i)
+        {
+            BYTE r = bitmap[i*3 + 0];
+            BYTE g = bitmap[i*3 + 1];
+            BYTE b = bitmap[i*3 + 2];
+            bitmap_grayScale[i] = (r + g + b) / 3;
+        }
         
         float u0, u1, v0, v1;
-        _atlas.addNewBitmap(width, height, bitmap.data(), u0, u1, v0, v1);
+        _atlas.addNewBitmap(width, height, bitmap_grayScale.data(), u0, u1, v0, v1);
 
-        // Cache
+        // Cache Glyph
         graphics::font::glyph t_glyph;
         t_glyph.u0 = u0;
         t_glyph.u1 = u1;
