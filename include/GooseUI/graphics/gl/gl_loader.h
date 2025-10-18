@@ -81,6 +81,7 @@ namespace goose
             typedef void(APIENTRY* PFNGLBUFFERSUBDATAPROC)(GLenum target, GLintptr offset, GLsizeiptr size, const void *data);
             typedef void(APIENTRY* PFNGLACTIVETEXTUREPROC)(GLenum texture);
             typedef void(APIENTRY* PFNGLUNIFORM1IPROC)(GLint location, GLint v0);
+            typedef void(APIENTRY* PFNGLBLENDEQUATIONPROC)(GLenum mode);
 
             // OpenGL Variables
             extern PFNGLDELETESHADERPROC glDeleteShader;
@@ -112,6 +113,7 @@ namespace goose
             extern PFNGLBUFFERSUBDATAPROC glBufferSubData;
             extern PFNGLACTIVETEXTUREPROC glActiveTexture;
             extern PFNGLUNIFORM1IPROC glUniform1i;
+            extern PFNGLBLENDEQUATIONPROC glBlendEquation;
 
             // Loader Variables
             int isloaded();

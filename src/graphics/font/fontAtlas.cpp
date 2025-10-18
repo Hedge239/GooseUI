@@ -1,6 +1,5 @@
 #include "GooseUI/graphics/font/fontAtlas.h"
 
-#include <iostream>
 #include <cstring>
 
 
@@ -19,7 +18,7 @@ namespace goose::graphics::font
             _Ypos += _rowHeight + 1;
             _rowHeight = 0;
         }
-
+        
         // Is Atlas Full?
         if(_Ypos + height >= _height) { return false; }
         

@@ -75,14 +75,14 @@ namespace goose::platform::gWin32
         DWRITE_FONT_METRICS fontMetrics{};
         _face->GetDesignGlyphMetrics(&index, 1, &glyphMetrics);
         _face->GetMetrics(&fontMetrics);
-
+        
         float scale = _size / static_cast<float>(fontMetrics.designUnitsPerEm);
 
         int bitmapWidth = static_cast<int>((glyphMetrics.leftSideBearing + glyphMetrics.advanceWidth + glyphMetrics.rightSideBearing) * scale);
         if(bitmapWidth <=0) { bitmapWidth = 1; }
 
         int bitmapHeight = static_cast<int>((fontMetrics.ascent + fontMetrics.descent + fontMetrics.lineGap) * scale);
-        if(bitmapHeight <= 0) { bitmapHeight = 1; }
+        if(bitmapHeight <= 0) { bitmapHeight = 1; };
 
         // Rasterize
         Microsoft::WRL::ComPtr<IDWriteGlyphRunAnalysis> analysis;
@@ -97,7 +97,7 @@ namespace goose::platform::gWin32
             &dRun,
             1.0f,
             &transform,
-            DWRITE_RENDERING_MODE_CLEARTYPE_GDI_CLASSIC,
+            DWRITE_RENDERING_MODE_ALIASED,
             DWRITE_MEASURING_MODE_NATURAL, 
             0,
             0,
@@ -107,14 +107,14 @@ namespace goose::platform::gWin32
         
         // Create the Outline
         RECT bounds;
-        analysis->GetAlphaTextureBounds(DWRITE_TEXTURE_CLEARTYPE_3x1, &bounds);
+        analysis->GetAlphaTextureBounds(DWRITE_TEXTURE_ALIASED_1x1, &bounds);
 
         int width = bounds.right - bounds.left;
         int height = bounds.bottom - bounds.top;
         if(width <= 0 || height <= 0) { static graphics::font::glyph empty{}; return empty; }
 
-        std::vector<BYTE> bitmap(bitmapWidth * bitmapHeight);
-        analysis->CreateAlphaTexture(DWRITE_TEXTURE_CLEARTYPE_3x1, &bounds, bitmap.data(), (UINT32)bitmap.size());
+        std::vector<BYTE> bitmap(width * height);
+        analysis->CreateAlphaTexture(DWRITE_TEXTURE_ALIASED_1x1, &bounds, bitmap.data(), (UINT32)bitmap.size());
         
         float u0, u1, v0, v1;
         _atlas.addNewBitmap(width, height, bitmap.data(), u0, u1, v0, v1);
