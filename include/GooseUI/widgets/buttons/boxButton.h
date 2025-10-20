@@ -26,6 +26,8 @@ namespace goose
                 core::enumerations::componentScale _scaleMethod;
                 core::event::dispatcher& _evtDispatcher;
 
+                int _initalBounds[4];
+
                 bool _isPressed;
                 bool _isVisible;
 

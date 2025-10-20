@@ -2,11 +2,6 @@
 
 #### Priority
 
-- [ ] EGL implimentation
-  - [ ] Native Wayland Support
-  - [ ] Native X11 Support
-  - [ ] ? Native MacOS Support
-
 - [ ] Vulkan implimentation
   - [ ] Native Wayland Support
   - [ ] Native X11 Support
@@ -14,7 +9,6 @@
   - [ ] Native Win32 Support
 
 - [ ] Vulkan SDF Unicode Font bitmap generator & rendering [DirectWrite/Freetype]
-- [ ] OpenGL Unicode Font bitmap generator & rendering [Freetype]
 
 #### Non-Priority
 
@@ -34,10 +28,16 @@
 
 ## In Progress
 
-- [ ] Widget Posistion and Scale Management
+- [ ] EGL implimentation
+  - [ ] Native Wayland Support
+  - [ ] Native X11 Support
+  - [ ] ? Native MacOS Support
+
+- [ ] OpenGL Unicode Font bitmap generator & rendering [Freetype]
 
 ## Completed
 
+- [x] Widget Posistion and Scale Management
 - [x] Multi-Platform font base
 - [x] OpenGL Unicode Font bitmap generator & rendering [DirectWrite]
 - [x] Baisc Functions

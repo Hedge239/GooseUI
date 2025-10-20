@@ -1,16 +1,21 @@
 #include "GooseUI/widgets/buttons/boxButton.h"
 #include "GooseUI/core/templates/renderBase.h"
-#include "GooseUI/graphics/font/font.h"
-#include "GooseUI/graphics/text.h"
-std::unique_ptr<goose::graphics::font::font> arial; //TMP
+#include "GooseUI/graphics/layoutCalculator.h"
+
+
 namespace goose::widgets::buttons
 {
     // Create NEW widget and set private variables
     boxButton::boxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
-        : _host(window), _eventID(eventID), _evtDispatcher(evtDispatcher), _scaleMethod(componentScaleing), _alignment(componentAlign), _posX(X), _posY(Y), _width(Width), _height(Height) { _isVisible = true; _isPressed = false; _outlineSize = 1; _color = { 0.85f, 0.85f, 0.85f, 1.0f }; 
-        arial = goose::graphics::font::createFont(); //TMP
-        arial->load("ARIAL.TTF", 12);//TMP
-    }
+        : _host(window), _eventID(eventID), _evtDispatcher(evtDispatcher), _scaleMethod(componentScaleing), _alignment(componentAlign), _posX(X), _posY(Y), _width(Width), _height(Height) 
+        { 
+            _isVisible = true; 
+            _isPressed = false;
+            _outlineSize = 1; 
+            _color = { 0.85f, 0.85f, 0.85f, 1.0f };
+
+            graphics::layoutCalculator::getInitalOffsets(_initalBounds, window->getWidth(), window->getHeight(), _posX, _posY, _width, _height);
+        }
 
     boxButton* createBoxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
         { return new boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
@@ -24,10 +29,10 @@ namespace goose::widgets::buttons
     void boxButton::draw(core::templates::renderBase::renderer& renderer)
     {
         if(!_isVisible) { return; }
+        graphics::layoutCalculator::calculateLayout(_scaleMethod, _alignment, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
 
-        //if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
-        //renderer.drawRect(_posX, _posY, _width, _height, _color);
-        graphics::text::draw(renderer, arial.get(), "Hello World", _posX, _posY, { 0.0f, 0.0f, 0.0f, 1.0f }); //TMP
+        if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
+        renderer.drawRect(_posX, _posY, _width, _height, _color);
     }
 
     void boxButton::handelEvent(core::event::event evtData)
