@@ -7,11 +7,19 @@ namespace goose::platform::gWin32
 {
     LRESULT CALLBACK gWin32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
+        gWin32_window* self = reinterpret_cast<gWin32_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+        
         switch(uMsg)
         {
             case WM_CLOSE:
             {
                 PostQuitMessage(0);
+                return 0;
+            }
+
+            case WM_SIZING:
+            {
+                if(self) { self->renderWidgets(); }
                 return 0;
             }
 
@@ -89,6 +97,7 @@ namespace goose::platform::gWin32
         WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
         WindowClass.hInstance = _hInstance;
         WindowClass.lpszClassName = L"GooseUI_Window";
+        WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
         RegisterClassW(&WindowClass);
 
         // Calculate Screen Posistion
@@ -168,7 +177,8 @@ namespace goose::platform::gWin32
         );
 
         if(!_hwnd) { printf("GooseUI: Failed to create Win32 Window \n"); }
-
+        SetWindowLongPtr(_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+        
         // Init Backend
         _bgColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -315,11 +325,11 @@ namespace goose::platform::gWin32
 
             switch(msg.message)
             {
+                case WM_QUIT: { _isRunning = false; handelWidgets = false; break; }
+                
                 case WM_LBUTTONDOWN: { evtData.type = core::event::eventType::leftMouseDown; break; }
                 case WM_LBUTTONUP: { evtData.type = core::event::eventType::leftMouseUp; break; }
                 case WM_RBUTTONDOWN: { evtData.type = core::event::eventType::rightMouseDown; break; }
-
-                case WM_QUIT: { _isRunning = false; handelWidgets = false; break; }
 
                 default: { handelWidgets = false; break; }
             }

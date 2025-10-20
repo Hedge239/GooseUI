@@ -14,7 +14,7 @@ namespace goose::core
     void eventloop::run(std::initializer_list<widgets::base::window*> windows)
     {
         // I solely did this just so the user did not have to init vector first
-        std::vector<widgets::base::window*> windowList(windows);
+        //std::vector<widgets::base::window*> window_vec(windows);
 
         while(true)
         {
@@ -22,11 +22,16 @@ namespace goose::core
 
             for(widgets::base::window* window : windows)
             {
-                if(!window->isRunning()) { continue; }
+                // TODO FIX: When window is not running, remove from vector then destroy then continue. This will only run once per destroyed window
+                if(!window->isRunning()) 
+                {
+                    window->destroy();
+                    continue; 
+                }
 
                 running = true;
 
-                window ->handelEvents();
+                window->handelEvents();
             }
 
             if(!running) { break; }
