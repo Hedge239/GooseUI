@@ -8,7 +8,7 @@
   - [ ] ? Native MacOS Support
   - [ ] Native Win32 Support
 
-- [ ] Vulkan SDF Unicode Font bitmap generator & rendering [DirectWrite/Freetype]
+- [ ] Vulkan Unicode Font bitmap generator & rendering [DirectWrite/Freetype]
 
 #### Non-Priority
 
@@ -28,9 +28,10 @@
 
 ## In Progress
 
-- [ ] EGL implimentation
+- [ ] OpenGL implimentation
   - [ ] Native Wayland Support
-  - [ ] Native X11 Support
+  - [x] Native X11 Support
+  - [x] Native Win32 Support
   - [ ] ? Native MacOS Support
 
 - [ ] OpenGL Unicode Font bitmap generator & rendering [Freetype]
@@ -41,4 +42,3 @@
 - [x] Multi-Platform font base
 - [x] OpenGL Unicode Font bitmap generator & rendering [DirectWrite]
 - [x] Baisc Functions
-- [x] Win32 OpenGL Support
