@@ -14,7 +14,7 @@ namespace goose::widgets::buttons
             _outlineSize = 1; 
             _color = { 0.85f, 0.85f, 0.85f, 1.0f };
 
-            graphics::layoutCalculator::getInitalOffsets(_initalBounds, window->getWidth(), window->getHeight(), _posX, _posY, _width, _height);
+            graphics::layout::calculator::getInitalOffsets(_initalBounds, window->getWidth(), window->getHeight(), _posX, _posY, _width, _height);
         }
 
     boxButton* createBoxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
@@ -29,7 +29,7 @@ namespace goose::widgets::buttons
     void boxButton::draw(core::templates::renderBase::renderer& renderer)
     {
         if(!_isVisible) { return; }
-        graphics::layoutCalculator::calculateLayout(_scaleMethod, _alignment, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
+        graphics::layout::calculator::calculateLayout(_scaleMethod, _alignment, _sizeRestraints, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
 
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         renderer.drawRect(_posX, _posY, _width, _height, _color);
@@ -49,6 +49,7 @@ namespace goose::widgets::buttons
 
     // Posistioning
     void boxButton::setSize(int width, int height) { _width = width; _height = height;}
+    void boxButton::setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) { _sizeRestraints.minWidth = minWidth; _sizeRestraints.minHeight = minHeight; _sizeRestraints.maxWidth = maxWidth; _sizeRestraints.maxHeight = maxHeight; }
     void boxButton::setPosistion(int X, int Y) { _posX = X; _posY = Y; }
 
     // Returns

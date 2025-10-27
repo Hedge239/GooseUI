@@ -43,6 +43,7 @@ namespace goose
                 // Reuturns
                 virtual bool isRunning() = 0;
                 
+                virtual int getDisplayService() const = 0;
                 virtual int getWidth() = 0;
                 virtual int getHeight() = 0;
             };

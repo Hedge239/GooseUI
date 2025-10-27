@@ -5,11 +5,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # ------------------------------- Options -------------------------------
+option(GOOSEUI_XORG_SUPPORT "Legacy X11 Support" ON)
+option(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" ON)
 
 option(GOOSEUI_USE_OPENGL "Use OpenGL" ON)
 option(GOOSEUI_USE_VULKAN "Use Vulkan" OFF)
 
-option(GOOSEUI_XORG_SUPPORT "Legacy X11 Support" ON)
 option(GOOSEUI_INSTALL "ExportTargets" ON)
 option(GOOSEUI_BUILD_EXAMPLES "Builds included examples & test applications" ON)
 
@@ -20,6 +21,8 @@ include("${CMAKE_SOURCE_DIR}/cmake/.cmake/widgets.cmake")
 
 # Graphic Services
 if(GOOSEUI_USE_OPENGL)
+
+    set(OpenGL_GL_PREFERENCE GLVND) # This is just so it shuts up
     find_package(OpenGL)
 
     if(OPENGL_FOUND)
@@ -75,18 +78,22 @@ if(UNIX AND NOT APPLE)
         list(APPEND GOOSEUI_FLAGS "X11")
 
         include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/xorg.cmake" REQUIRED)
-        add_compile_definitions(GooseUI_xorgSupported)
+        add_compile_definitions(GOOSEUI_XORG_SUPPORT)
     endif()
 
-    message(STATUS "[GooseUI] -- Display Service: Wayland")
+    if(GOOSEUI_WAYLAND_SUPPORT)
+        message(STATUS "[GooseUI] -- Display Service: Wayland")
 
-    find_package(Wayland REQUIRED)
+        find_package(Wayland REQUIRED)
 
-    list(APPEND GOOSEUI_INCLUDE "${WAYLAND_INCLUDE_DIR}")
-    list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
-    list(APPEND GOOSEUI_FLAGS "wayland-client")
+        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_INCLUDE_DIR}")
+        list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
+        list(APPEND GOOSEUI_FLAGS "wayland-client")
 
-    include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/wayland.cmake" REQUIRED)
+        include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/wayland.cmake" REQUIRED)
+        add_compile_definitions(GOOSEUI_WAYLAND_SUPPORT)
+    endif()
+    
 endif()
 
 # ------------------------------- Create Lib -------------------------------

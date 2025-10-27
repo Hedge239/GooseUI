@@ -3,11 +3,29 @@
 
 #include "GooseUI/core/templates/renderBase.h"
 
+#include <X11/Xlib.h>
 #include <string>
 
 #if defined(_WIN32)
+
     #include <windows.h>
+
+#elif defined(__APPLE__)
+
+    #error Unsuported // TODO
+
+#else
+
+    #if GOOSEUI_XORG_SUPPORT
+        #include <GL/glx.h>
+    #endif
+
+    #if GOOSEUI_WAYLAND_SUPPORT
+        #include <wayland-client.h>
+    #endif
+
 #endif
+
 
 namespace goose
 {
@@ -26,9 +44,25 @@ namespace goose
             struct glContext
             {
                 #if defined(_WIN32)
+
                 HGLRC hglrc = nullptr;
                 HDC   hdc   = nullptr;
-                #elif 
+
+                #endif
+                #if defined(__APPLE__)
+
+                #error Unsuported // TODO
+
+                #endif
+                #if GOOSEUI_XORG_SUPPORT
+
+                GLXContext glxContext = nullptr;
+
+                #endif
+                #if GOOSEUI_WAYLAND_SUPPORT
+
+
+
                 #endif
             };
 

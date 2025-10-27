@@ -4,11 +4,12 @@
 #include "GooseUI/core/templates/widgetBase.h"
 #include "GooseUI/core/templates/renderBase.h"
 
-#include "GooseUI/widgets/base/window.h"
-
 #include "GooseUI/core/enumerations.h"
 #include "GooseUI/core/eventDispatcher.h"
 #include "GooseUI/core/event.h"
+
+#include "GooseUI/widgets/base/window.h"
+#include "GooseUI/graphics/layoutCalculator.h"
 
 #include <string>
 
@@ -22,6 +23,7 @@ namespace goose
             {
                 widgets::base::window* _host;
 
+                graphics::layout::sizeRestraints _sizeRestraints;
                 core::templates::renderBase::color _color;
                 core::enumerations::componentScale _scaleMethod;
                 core::event::dispatcher& _evtDispatcher;
@@ -35,6 +37,7 @@ namespace goose
                 int _eventID;
                 int _alignment;
                 int _width, _height;
+                int _minWidth, _minHeight;
                 int _posX, _posY;
 
                 std::string _label;
@@ -57,6 +60,7 @@ namespace goose
 
                 // Posistioning
                 void setSize(int width, int height) override;
+                void setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
                 void setPosistion(int X, int Y) override;
 
                 // Return
