@@ -14,8 +14,8 @@ Windows
 
 Linux
 - OpenGL and/or Vulkan
-- Wayland
 - FreeType2
+- Wayland (Optional)
 - X11 (Optional)
 
 ## Getting Started
