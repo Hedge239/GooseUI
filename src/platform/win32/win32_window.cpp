@@ -291,7 +291,8 @@ namespace goose::platform::gWin32
         if(_backendContext == core::enumerations::opengl) { wglMakeCurrent(GetDC(this->getHwnd()), glBackend->getContext().hglrc); }
         #endif
 
-        _backend->beginFrame(getWidth(), getHeight(), _bgColor);
+        RECT rect; GetClientRect(_hwnd, &rect);
+        _backend->beginFrame(rect.right - rect.left, rect.bottom - rect.top, _bgColor);
 
         for(core::templates::widget::base* widget : _widgets)
         {
@@ -352,6 +353,7 @@ namespace goose::platform::gWin32
     // Returns
     bool gWin32_window::isRunning() { return _isRunning; }
 
-    int gWin32_window::getWidth() { RECT rect; GetClientRect(_hwnd, &rect); return rect.right - rect.left; }
-    int gWin32_window::getHeight() { RECT rect; GetClientRect(_hwnd, &rect); return rect.bottom - rect.top; }
+    int gWin32_window::getDisplayService() const { return core::enumerations::displayService::win32; }
+    int gWin32_window::getWidth() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.right - rect.left; }
+    int gWin32_window::getHeight() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.bottom - rect.top; }
 }
