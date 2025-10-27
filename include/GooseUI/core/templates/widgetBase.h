@@ -35,6 +35,7 @@ namespace goose
 
                     // Posistioning
                     virtual void setSize(int width, int height) = 0;
+                    virtual void setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) = 0;
                     virtual void setPosistion(int X, int Y) = 0;
 
                     // Return

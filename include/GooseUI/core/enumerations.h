@@ -41,6 +41,13 @@ namespace goose
                 opengl,
                 vulkan
             };
+
+            enum displayService
+            {
+                win32 = 1 << 0,
+                x11 = 1 << 1,
+                wayland = 1 << 2
+            };
         }
     }
 }
