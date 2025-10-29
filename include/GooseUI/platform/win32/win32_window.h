@@ -69,6 +69,7 @@ namespace goose
 
                 // Reuturns
                 bool isRunning() override;
+                int getDisplayService() const override;
                 int getWidth() override;
                 int getHeight() override;
             };
