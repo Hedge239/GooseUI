@@ -2,6 +2,7 @@
 #include "GooseUI/core/event.h"
 #include "GooseUI/graphics/gl/gl_renderer.h"
 
+
 namespace goose::platform::gX11
 {
     // Graphic Dependent
@@ -363,9 +364,8 @@ namespace goose::platform::gX11
                     }
                 }
             }
-           //printf("Event Handeled");
         }
-        //printf("Event Handeled 2");
+
         renderWidgets();
     }
 

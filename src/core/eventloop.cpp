@@ -2,8 +2,6 @@
 #include "GooseUI/core/enumerations.h"
 #include "GooseUI/widgets/base/window.h"
 
-#include <vector>
-#include <set>
 
 #if defined(_WIN32)
 
@@ -65,7 +63,8 @@ namespace goose::core
                 #if GOOSEUI_XORG_SUPPORT
                 if(displayService == core::enumerations::displayService::x11)
                 {
-                    int lastXfd = 0; fd_set in_fds;
+                    int lastXfd = 0; 
+                    fd_set in_fds;
 
                     FD_ZERO(&in_fds);
                     for(widgets::base::window* window : windows)
@@ -75,7 +74,8 @@ namespace goose::core
                         FD_SET(xfd, &in_fds); lastXfd = std::max(lastXfd, xfd);
                     }
 
-                    select(lastXfd + 1, &in_fds, nullptr, nullptr, nullptr);
+                    struct timeval timeout { 0, 160000 }; // Temp fix for multi-window, yes I hate it too
+                    select(lastXfd + 1, &in_fds, nullptr, nullptr, &timeout);
                     continue;
                 }
                 #endif
