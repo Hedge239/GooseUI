@@ -3,7 +3,6 @@ set(
     "src/core/eventDispatcher.cpp"
     "src/core/eventloop.cpp"
 
-    "src/graphics/text.cpp"
     "src/graphics/layoutCalculator.cpp"
     "src/graphics/font/font.cpp"
     "src/graphics/font/fontManager.cpp"

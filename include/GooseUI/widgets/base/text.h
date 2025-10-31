@@ -24,12 +24,18 @@ namespace goose
             class font; // FORWARD DECLERATION
             class layout; // FORWARD DECLERATION
         }
+    }
 
-        class text
+    namespace widgets
+    {
+        namespace base
         {
-            public:
-            static void draw(core::templates::renderBase::renderer& renderer, goose::graphics::font::font* font, const std::string& text, int X, int Y, const core::templates::renderBase::color& color);
-        };
+            class text
+            {
+                public:
+                static void draw(core::templates::renderBase::renderer& renderer, goose::graphics::font::font* font, const std::string& text, int X, int Y, const core::templates::renderBase::color& color);
+            };
+        }
     }
 }
 
