@@ -1,5 +1,4 @@
-#include "GooseUI/graphics/font/font.h"
-#include "GooseUI/graphics/text.h"
+
 #include "GooseUI/widgets/base/window.h"
 #include "GooseUI/widgets/buttons/boxButton.h"
 #include "GooseUI/GooseUI.h"
@@ -32,24 +31,24 @@ int main()
     // Create Widgets
     ExampleButton = goose::widgets::buttons::createBoxButton(
         ExampleWindow,
-        1, 
-        evtDispatch, 
+        1,
+        evtDispatch,
         goose::core::enumerations::SCALE_ALL,
         goose::core::enumerations::ALIGN_LEFT | goose::core::enumerations::ALIGN_RIGHT | goose::core::enumerations::ALIGN_BOTTOM | goose::core::enumerations::ALIGN_TOP,
-        120, 105, 
+        120, 105,
         50, 80
     );
-    
+
     ExampleButton2 = goose::widgets::buttons::createBoxButton(
         ExampleWindow2,
-        2, 
-        evtDispatch, 
+        2,
+        evtDispatch,
         goose::core::enumerations::SCALE_ALL,
         goose::core::enumerations::ALIGN_LEFT | goose::core::enumerations::ALIGN_RIGHT | goose::core::enumerations::ALIGN_BOTTOM | goose::core::enumerations::ALIGN_TOP,
-        200,200, 
+        200,200,
         50, 50
     );
-    
+
     // Create Events
     evtDispatch.add(1, [&](goose::core::event::event evt){
         printf(" -- Button Clicked! ID:%i \n", ExampleButton->getEventID());

@@ -3,10 +3,12 @@
 build/
 .old/
 
-# Visual Studio Code
+# Code Editors
 .clangd
 .cache
+__cmake_systeminformation/
 .vscode/
+.zed/
 
 # CMake
 CMakePresets.json
