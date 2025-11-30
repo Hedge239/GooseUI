@@ -46,7 +46,7 @@ namespace goose
                 boxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
                 ~boxButton() = default;
 
-                void setLabel(std::string label);
+                void setLabel(const std::string& label);
                 void setOutlineSize(int size);
 
                 // Overides
