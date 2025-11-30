@@ -21,7 +21,7 @@ namespace goose::widgets::buttons
         { return new boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
 
     // Widget Specific Functions
-    void boxButton::setLabel(std::string label) { _label = label; }
+    void boxButton::setLabel(const std::string& label) { _label = label; }
     void boxButton::setOutlineSize(int size) { _outlineSize = size; }
     
     // overides
