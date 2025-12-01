@@ -7,6 +7,7 @@
 #include "GooseUI/core/enumerations.h"
 #include "GooseUI/core/event.h"
 
+#include "GooseUI/graphics/font/font.h"
 #include "GooseUI/widgets/base/window.h"
 #include "GooseUI/graphics/layoutCalculator.h"
 
@@ -26,19 +27,23 @@ namespace goose
                 core::templates::renderBase::color _color;
                 core::enumerations::componentScale _scaleMethod;
                 
-                int _initalBounds[4];
+                std::unique_ptr<goose::graphics::font::font> _font;
                 
                 bool _isVisible;
                 
+                int _initalBounds[4];
                 int _alignment;
                 int _width, _height;
                 int _minWidth, _minHeight;
                 int _posX, _posY;
+                
+                std::string _label;
 
                 public:
                 label(widgets::base::window* window, core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
                 ~label() = default;
                 
+                void setFont(const std::string& fontFilePath, int size);
                 void setText(const std::string& label);
                 void setColor(core::templates::renderBase::color color);
                 
