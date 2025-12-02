@@ -9,6 +9,9 @@ int main()
     goose::widgets::base::window* window1;
     goose::widgets::base::window* window2;
     
+    goose::widgets::display::label* label1;
+    
+    // Create Windows
     window1 = goose::widgets::base::createWindow(
         "Window1",
         500, 500,
@@ -22,6 +25,22 @@ int main()
         goose::core::enumerations::SCREEN_CENTER,
         goose::core::enumerations::opengl
     );
+    
+    // Create Labels
+    label1 = goose::widgets::display::createLabel(
+        window1,
+        goose::core::enumerations::SCALE_ALL,
+        goose::core::enumerations::ALIGN_LEFT | goose::core::enumerations::ALIGN_RIGHT | goose::core::enumerations::ALIGN_BOTTOM | goose::core::enumerations::ALIGN_TOP,
+        100,
+        100,
+        12,
+        100
+    );
+    
+    label1->setFont("C:\\WINDOWS\\FONTS\\ARIAL.TTF", 12);
+    label1->setText("JUMPING ZEBRAS VEX QUIRKY FROGS WHILE BAKING CRAZY ÉCLAIRS!");
+    
+    window1->addWidget(label1);
     
     window1->setHeader("Example Window 1", true, true, true, true);
     window1->isResizeable(true);

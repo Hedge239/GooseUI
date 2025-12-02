@@ -33,6 +33,7 @@ namespace goose::widgets::display
     // Core Functions
     void label::draw(core::templates::renderBase::renderer& renderer)
     {
+        graphics::layout::calculator::calculateLayout(_scaleMethod, _alignment, _sizeRestraints, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
         widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, _color);
     }
 
