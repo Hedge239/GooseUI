@@ -18,10 +18,10 @@ namespace goose::widgets::base
 
         for(const auto& gp : layout.getGlyphs())
         {
-            if (gp.glyph->width == 0 || gp.glyph->height == 0) { continue; }
-            renderer.drawTextureQuad(atlas.getID(), X, Y, gp.glyph->width, -gp.glyph->height, gp.glyph->u0, gp.glyph->u1, gp.glyph->v0, gp.glyph->v1, color);
+            if (gp.glyph->width == 0 || gp.glyph->height == 0) { X += gp.glyph->xAdvance; continue; }
+            renderer.drawTextureQuad(atlas.getID(), X, Y + gp.glyph->yOffset, gp.glyph->width, -gp.glyph->height, gp.glyph->u0, gp.glyph->u1, gp.glyph->v0, gp.glyph->v1, color);
 
-            X += (gp.glyph->xAdvance);
+            X += (gp.glyph->xAdvance) + 1.0f;
         }
     }
 }

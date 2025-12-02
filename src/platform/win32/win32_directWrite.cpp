@@ -111,7 +111,22 @@ namespace goose::platform::gWin32
 
         int width = bounds.right - bounds.left;
         int height = bounds.bottom - bounds.top;
-        if(width <= 0 || height <= 0) { static graphics::font::glyph empty{}; return empty; }
+        
+        if (width <= 0 || height <= 0)
+        {
+            // Keep metrics for space
+            graphics::font::glyph t_glyph;
+            t_glyph.u0 = t_glyph.u1 = t_glyph.v0 = t_glyph.v1 = 0.0f;
+            t_glyph.width  = 0.0f;
+            t_glyph.height = 0.0f;
+        
+            t_glyph.xAdvance = (float)(glyphMetrics.advanceWidth * scale);
+            t_glyph.xOffset  = (float)(glyphMetrics.leftSideBearing * scale);
+            t_glyph.yOffset  = (float)(fontMetrics.ascent * scale);
+        
+            _glyphs[codepoint] = t_glyph;
+            return _glyphs[codepoint];
+        }
         
         // Create and Convert bitmap to Grayscale
         std::vector<BYTE> bitmap(width * height * 3);
@@ -139,7 +154,7 @@ namespace goose::platform::gWin32
         t_glyph.height = (float)height;
         t_glyph.xAdvance = (float)(glyphMetrics.advanceWidth * scale);
         t_glyph.xOffset = (float)(glyphMetrics.leftSideBearing * scale);
-        t_glyph.yOffset = (float)(fontMetrics.ascent * scale);
+        t_glyph.yOffset = -bounds.top;
 
         _glyphs[codepoint] = t_glyph;
         return _glyphs[codepoint];
