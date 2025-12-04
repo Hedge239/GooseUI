@@ -27,8 +27,6 @@ namespace goose
                 core::templates::renderBase::color _color;
                 core::enumerations::componentScale _scaleMethod;
                 
-                std::unique_ptr<goose::graphics::font::font> _font;
-                
                 bool _isVisible;
                 
                 int _initalBounds[4];
@@ -37,6 +35,7 @@ namespace goose
                 int _minWidth, _minHeight;
                 int _posX, _posY;
                 
+                std::unique_ptr<goose::graphics::font::font> _font = nullptr;
                 std::string _label;
 
                 public:
