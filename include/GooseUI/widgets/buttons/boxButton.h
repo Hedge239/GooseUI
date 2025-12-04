@@ -9,7 +9,10 @@
 #include "GooseUI/core/event.h"
 
 #include "GooseUI/widgets/base/window.h"
+#include "GooseUI/widgets/base/text.h"
+
 #include "GooseUI/graphics/layoutCalculator.h"
+#include "GooseUI/graphics/font/font.h"
 
 #include <string>
 
@@ -39,14 +42,18 @@ namespace goose
                 int _width, _height;
                 int _minWidth, _minHeight;
                 int _posX, _posY;
-
+                
+                std::unique_ptr<goose::graphics::font::font> _font = nullptr;
+                core::templates::renderBase::color _labelColor;
                 std::string _label;
 
                 public:
                 boxButton(widgets::base::window* window, int eventID, goose::core::event::dispatcher& evtDispatcher, goose::core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
                 ~boxButton() = default;
 
-                void setLabel(const std::string& label);
+                void setFont(const std::string& fontFilePath, int size);
+                void setLabel(const std::string& text, core::templates::renderBase::color color);
+                
                 void setOutlineSize(int size);
 
                 // Overides

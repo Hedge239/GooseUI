@@ -1,5 +1,6 @@
 #include "GooseUI/widgets/buttons/boxButton.h"
 #include "GooseUI/core/templates/renderBase.h"
+#include "GooseUI/graphics/font/font.h"
 #include "GooseUI/graphics/layoutCalculator.h"
 
 
@@ -21,7 +22,8 @@ namespace goose::widgets::buttons
         { return new boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
 
     // Widget Specific Functions
-    void boxButton::setLabel(const std::string& label) { _label = label; }
+    void boxButton::setFont(const std::string& fontFilePath, int size){ if(_font == nullptr){ _font = goose::graphics::font::createFont(); } _font->load(fontFilePath, size); }   
+    void boxButton::setLabel(const std::string& text, core::templates::renderBase::color color){ _label = text; _labelColor = color; }
     void boxButton::setOutlineSize(int size) { _outlineSize = size; }
     
     // overides
@@ -33,6 +35,8 @@ namespace goose::widgets::buttons
 
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         renderer.drawRect(_posX, _posY, _width, _height, _color);
+        
+        if(_label != "" && _font != nullptr){ widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, _labelColor); }
     }
 
     void boxButton::handelEvent(core::event::event evtData)

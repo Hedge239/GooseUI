@@ -20,12 +20,7 @@ namespace goose::widgets::display
             { return new label(window, componentScaleing, componentAlign, X, Y, Width, Height); }
     
     // Widget Specific
-    void label::setFont(const std::string& fontFilePath, int size)
-    {  
-        _font = goose::graphics::font::createFont();
-        _font->load(fontFilePath, size);
-    }
-    
+    void label::setFont(const std::string& fontFilePath, int size){ if(_font == nullptr){ if(_font == nullptr){ _font = goose::graphics::font::createFont(); } _font->load(fontFilePath, size); }}
     void label::setText(const std::string& label){ _label = label; }
     void label::setColor(core::templates::renderBase::color color){ _color = color; }
     
@@ -33,13 +28,13 @@ namespace goose::widgets::display
     // Core Functions
     void label::draw(core::templates::renderBase::renderer& renderer)
     {
+        if(!_isVisible && _font == nullptr){ return; }
         graphics::layout::calculator::calculateLayout(_scaleMethod, _alignment, _sizeRestraints, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
+        
         widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, _color);
     }
 
-    void label::handelEvent(core::event::event evtData)
-    {
-    }
+    void label::handelEvent(core::event::event evtData){}
 
     // Visibility
     void label::show() { _isVisible = true; }
