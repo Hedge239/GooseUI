@@ -2,6 +2,7 @@
 #include "GooseUI/core/templates/renderBase.h"
 #include "GooseUI/graphics/font/font.h"
 #include "GooseUI/graphics/layoutCalculator.h"
+#include "GooseUI/widgets/base/text.h"
 
 
 namespace goose::widgets::buttons
@@ -36,7 +37,12 @@ namespace goose::widgets::buttons
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         renderer.drawRect(_posX, _posY, _width, _height, _color);
         
-        if(_label != "" && _font != nullptr){ widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, _labelColor); }
+        if(_label != "" && _font != nullptr)
+        { 
+            int textWidth, textHeight;
+            widgets::base::text::getSize(_font.get(), _label, 1, textWidth, textHeight);
+            widgets::base::text::draw(renderer, _font.get(), _label, _posX + (_width - textWidth) / 2, _posY + (_height + textHeight) / 2, 1, _labelColor); 
+        }
     }
 
     void boxButton::handelEvent(core::event::event evtData)
