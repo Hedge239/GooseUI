@@ -1,44 +1,35 @@
-## Stuff to do before 1.0
+## TODO - Anything marked is in progress
 
-#### Priority
+#### -- Backend --
 
-- [ ] Vulkan implimentation
+- [ ] Vulkan 
   - [ ] Native Wayland Support
   - [ ] Native X11 Support
-  - [ ] ? Native MacOS Support
+  - [ ] Native MacOS Support
   - [ ] Native Win32 Support
+  - [ ] Unicode Font bitmap rendering [DirectWrite/Freetype]
+  - [ ] SDF Rendering for text
 
-- [ ] Vulkan Unicode Font bitmap generator & rendering [DirectWrite/Freetype]
-
-#### Non-Priority
-
-- [ ] Basic Widgets
-  - [ ] TextBox  - Single-line Textbox
-  - [ ] TextArea - Multi-line Textbox
-  - [ ] Button
-  - [ ] ProgressBar
-  - [ ] Label
-  - [ ] Image
-- [ ] Dialogs
-
-#### Optional
-
-- [ ] Different Cursor types
-- [ ] System Notifications
-
-## In Progress
-
-- [ ] OpenGL implimentation
+- [x] OpenGL
   - [ ] Native Wayland Support
   - [x] Native X11 Support
   - [x] Native Win32 Support
-  - [ ] ? Native MacOS Support
+  - [ ] Native MacOS Support
+  - [x] SDF Rendering for text
 
-- [ ] OpenGL Unicode Font bitmap generator & rendering [Freetype]
+- [x] Unicode Font bitmap generator  [Freetype]
 
-## Completed
+#### -- Widgets --
 
-- [x] Widget Posistion and Scale Management
-- [x] Multi-Platform font base
-- [x] OpenGL Unicode Font bitmap generator & rendering [DirectWrite]
-- [x] Baisc Functions
+- [ ] TextBox  - Single-line Textbox
+- [ ] TextArea - Multi-line Textbox
+- [ ] ProgressBar
+- [ ] Image
+- [x] Button(s)
+- [x] label
+
+#### -- System --
+
+- [ ] Dialogs
+- [ ] Different Cursor types
+- [ ] System Notifications
