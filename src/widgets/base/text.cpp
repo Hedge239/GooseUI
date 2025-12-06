@@ -8,7 +8,7 @@
 
 namespace goose::widgets::base
 {
-    void text::draw(core::templates::renderBase::renderer& renderer, graphics::font::font* font, const std::string& text, int X, int Y, int scale, const core::templates::renderBase::color& color)
+    void text::draw(core::templates::renderBase::renderer& renderer, graphics::font::font* font, const std::string& text, int X, int Y, float scale, const core::templates::renderBase::color& color)
     {
         graphics::font::atlas& atlas = *font->getAtlas();
         renderer.uploadFontAtlas(atlas);
@@ -32,7 +32,7 @@ namespace goose::widgets::base
         }
     }
     
-    void text::getSize(graphics::font::font *font, const std::string &text, int scale, int &outWidth, int &outHeight)
+    void text::getSize(graphics::font::font *font, const std::string &text, float scale, int &outWidth, int &outHeight)
     {
         graphics::font::layout layout;
         layout.setText(text, font);
