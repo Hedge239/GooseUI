@@ -31,7 +31,7 @@ namespace goose::widgets::display
         if(!_isVisible && _font == nullptr){ return; }
         graphics::layout::calculator::calculateLayout(_scaleMethod, _alignment, _sizeRestraints, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
         
-        widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, _color);
+        widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, 1, _color);
     }
 
     void label::handelEvent(core::event::event evtData){}
