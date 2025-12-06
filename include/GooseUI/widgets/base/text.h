@@ -38,14 +38,14 @@ namespace goose
                     goose::graphics::font::font* font, 
                     const std::string& text, 
                     int X, int Y, 
-                    int scale, // 1 means no scale
+                    float scale, // 1 means no scale
                     const core::templates::renderBase::color& color
                 );
                 
                 static void getSize(
                     graphics::font::font* font, 
                     const std::string& text,
-                    int scale,
+                    float scale,
                     int& outWidth, int& outHeight
                 );
             };
