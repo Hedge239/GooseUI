@@ -37,7 +37,7 @@ int main()
         100, 50
     );
     
-    button1->setFont("C:\\WINDOWS\\FONTS\\ARIAL.TTF", 12);
+    button1->setFont("/home/Lucy/Desktop/GooseUI/build/tests/Hack-Regular.ttf", 12);
     button1->setLabel("Button Label :3", { 0.0f, 0.0f, 0.0f, 1.0f });
     
     window1->addWidget(button1);

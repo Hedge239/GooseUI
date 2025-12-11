@@ -18,17 +18,17 @@ namespace goose::widgets::base
 
         for(const graphics::font::glyphPos& gp : layout.getGlyphs())
         {
-            if (gp.glyph->width == 0 || gp.glyph->height == 0) { X += gp.glyph->xAdvance * scale; continue; }
+            if (gp.g->width == 0 || gp.g->height == 0) { X += gp.g->xAdvance * scale; continue; }
             renderer.drawTextureQuad(
                 atlas.getID(), 
-                X, Y + (gp.glyph->yOffset * scale), 
-                gp.glyph->width * scale, -gp.glyph->height * scale, 
-                gp.glyph->u0, gp.glyph->u1, 
-                gp.glyph->v0, gp.glyph->v1, 
+                X, Y + (gp.g->yOffset * scale), 
+                gp.g->width * scale, -gp.g->height * scale, 
+                gp.g->u0, gp.g->u1, 
+                gp.g->v0, gp.g->v1, 
                 color
             );
 
-            X += (gp.glyph->xAdvance * scale) + scale;
+            X += (gp.g->xAdvance * scale) + scale;
         }
     }
     
@@ -42,13 +42,13 @@ namespace goose::widgets::base
         
         for(const graphics::font::glyphPos& gp : layout.getGlyphs())
         {
-            if(gp.glyph->width == 0 || gp.glyph->height == 0)
+            if(gp.g->width == 0 || gp.g->height == 0)
             {
-                outWidth += gp.glyph->xAdvance * scale;
+                outWidth += gp.g->xAdvance * scale;
             }else 
             {
-                outWidth += (gp.glyph->xAdvance * scale) + scale;
-                if(gp.glyph->height * scale > outHeight){ outHeight = gp.glyph->height * scale; }
+                outWidth += (gp.g->xAdvance * scale) + scale;
+                if(gp.g->height * scale > outHeight){ outHeight = gp.g->height * scale; }
             }
         }
     }
