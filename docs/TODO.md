@@ -17,8 +17,6 @@
   - [ ] Native MacOS Support
   - [x] SDF Rendering for text
 
-- [x] Unicode Font bitmap generator  [Freetype]
-
 #### -- Widgets --
 
 - [ ] TextBox  - Single-line Textbox
