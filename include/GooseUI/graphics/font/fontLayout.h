@@ -14,7 +14,7 @@ namespace goose
         {
             struct glyphPos
             {
-                const glyph* glyph;
+                const glyph* g; // Changed because freetype :<
                 float x, y;
             };
 

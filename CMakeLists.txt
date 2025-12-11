@@ -6,10 +6,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # ------------------------------- Options -------------------------------
 option(GOOSEUI_XORG_SUPPORT "Legacy X11 Support" ON)
-option(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" ON)
+option(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" OFF)
 
 option(GOOSEUI_USE_OPENGL "Use OpenGL" ON)
-option(GOOSEUI_USE_VULKAN "Use Vulkan" OFF)
+option(GOOSEUI_USE_VULKAN "Use Vulkan" ON)
 
 option(GOOSEUI_INSTALL "ExportTargets" ON)
 option(GOOSEUI_BUILD_EXAMPLES "Builds included examples & test applications" ON)
@@ -50,6 +50,14 @@ if(GOOSEUI_USE_VULKAN)
     endif()
 endif()
 
+# Freetype if unix is detected
+if(UNIX OR APPLE)
+    find_package(Freetype REQUIRED)
+    message(STATUS "[GooseUI] -- Non-Windows Detected, FreeType Required")
+    list(APPEND GOOSEUI_LIBRARY Freetype::Freetype)
+    list(APPEND GOOSEUI_PLATFORM "${CMAKE_SOURCE_DIR}/src/platform/unix/unix_freeType.cpp")
+endif()
+
 # Display Services
 if(WIN32)
     message(STATUS "[GooseUI] -- OS: Windows")
@@ -86,7 +94,7 @@ if(UNIX AND NOT APPLE)
 
         find_package(Wayland REQUIRED)
 
-        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_INCLUDE_DIR}")
+        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_CLIENT_DIR}")
         list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
         list(APPEND GOOSEUI_FLAGS "wayland-client")
 
