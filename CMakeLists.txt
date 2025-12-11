@@ -54,8 +54,9 @@ endif()
 if(UNIX OR APPLE)
     find_package(Freetype REQUIRED)
     message(STATUS "[GooseUI] -- Non-Windows Detected, FreeType Required")
+
     list(APPEND GOOSEUI_LIBRARY Freetype::Freetype)
-    list(APPEND GOOSEUI_PLATFORM "${CMAKE_SOURCE_DIR}/src/platform/unix/unix_freeType.cpp")
+    include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/unix.cmake" REQUIRED)
 endif()
 
 # Display Services
