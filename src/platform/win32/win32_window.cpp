@@ -1,8 +1,5 @@
 #include "GooseUI/platform/win32/win32_window.h"
 
-//#include "GooseUI/graphics/gl_renderer.h"
-//#define GOOSEUI_ENABLE_OPENGL true
-
 namespace goose::platform::gWin32
 {
     LRESULT CALLBACK gWin32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
