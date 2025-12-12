@@ -1,8 +1,10 @@
 #include "GooseUI/widgets/buttons/boxButton.h"
-#include "GooseUI/core/templates/renderBase.h"
+#include "GooseUI/widgets/base/text.h"
+
 #include "GooseUI/graphics/font/font.h"
 #include "GooseUI/graphics/layoutCalculator.h"
-#include "GooseUI/widgets/base/text.h"
+
+#include "GooseUI/core/templates/renderBase.h"
 
 
 namespace goose::widgets::buttons
