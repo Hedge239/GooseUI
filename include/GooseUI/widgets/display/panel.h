@@ -1,5 +1,5 @@
-#ifndef _GOOSEUI_LABEL_H_
-#define _GOOSEUI_LABEL_H_
+#ifndef _GOOSEUI_PANEL_H_
+#define _GOOSEUI_PANEL_H_
 
 #include "GooseUI/core/templates/widgetBase.h"
 #include "GooseUI/core/templates/renderBase.h"
@@ -7,12 +7,10 @@
 #include "GooseUI/core/enumerations.h"
 #include "GooseUI/core/event.h"
 
-#include "GooseUI/graphics/font/font.h"
+#include "GooseUI/widgets/base/window.h"
 #include "GooseUI/graphics/layoutCalculator.h"
 
-#include "GooseUI/widgets/base/window.h"
-
-#include <string>
+#include <vector>
 
 namespace goose
 {
@@ -20,7 +18,7 @@ namespace goose
     {
         namespace display
         {
-            class label : public core::templates::widget::base
+            class panel : public core::templates::widget::base
             {
                 widgets::base::window* _host;
 
@@ -36,15 +34,15 @@ namespace goose
                 int _minWidth, _minHeight;
                 int _posX, _posY;
                 
-                std::unique_ptr<goose::graphics::font::font> _font = nullptr;
-                std::string _label;
-
-                public:
-                label(widgets::base::window* window, core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
-                ~label() = default;
+                std::vector<core::templates::widget::base*> _widgets;
                 
-                void setFont(const std::string& fontFilePath, int size);
-                void setText(const std::string& label);
+                public:
+                panel(widgets::base::window* window, core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
+                ~panel();
+                
+                void addChild(core::templates::widget::base* widget);
+                void removeChild(core::templates::widget::base* widget);
+                
                 void setColor(core::templates::renderBase::color color);
                 
                 // Overides
@@ -70,17 +68,17 @@ namespace goose
                 int getHeight() override;
             };
             
-            label* createLabel(
+            panel* createPanel(
                 widgets::base::window* window,
                 core::enumerations::componentScale componentScaleing, 
                 int componentAlign, 
                 int X, 
                 int Y, 
                 int Width, 
-                int Height
+                int Height 
             );
         }
     }
 }
 
-#endif /*_GOOSEUI_LABEL_H_*/
+#endif /*_GOOSEUI_PANEL_H_*/

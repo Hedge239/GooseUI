@@ -4,4 +4,5 @@ set(
     "src/widgets/base/text.cpp"
     "src/widgets/buttons/boxButton.cpp"
     "src/widgets/display/label.cpp"
+    "src/widgets/display/panel.cpp"
 )
