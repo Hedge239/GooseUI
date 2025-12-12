@@ -42,7 +42,7 @@ namespace goose::platform::gWin32
         _size = (float)pixelSize;
 
         HRESULT hResult = _factory->CreateFontFileReference(std::wstring(path.begin(), path.end()).c_str(), nullptr, &_fontFile);
-        if(FAILED(hResult)) { return false; }
+        if(FAILED(hResult)) { printf("GooseUI: Faild to load Font: %s \n", path.c_str()); return false; }
 
         BOOL supported = false; // WHAT IS THE DIFFERENCE AGHAHGAHG
         UINT32 numberOfFaces;
@@ -61,7 +61,7 @@ namespace goose::platform::gWin32
 
     const graphics::font::glyph& gWin32_DirectWrite::getGlyph(uint32_t codepoint)
     {
-        if(!_initialized) { printf("GooseUI: Font not Loaded before use \n"); static graphics::font::glyph empty{}; return empty; }
+        if(!_initialized) { static graphics::font::glyph empty{}; return empty; }
 
         std::unordered_map<uint32_t, graphics::font::glyph>::iterator iterator = _glyphs.find(codepoint);
         if(iterator != _glyphs.end()) { return iterator->second; }
