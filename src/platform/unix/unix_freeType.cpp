@@ -61,7 +61,7 @@ namespace goose::platform::gUnix
 
     const graphics::font::glyph& gUnix_FreeType::getGlyph(uint32_t codepoint)
     {
-        if(!_initialized){ printf("GooseUI: Font not Loaded before use \n"); static graphics::font::glyph empty{}; return empty; }
+        if(!_initialized){ static graphics::font::glyph empty{}; return empty; }
 
         std::unordered_map<uint32_t, graphics::font::glyph>::iterator iterator = _glyphs.find(codepoint);
         if(iterator != _glyphs.end()) { return iterator->second; }
