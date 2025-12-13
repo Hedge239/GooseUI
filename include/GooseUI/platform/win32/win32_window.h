@@ -64,6 +64,7 @@ namespace goose
 
                 // Widget Management
                 void addWidget(core::templates::widget::base* widget) override;
+                void removeWidget(core::templates::widget::base* widget) override;
                 void renderWidgets() override;
                 void handelEvents() override;
 

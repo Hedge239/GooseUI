@@ -37,6 +37,7 @@ namespace goose
 
                 // Widget Management
                 virtual void addWidget(core::templates::widget::base* widget) = 0;
+                virtual void removeWidget(core::templates::widget::base* widget) = 0;
                 virtual void renderWidgets() = 0;
                 virtual void handelEvents() = 0;
 

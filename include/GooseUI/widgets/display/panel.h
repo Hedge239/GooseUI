@@ -12,6 +12,11 @@
 
 #include <vector>
 
+// Origionally I was just going to pass the panel calls to the widgets,
+// But I found it more effective to just add it to the window it-self then call the functions to the widgets
+// Albeit it would require major refactoring for anything else, so the widgets still go based off the window, the pannel just groups them.
+// Might change scaleing & pos later but idk
+
 namespace goose
 {
     namespace widgets
@@ -38,9 +43,9 @@ namespace goose
                 
                 public:
                 panel(widgets::base::window* window, core::enumerations::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
-                ~panel();
+                ~panel() = default;
                 
-                void addChild(core::templates::widget::base* widget);
+                void addChild(core::templates::widget::base* widget);   // MUST BE AFTER ADDING PANEL TO WINDOW
                 void removeChild(core::templates::widget::base* widget);
                 
                 void setColor(core::templates::renderBase::color color);

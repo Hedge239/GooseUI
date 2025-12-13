@@ -19,22 +19,53 @@ namespace goose::widgets::display
             { return new panel(window, componentScaleing, componentAlign, X, Y, Width, Height); }
             
         // Widget Specific
-        void panel::addChild(core::templates::widget::base* widget){ _widgets.push_back(widget); }
+        void panel::addChild(core::templates::widget::base* widget){ _widgets.push_back(widget); _host->addWidget(widget); }
         void panel::removeChild(core::templates::widget::base* widget)
         {
             std::vector<core::templates::widget::base*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
-            if(target != _widgets.end()){ _widgets.erase(target); }
+            if(target != _widgets.end()){ _widgets.erase(target); _host->removeWidget(widget); }
         }
         
         void panel::setColor(core::templates::renderBase::color color){ _color = color; }
         
         // overides
-        void panel::draw(core::templates::renderBase::renderer& renderer){}
+        void panel::draw(core::templates::renderBase::renderer& renderer)
+        {
+            if(!_isVisible) { return; }
+            graphics::layout::calculator::calculateLayout(_scaleMethod, _alignment, _sizeRestraints, _initalBounds, _host->getWidth(), _host->getHeight(), _posX, _posY, _width, _height);
+            
+            renderer.drawRect(_posX, _posY, _width, _height, _color);
+        }
+        
         void panel::handelEvent(core::event::event evtData){}
     
         // Visibility
-        void panel::show() { _isVisible = true; }
-        void panel::hide() { _isVisible = false; }
+        void panel::show() 
+        { 
+            _isVisible = true;
+            
+            if(_widgets.empty()){ return; }
+            for(core::templates::widget::base* widget : _widgets)
+            {
+                if(widget)
+                {
+                    widget->show();
+                }
+            } 
+        }
+        void panel::hide() 
+        { 
+            _isVisible = false; 
+            
+            if(_widgets.empty()){ return; }
+            for(core::templates::widget::base* widget : _widgets)
+            {
+                if(widget)
+                {
+                    widget->hide();
+                }
+            } 
+        }
     
         // Posistioning
         void panel::setSize(int width, int height) { _width = width; _height = height;}
