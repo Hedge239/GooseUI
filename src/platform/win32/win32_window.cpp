@@ -1,5 +1,8 @@
 #include "GooseUI/platform/win32/win32_window.h"
 
+#include <algorithm>
+
+
 namespace goose::platform::gWin32
 {
     LRESULT CALLBACK gWin32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -279,6 +282,12 @@ namespace goose::platform::gWin32
 
     // Widget Management
     void gWin32_window::addWidget(core::templates::widget::base* widget) { _widgets.push_back(widget); }
+    void gWin32_window::removeWidget(core::templates::widget::base* widget)
+    {
+        std::vector<core::templates::widget::base*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
+        if(target != _widgets.end()){ _widgets.erase(target); }
+    }
+    
     void gWin32_window::renderWidgets()
     {
         if(!_backend) return;

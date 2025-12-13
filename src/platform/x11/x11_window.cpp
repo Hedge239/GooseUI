@@ -1,6 +1,6 @@
 #include "GooseUI/platform/x11/x11_window.h"
-#include "GooseUI/core/event.h"
-#include "GooseUI/graphics/gl/gl_renderer.h"
+
+#include <algorithm>
 
 
 namespace goose::platform::gX11
@@ -288,6 +288,12 @@ namespace goose::platform::gX11
 
     // Widget Management
     void gX11_window::addWidget(core::templates::widget::base* widget) { _widgets.push_back(widget); }
+    void gX11_window::removeWidget(core::templates::widget::base* widget)
+    {
+        std::vector<core::templates::widget::base*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
+        if(target != _widgets.end()){ _widgets.erase(target); }
+    }
+    
     void gX11_window::renderWidgets()
     {
         if(!_backend) return;
