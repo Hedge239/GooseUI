@@ -49,7 +49,15 @@ namespace goose::core
             if(!running) { break; }
 
             #if defined(_WIN32)
-
+            
+            MSG msg; // Fixes issue when closing window, still need to fix the unfocused window closeing all windows issue though
+            while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                if(msg.message == WM_QUIT) return;
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+            
             MsgWaitForMultipleObjects(0, nullptr, FALSE, INFINITE, QS_ALLINPUT);
             continue;
 
