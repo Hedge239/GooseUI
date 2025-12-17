@@ -1,6 +1,7 @@
 #include "GooseUI/platform/win32/win32_window.h"
 
 #include <algorithm>
+#include <filesystem>
 
 
 namespace goose::platform::gWin32
@@ -226,6 +227,15 @@ namespace goose::platform::gWin32
 
     // OVERIDES
     // Window Configuration
+    void gWin32_window::setWindowIcon(const std::string& ICO)
+    {
+        if(std::filesystem::path(ICO).extension() != ".ico"){ printf("GooseUI: Invalid Window Icon: %s \n", ICO.c_str()); }
+        
+        HICON hIcon = (HICON)LoadImageA(nullptr, ICO.c_str(), IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+        SendMessage(_hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+        SendMessage(_hwnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
+    };
+    
     void gWin32_window::setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise)
     {
         if(!title.empty()) { SetWindowTextA(_hwnd, title.c_str()); }

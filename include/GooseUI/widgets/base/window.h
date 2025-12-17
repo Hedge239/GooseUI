@@ -18,6 +18,7 @@ namespace goose
                 virtual ~window() = default;
 
                 // Window Configuration
+                virtual void setWindowIcon(const std::string& ICO) = 0; // To Simplify I will only accept .ico for icons on all platforms
                 virtual void setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise) = 0;
                 
                 virtual void isResizeable(bool isResizeable) = 0;

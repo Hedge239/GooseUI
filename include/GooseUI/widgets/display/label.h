@@ -7,7 +7,7 @@
 #include "GooseUI/core/enumerations.h"
 #include "GooseUI/core/event.h"
 
-#include "GooseUI/graphics/font/font.h"
+#include "GooseUI/widgets/base/text.h"
 #include "GooseUI/graphics/layoutCalculator.h"
 
 #include "GooseUI/widgets/base/window.h"
