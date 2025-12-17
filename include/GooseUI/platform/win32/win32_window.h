@@ -45,6 +45,7 @@ namespace goose
 
                 // Overides
                 // Window Configuration
+                void setWindowIcon(const std::string& ICO) override;
                 void setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise) override;
                 
                 void isResizeable(bool isResizeable) override;

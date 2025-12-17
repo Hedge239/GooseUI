@@ -182,6 +182,11 @@ namespace goose::platform::gX11
 
     // OVERIDES
     // Window Configuration
+    void gX11_window::setWindowIcon(const std::string& ICO)
+    {
+        
+    };
+    
     void gX11_window::setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise)
     {
         if(!title.empty()) { XStoreName(_display, _window, title.c_str()); }
