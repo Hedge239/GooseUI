@@ -15,14 +15,14 @@
   - [x] Native X11 Support
   - [x] Native Win32 Support
   - [ ] Native MacOS Support
-  - [x] SDF Rendering for text
+  - [ ] SDF Rendering for text
 
 #### -- Widgets --
 
 - [ ] TextBox  - Single-line Textbox
 - [ ] TextArea - Multi-line Textbox
 - [ ] ProgressBar
-- [ ] Image
+- [x] Image
 - [x] Button(s)
 - [x] label
 
