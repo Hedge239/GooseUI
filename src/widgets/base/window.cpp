@@ -5,7 +5,7 @@
     #include "GooseUI/platform/win32/win32_window.h"
     #define API goose::platform::gWin32::gWin32_window(title, width, height, posistion, graphicsBackend);
 
-    goose::widgets::base::window* goose::widgets::base::createWindow(const std::string& title, int width, int height, goose::core::enumerations::windowPos posistion, goose::core::enumerations::graphicsBackend graphicsBackend)
+    goose::interface::iWindow* goose::widgets::base::createWindow(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend)
     {
         return new API;
     }
@@ -14,7 +14,7 @@
 
     #include "GooseUI/platform/x11/x11_window.h"
 
-    goose::widgets::base::window* goose::widgets::base::createWindow(const std::string& title, int width, int height, goose::core::enumerations::windowPos posistion, goose::core::enumerations::graphicsBackend graphicsBackend)
+    goose::interface::iWindow* goose::widgets::base::createWindow(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend)
     {
         return new goose::platform::gX11::gX11_window(title, width, height, posistion, graphicsBackend);
     }

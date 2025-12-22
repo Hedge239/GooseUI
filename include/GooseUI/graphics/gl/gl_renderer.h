@@ -1,14 +1,15 @@
 #ifndef _GOOSEUI_GL_RENDERER_
 #define _GOOSEUI_GL_RENDERER_
 
-#include "GooseUI/core/templates/renderBase.h"
+#include "GooseUI/core/types.h"
+#include "GooseUI/interfaces/iRenderer.h"
 
-#include <X11/Xlib.h>
 #include <string>
 
 #if defined(_WIN32)
 
     #include <windows.h>
+    #undef interface
 
 #elif defined(__APPLE__)
 
@@ -17,6 +18,7 @@
 #else
 
     #if GOOSEUI_XORG_SUPPORT
+        #include <X11/Xlib.h>
         #include <GL/glx.h>
     #endif
 
@@ -74,7 +76,7 @@ namespace goose
                 unsigned int vao = 0;
             };
 
-            class glRenderer : public core::templates::renderBase::renderer
+            class glRenderer : public interface::iRenderer
             {
                 glRenderer();
                 ~glRenderer();
@@ -103,11 +105,11 @@ namespace goose
                 // Overides
                 void uploadFontAtlas(graphics::font::atlas& atlas) override;
 
-                void beginFrame(int windowWidth, int windowHeight, core::templates::renderBase::color color) override;
+                void beginFrame(int windowWidth, int windowHeight, const core::types::color& color) override;
                 void endFrame() override;
 
-                void drawTextureQuad(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const core::templates::renderBase::color& C) override;
-                void drawRect(float X, float Y, float W, float H, const core::templates::renderBase::color& C) override;
+                void drawTextureQuad(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const core::types::color& C) override;
+                void drawRect(float X, float Y, float W, float H, const core::types::color& C) override;
             };
         }
     }

@@ -5,12 +5,9 @@
 
 namespace goose
 {
-    namespace widgets
+    namespace interface
     {
-        namespace base
-        {
-            class window; // FORWARD DELCERATION
-        }
+        class iWindow; // FORWARD DECLERATION
     }
 
     namespace core
@@ -18,7 +15,7 @@ namespace goose
         class eventloop
         {
             public:
-            static void run(std::initializer_list<widgets::base::window*> windows);
+            static void run(std::initializer_list<interface::iWindow*> windows);
         };
     }
 }

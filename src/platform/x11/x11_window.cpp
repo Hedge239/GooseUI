@@ -9,7 +9,7 @@ namespace goose::platform::gX11
     #if GOOSEUI_ENABLE_OPENGL
     
 
-    void gX11_window::_createContext_openGL()
+    void gX11_window::_gl_createContext()
     {
         static GLint glxAttribs[] = {
 		GLX_RGBA,
@@ -30,7 +30,7 @@ namespace goose::platform::gX11
         XFree(fbc);
     }
 
-    void gX11_window::_shareContext_openGL()
+    void gX11_window::_gl_shareContext()
     {
         static GLint glxAttribs[] = {
 		GLX_RGBA,
@@ -57,7 +57,7 @@ namespace goose::platform::gX11
         }
     }
 
-    void gX11_window::_destroyContext_openGL()
+    void gX11_window::_gl_destoryContext()
     {
     }
     #endif
@@ -68,7 +68,7 @@ namespace goose::platform::gX11
 
 namespace goose::platform::gX11
 {
-    gX11_window::gX11_window(const std::string& title, int width, int height, goose::core::enumerations::windowPos posistion, goose::core::enumerations::graphicsBackend graphicsBackend)
+    gX11_window::gX11_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBacken)
     {
         _display = XOpenDisplay(nullptr);
         if(!_display) { printf("[GooseUI] -- Faild to open xDisplay\n"); exit(1); }
@@ -82,33 +82,33 @@ namespace goose::platform::gX11
         int posX, posY;
         switch(posistion)
         {
-            case goose::core::enumerations::SCREEN_TOP:
+            case core::types::windowPosistion::SCREEN_TOP:
                 posX = (screenWidth - width) / 2;
                 break;
-            case goose::core::enumerations::SCREEN_BOTTOM:
+            case core::types::windowPosistion::SCREEN_BOTTOM:
                 posX = (screenWidth - width) / 2;
                 posY = screenHeight - height;
                 break;
-            case goose::core::enumerations::SCREEN_LEFT:
+            case core::types::windowPosistion::SCREEN_LEFT:
                 posY = (screenHeight - height) / 2;
                 break;
-            case goose::core::enumerations::SCREEN_RIGHT:
+            case core::types::windowPosistion::SCREEN_RIGHT:
                 posX = screenWidth - width;
                 posY = (screenHeight - height) / 2;
                 break;
-            case goose::core::enumerations::SCREEN_TOP_LEFT:
+            case core::types::windowPosistion::SCREEN_TOP_LEFT:
                 break;
-            case goose::core::enumerations::SCREEN_TOP_RIGHT:
+            case core::types::windowPosistion::SCREEN_TOP_RIGHT:
                 posX = screenWidth - width;
                 break;
-            case goose::core::enumerations::SCREEN_BOTTOM_LEFT:
+            case core::types::windowPosistion::SCREEN_BOTTOM_LEFT:
                 posY = screenHeight - height;
                 break;
-            case goose::core::enumerations::SCREEN_BOTTOM_RIGHT:
+            case core::types::windowPosistion::SCREEN_BOTTOM_RIGHT:
                 posX = screenWidth - width;
                 posY = screenHeight - height;
                 break;
-            case goose::core::enumerations::SCREEN_CENTER:
+            case core::types::windowPosistion::SCREEN_CENTER:
                 posX = (screenWidth - width) / 2;
                 posY = (screenHeight - height) / 2;
                 break;
@@ -142,16 +142,16 @@ namespace goose::platform::gX11
         switch(graphicsBackend)
         {
             #if GOOSEUI_ENABLE_OPENGL
-            case core::enumerations::opengl:
-                _createContext_openGL();
+            case core::types::graphicsBackend::opengl:
+                _gl_createContext();
                 _backend = &goose::graphics::gl::glRenderer::getRenderer();
-                _backendContext = core::enumerations::opengl;
-                _shareContext_openGL();
+                _context = core::types::graphicsBackend::opengl;
+                _gl_shareContext();
                 break;
             #endif
 
             #if GOOSEUI_ENABLE_VULKAN
-            case core::enumerations::vulkan:
+            case core::types::graphicsBackend::vulkan:
                 break;
             #endif
 
@@ -160,19 +160,19 @@ namespace goose::platform::gX11
                 break;
         }
 
-        _isRunning = true;
+        _running = true;
     }
 
     gX11_window::~gX11_window()
     {
-        _isRunning = false;
+        _running = false;
 
         #if GOOSEUI_ENABLE_OPENGL
-            if(_backendContext == core::enumerations::opengl) { _destroyContext_openGL(); }
+            if(_context == core::types::graphicsBackend::opengl) { _gl_destoryContext(); }
         #endif
 
         #if GOOSEUI_ENABLE_VULKAN
-            if(_backendContext == core::enumerations::vulkan) { _destroyContext_vulkan(); }
+            if(_context == core::types::graphicsBackend::opengl) { _vk_destroyContext(); }
         #endif
 
         if(_backend) { delete _backend; };
@@ -292,10 +292,10 @@ namespace goose::platform::gX11
     void gX11_window::destroy() { XDestroyWindow(_display, _window); }
 
     // Widget Management
-    void gX11_window::addWidget(core::templates::widget::base* widget) { _widgets.push_back(widget); }
-    void gX11_window::removeWidget(core::templates::widget::base* widget)
+    void gX11_window::addWidget(interface::iWidget* widget) { _widgets.push_back(widget); }
+    void gX11_window::removeWidget(interface::iWidget* widget)
     {
-        std::vector<core::templates::widget::base*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
+        std::vector<interface::iWidget*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
         if(target != _widgets.end()){ _widgets.erase(target); }
     }
     
@@ -305,13 +305,12 @@ namespace goose::platform::gX11
 
         #if GOOSEUI_ENABLE_OPENGL
         graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(_backend);
-        ;
-        if(_backendContext == core::enumerations::opengl) {  glXMakeCurrent(_display, _window, glBackend->getContext().glxContext); }
+        if(_context == core::types::graphicsBackend::opengl{  glXMakeCurrent(_display, _window, glBackend->getContext().glxContext); }
         #endif
 
         _backend->beginFrame(getWidth(), getHeight(), _bgColor);
 
-        for(core::templates::widget::base* widget : _widgets)
+        for(interface::iWidget* widget : _widgets)
         {
             if(widget)
             {
@@ -322,7 +321,7 @@ namespace goose::platform::gX11
         _backend->endFrame();
 
         #if GOOSEUI_ENABLE_OPENGL
-        if(_backendContext == core::enumerations::opengl) { glXSwapBuffers(_display, _window); }
+        if(_context == core::types::graphicsBackend::opengl){ glXSwapBuffers(_display, _window); }
         #endif
     }
 
@@ -335,7 +334,7 @@ namespace goose::platform::gX11
             
             // Set evtData & run event loop
             bool handelWidgets = true;
-            core::event::event evtData;
+            core::types::event::eventData evtData;
             
             switch (event.type)
             {
@@ -349,8 +348,8 @@ namespace goose::platform::gX11
                     evtData.mouseX = event.xbutton.x;
                     evtData.mouseY = event.xbutton.y;
 
-                    if(event.xbutton.button == Button1) { evtData.type = core::event::eventType::leftMouseDown; break; }
-                    if(event.xbutton.button == Button3) { evtData.type = core::event::eventType::rightMouseDown; break; }
+                    if(event.xbutton.button == Button1) { evtData.type = core::types::event::eventType::leftMouseDown; break; }
+                    if(event.xbutton.button == Button3) { evtData.type = core::types::event::eventType::rightMouseDown; break; }
                     break;
                 }
                 case ButtonRelease:
@@ -358,7 +357,7 @@ namespace goose::platform::gX11
                     evtData.mouseX = event.xbutton.x;
                     evtData.mouseY = event.xbutton.y;
                     
-                    if(event.xbutton.button == Button1) { evtData.type = core::event::eventType::leftMouseUp; break; }
+                    if(event.xbutton.button == Button1) { evtData.type = core::types::event::eventType::leftMouseUp; break; }
                     break;
                 }
 
@@ -367,7 +366,7 @@ namespace goose::platform::gX11
 
             if(handelWidgets)
             {
-                for(core::templates::widget::base* widget : _widgets)
+                for(interface::iWidget* widget : _widgets)
                 {
                     if(widget)
                     {
@@ -384,9 +383,7 @@ namespace goose::platform::gX11
     Display* gX11_window::getDisplay() { return _display; }
     Window gX11_window::getWindow() { return _window; }
 
-    bool gX11_window::isRunning() { return _isRunning; }
-
-    int gX11_window::getDisplayService() const { return core::enumerations::displayService::x11; }
+    int gX11_window::getDisplayService() const { return core::types::window::displayService::x11; }
     int gX11_window::getWidth() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.width; }
     int gX11_window::getHeight() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.height; }
 }

@@ -5,3 +5,4 @@ include_directories("../include")
 link_libraries(GooseUI OpenGL::GL)
 
 add_executable(EventTest EventTest.cpp)
+add_executable(ParentTest ParentTest.cpp)

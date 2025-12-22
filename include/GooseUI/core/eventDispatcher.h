@@ -1,7 +1,7 @@
 #ifndef _GOOSEUI_EVENTDISPATCHER_H_
 #define _GOOSEUI_EVENTDISPATCHER_H_
 
-#include "GooseUI/core/event.h"
+#include "GooseUI/core/types.h"
 
 #include <unordered_map>
 #include <functional>
@@ -14,11 +14,11 @@ namespace goose
         {
             class dispatcher
             {
-                std::unordered_map<int, std::function<void(event)>> EventsObj;
+                std::unordered_map<int, std::function<void(types::event::eventData)>> EventsObj;
 
                 public:
-                void add(const int& eventID, std::function<void(event)> EvtCallback);
-                void dispatch(const int& eventID, const event& Evt);
+                void add(const int& eventID, std::function<void(types::event::eventData)> EvtCallback);
+                void dispatch(const int& eventID, const types::event::eventData& Evt);
             };
         }
     }

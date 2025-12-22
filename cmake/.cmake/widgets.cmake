@@ -3,6 +3,6 @@ set(
     "src/widgets/base/window.cpp"
     "src/widgets/base/text.cpp"
     "src/widgets/buttons/boxButton.cpp"
+    "src/widgets/containers/panel.cpp"
     "src/widgets/display/label.cpp"
-    "src/widgets/display/panel.cpp"
 )

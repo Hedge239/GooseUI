@@ -1,9 +1,11 @@
 #ifndef _GOOSEUI_X11_WINDOW_H_
 #define _GOOSEUI_X11_WINDOW_H_
 
-#include "GooseUI/widgets/base/window.h"
 #include "GooseUI/graphics/context.h"
-#include "GooseUI/core/templates/renderBase.h"
+
+#include "GooseUI/interfaces/iWindow.h"
+#include "GooseUI/interfaces/iWidget.h"
+#include "GooseUI/interfaces/iRenderer.h"
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -15,28 +17,21 @@ namespace goose
     {
         namespace gX11
         {
-            class gX11_window : public widgets::base::window
+            class gX11_window : public interface::iWindow
             {
                 Display* _display = nullptr;
                 ::Window _window;
 
                 Atom _wm_delete_window;
-
-                goose::core::templates::renderBase::color _bgColor;
-                goose::core::templates::renderBase::renderer* _backend;
-                goose::core::enumerations::graphicsBackend _backendContext;
-
-                std::vector<core::templates::widget::base*> _widgets;
-                bool _isRunning;
-
-                void _createContext_openGL();
-                void _shareContext_openGL();
-                void _destroyContext_openGL();
-                void _createContext_vulkan();
-                void _destroyContext_vulkan();
+                
+                void _gl_createContext();
+                void _gl_shareContext();
+                void _gl_destoryContext();
+                void _vk_createContext();
+                void _vk_shareContext();
 
                 public:
-                gX11_window(const std::string& title, int width, int height, goose::core::enumerations::windowPos posistion, goose::core::enumerations::graphicsBackend graphicsBacken);
+                gX11_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend);
                 virtual ~gX11_window();
 
                 ::Window getWindow();
@@ -63,14 +58,13 @@ namespace goose
                 void destroy() override;
 
                 // Widget Management
-                void addWidget(core::templates::widget::base* widget) override;
-                void removeWidget(core::templates::widget::base* widget) override;
+                void addWidget(interface::iWidget* widget) override;
+                void removeWidget(interface::iWidget* widget) override;
                 void renderWidgets() override;
                 void handelEvents() override;
 
                 // Reuturns
                 int getDisplayService() const override;
-                bool isRunning() override;
                 int getWidth() override;
                 int getHeight() override;
             };
