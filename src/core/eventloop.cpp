@@ -1,11 +1,13 @@
 #include "GooseUI/core/eventloop.h"
-#include "GooseUI/core/enumerations.h"
-#include "GooseUI/widgets/base/window.h"
+#include "GooseUI/core/types.h"
+
+#include "GooseUI/interfaces/iWindow.h"
 
 
 #if defined(_WIN32)
 
     #include <windows.h>
+    #undef interface
 
 #elif defined(__APPLE__)
 
@@ -25,7 +27,7 @@
 
 namespace goose::core
 {
-    void eventloop::run(std::initializer_list<widgets::base::window*> windows)
+    void eventloop::run(std::initializer_list<interface::iWindow*> windows)
     {
         int displayService = (*windows.begin())->getDisplayService();
         bool running = false;
@@ -34,7 +36,7 @@ namespace goose::core
         while(true)
         {
             running = false;
-            for(widgets::base::window* window : windows)
+            for(interface::iWindow* window : windows)
             {
                 if(!window->isRunning()) 
                 {
@@ -75,7 +77,7 @@ namespace goose::core
                     fd_set in_fds;
 
                     FD_ZERO(&in_fds);
-                    for(widgets::base::window* window : windows)
+                    for(interface::iWindow* window : windows)
                     {
                         platform::gX11::gX11_window* x11Window = dynamic_cast<platform::gX11::gX11_window*>(window);
                         int xfd = ConnectionNumber(x11Window->getDisplay());

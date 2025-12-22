@@ -2,7 +2,7 @@
 
 namespace goose::core::event
 {
-    void dispatcher::dispatch(const int& eventID, const event& Evt)
+    void dispatcher::dispatch(const int& eventID, const types::event::eventData& Evt)
     {
         if(dispatcher::EventsObj.count(eventID))
         {
@@ -10,5 +10,5 @@ namespace goose::core::event
         }
     }
 
-    void dispatcher::add(const int& eventID, std::function<void(event)> EvtCallback) { dispatcher::EventsObj[eventID] = EvtCallback; }
+    void dispatcher::add(const int& eventID, std::function<void(types::event::eventData)> EvtCallback) { dispatcher::EventsObj[eventID] = EvtCallback; }
 }

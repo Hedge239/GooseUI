@@ -99,7 +99,7 @@ namespace goose::graphics::gl // EXTERNAL
         atlas.uploaded();
     }
 
-    void glRenderer::beginFrame(int windowWidth, int windowHeight, core::templates::renderBase::color color)
+    void glRenderer::beginFrame(int windowWidth, int windowHeight, const core::types::color& color)
     {
         _windowWidth = windowWidth;
         _windowHeight = windowHeight;
@@ -121,7 +121,7 @@ namespace goose::graphics::gl // EXTERNAL
         // HANDELED PER WINDOW
     }
 
-    void glRenderer::drawTextureQuad(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const core::templates::renderBase::color& C)
+    void glRenderer::drawTextureQuad(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const core::types::color& C)
     {
         float x0 = (2.0f * X) / _windowWidth - 1.0f;
         float x1 = (2.0f * (X + W)) / _windowWidth - 1.0f;
@@ -154,7 +154,7 @@ namespace goose::graphics::gl // EXTERNAL
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void glRenderer::drawRect(float X, float Y, float W, float H, const core::templates::renderBase::color& C)
+    void glRenderer::drawRect(float X, float Y, float W, float H, const core::types::color& C)
     {
         float x0 = (2.0f * X) / _windowWidth - 1.0f;
         float x1 = (2.0f * (X + W)) / _windowWidth - 1.0f;

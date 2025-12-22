@@ -1,14 +1,16 @@
 #ifndef _GOOSEUI_WIN32_WINDOW_H_
 #define _GOOSEUI_WIN32_WINDOW_H_
 
-#include "GooseUI/widgets/base/window.h"
 #include "GooseUI/graphics/context.h"
-#include "GooseUI/core/templates/renderBase.h"
-#include "GooseUI/core/event.h"
+
+#include "GooseUI/interfaces/iWindow.h"
+#include "GooseUI/interfaces/iWidget.h"
+#include "GooseUI/interfaces/iRenderer.h"
 
 #include <windows.h>
 #include <cstdio>
-#include <vector>
+
+#undef interface
 
 namespace goose
 {
@@ -16,29 +18,22 @@ namespace goose
     {
         namespace gWin32
         {
-            class gWin32_window : public widgets::base::window
+            class gWin32_window : public interface::iWindow
             {
                 HWND _hwnd;
                 HINSTANCE _hInstance;
-
-                goose::core::templates::renderBase::color _bgColor;
-                goose::core::templates::renderBase::renderer* _backend;
-                goose::core::enumerations::graphicsBackend _backendContext;
-
-                std::vector<core::templates::widget::base*> _widgets;
-                bool _isRunning;
-
-                void _createContext_openGL();
-                void _shareContext_openGL();
-                void _destroyContext_openGL();
-                void _createContext_vulkan();
-                void _destroyContext_vulkan();
+                
+                void _gl_createContext();
+                void _gl_shareContext();
+                void _gl_destoryContext();
+                void _vk_createContext();
+                void _vk_shareContext();
 
                 protected:
                 static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
                 public:
-                gWin32_window(const std::string& title, int width, int height, goose::core::enumerations::windowPos posistion, goose::core::enumerations::graphicsBackend graphicsBacken);
+                gWin32_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend);
                 virtual ~gWin32_window();
 
                 HWND getHwnd();
@@ -64,13 +59,12 @@ namespace goose
                 void destroy() override;
 
                 // Widget Management
-                void addWidget(core::templates::widget::base* widget) override;
-                void removeWidget(core::templates::widget::base* widget) override;
+                void addWidget(interface::iWidget* widget) override;
+                void removeWidget(interface::iWidget* widget) override;
                 void renderWidgets() override;
                 void handelEvents() override;
 
                 // Reuturns
-                bool isRunning() override;
                 int getDisplayService() const override;
                 int getWidth() override;
                 int getHeight() override;

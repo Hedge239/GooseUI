@@ -1,14 +1,14 @@
 #include "GooseUI/widgets/base/text.h"
 
+#include "GooseUI/interfaces/iRenderer.h"
+
 #include "GooseUI/graphics/font/fontLayout.h"
 #include "GooseUI/graphics/font/font.h"
-
-#include "GooseUI/core/templates/renderBase.h"
 
 
 namespace goose::widgets::base
 {
-    void text::draw(core::templates::renderBase::renderer& renderer, graphics::font::font* font, const std::string& text, int X, int Y, float scale, const core::templates::renderBase::color& color)
+    void text::draw(interface::iRenderer& renderer, graphics::font::font* font, const std::string& text, int X, int Y, float scale, const core::types::color& color)
     {
         graphics::font::atlas& atlas = *font->getAtlas();
         renderer.uploadFontAtlas(atlas);

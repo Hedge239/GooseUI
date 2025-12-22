@@ -1,22 +1,11 @@
 #ifndef _GOOSEUI_TEXT_H_
 #define _GOOSEUI_TEXT_H_
 
+#include "GooseUI/core/types.h"
 #include "GooseUI/graphics/font/fontManager.h"
 
 namespace goose
 {
-    namespace core
-    {
-        namespace templates
-        {
-            namespace renderBase
-            {
-                struct color; // FORWARD DECLERATION
-                class renderer; // FORWARD DECLERATION
-            }
-        }
-    }
-
     namespace graphics
     {
         namespace font
@@ -34,12 +23,12 @@ namespace goose
             {
                 public:
                 static void draw(
-                    core::templates::renderBase::renderer& renderer, 
+                    interface::iRenderer& renderer, 
                     goose::graphics::font::font* font, 
                     const std::string& text, 
                     int X, int Y, 
                     float scale, // 1 means no scale
-                    const core::templates::renderBase::color& color
+                    const core::types::color& color
                 );
                 
                 static void getSize(
