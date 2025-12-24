@@ -59,8 +59,8 @@ namespace goose
                 void destroy() override;
 
                 // Widget Management
-                void addWidget(interface::iWidget* widget) override;
-                void removeWidget(interface::iWidget* widget) override;
+                void addWidgetToVector(interface::iWidget* widget) override;
+                void removeWidgetFromVector(interface::iWidget* widget) override;
                 void renderWidgets() override;
                 void handelEvents() override;
 

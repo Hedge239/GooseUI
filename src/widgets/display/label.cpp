@@ -7,9 +7,8 @@
 
 namespace goose::widgets::display
 {
-    label::label(interface::iWindow* window, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
+    label::label(core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
         {
-            _hostWindow = window;
             _scaleing = componentScaleing;
             _alignment = componentAlign;
             _posX = X;
@@ -19,12 +18,10 @@ namespace goose::widgets::display
             
             _isVisible = true;
             _color = { 0.0f, 0.0f, 0.0f, 1.0f };
-            
-            graphics::layout::calculator::getInitalOffsets(_initalBounds, window->getWidth(), window->getHeight(), _posX, _posY, _width, _height);
         }
         
-        label* createLabel(interface::iWindow* window, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
-            { return new label(window, componentScaleing, componentAlign, X, Y, Width, Height); }
+        label* createLabel(core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
+            { return new label(componentScaleing, componentAlign, X, Y, Width, Height); }
     
     // Widget Specific
     void label::setFont(const std::string& fontFilePath, int size){ if(_font == nullptr){ if(_font == nullptr){ _font = goose::graphics::font::createFont(); } _font->load(fontFilePath, size); }}
@@ -35,7 +32,7 @@ namespace goose::widgets::display
     // Core Functions
     void label::draw(interface::iRenderer& renderer)
     {
-        if(!_isVisible && _font == nullptr){ return; }
+        if(!_isVisible || !_hostWindow || _font == nullptr){ return; }
         graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
         
         widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, 1, _color);
@@ -43,8 +40,36 @@ namespace goose::widgets::display
 
     void label::pollEvent(core::types::event::eventData evtData){ return; }
     
-    void label::setParent(iWidget* widget){ _hostParent = widget; }
-    void label::removeParent(){ _hostParent = nullptr; }
+    // If a widget has a parent, we can not add or remove it from a window unless the parent is also removed - vise vera if no parent but attached to window, cannot add parent 
+    void label::addToWindow(interface::iWindow* window)
+    {
+        if(!window || _hostParent){ return; }
+        _hostWindow = window;
+        _hostWindow->addWidgetToVector(this);
+        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
+    }
+    
+    void label::removeFromWindow()
+    {
+        if(!_hostWindow || _hostParent){ return; }
+        _hostWindow->removeWidgetFromVector(this);
+        _hostWindow = nullptr;
+    }
+    
+    void label::setParent(iWidget* widget)
+    { 
+        if(!widget || _hostWindow){ return; }
+        _hostParent = widget; _hostWindow = _hostParent->getWindow();
+        _hostWindow->addWidgetToVector(this);
+        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostParent->getWidth(), _hostParent->getHeight(), _posX, _posY, _width, _height);
+    }
+    
+    void label::removeParent()
+    { 
+        if(!_hostParent){ return; }
+        _hostWindow->removeWidgetFromVector(this);
+        _hostWindow = nullptr; _hostParent = nullptr; 
+    }
 
     // Visibility
     void label::show() { _isVisible = true; }

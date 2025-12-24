@@ -34,6 +34,8 @@ namespace goose
             virtual void draw(iRenderer& renderer) = 0;
             virtual void pollEvent(core::types::event::eventData evtData) = 0;
             
+            virtual void addToWindow(iWindow* window) = 0;
+            virtual void removeFromWindow() = 0;
             virtual void setParent(iWidget* widget) = 0;
             virtual void removeParent() = 0;
             
@@ -47,7 +49,9 @@ namespace goose
             virtual void setPosistion(int X, int Y) = 0;
             
             // Returmns
-            iWidget* getParent() const { return _hostParent; }
+            iWindow* getWindow() const { return _hostWindow; }
+            
+            bool isVisible() const { return _isVisible; }
             
             int getPosX() const { return _posX; };
             int getPosY() const { return _posY; }

@@ -24,7 +24,6 @@ int main()
     );
     
     button1 = goose::widgets::buttons::createBoxButton(
-        window1, 
         1, 
         dispatch, 
         goose::core::types::componentScale::SCALE_NONE, 
@@ -37,7 +36,8 @@ int main()
         printf("[Window1 Evt] [ID: 1] - Input Detected \n");
     });
     
-    window1->addWidget(button1);
+    button1->addToWindow(window1);
+    
     window1->setHeader("EventTest Window 1", true, true, true, true);
     window1->isResizeable(true);
     
@@ -49,7 +49,6 @@ int main()
     );
     
     button2 = goose::widgets::buttons::createBoxButton(
-        window2, 
         2, 
         dispatch, 
         goose::core::types::componentScale::SCALE_ALL, 
@@ -65,7 +64,8 @@ int main()
         printf("[Window2 Evt] [ID: 2] - Input Detected \n");
     });
     
-    window2->addWidget(button2);
+    button2->addToWindow(window2);
+    
     window2->setHeader("EventTest Window 2", true, true, true, true);
     window2->isResizeable(true);
     

@@ -46,9 +46,9 @@ namespace goose
             virtual void hide() = 0;
             virtual void destroy() = 0;
 
-            // Widget Management
-            virtual void addWidget(iWidget* widget) = 0;
-            virtual void removeWidget(iWidget* widget) = 0;
+            // Widget Management - Renamed to make it harder to accidently use
+            virtual void addWidgetToVector(iWidget* widget) = 0;
+            virtual void removeWidgetFromVector(iWidget* widget) = 0;
             virtual void renderWidgets() = 0;
             virtual void handelEvents() = 0;
 

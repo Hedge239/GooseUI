@@ -8,10 +8,9 @@
 namespace goose::widgets::buttons
 {
     // Create NEW widget and set private variables
-    boxButton::boxButton(interface::iWindow* window, int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
+    boxButton::boxButton(int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
         : _eventID(eventID), _evtDispatcher(evtDispatcher)
         {
-            _hostWindow = window;
             _scaleing = componentScaleing;
             _alignment = componentAlign;
             _posX = X;
@@ -23,12 +22,10 @@ namespace goose::widgets::buttons
             _isPressed = false;
             _outlineSize = 1; 
             _color = { 0.85f, 0.85f, 0.85f, 1.0f };
-
-            graphics::layout::calculator::getInitalOffsets(_initalBounds, window->getWidth(), window->getHeight(), _posX, _posY, _width, _height);
         }
 
-    boxButton* createBoxButton(interface::iWindow* window, int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
-        { return new boxButton(window, eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
+    boxButton* createBoxButton(int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height)
+        { return new boxButton(eventID, evtDispatcher, componentScaleing, componentAlign, X, Y, Width, Height); }
 
     // Widget Specific Functions
     void boxButton::setFont(const std::string& fontFilePath, int size){ if(_font == nullptr){ _font = goose::graphics::font::createFont(); } _font->load(fontFilePath, size); }   
@@ -40,7 +37,7 @@ namespace goose::widgets::buttons
     // Core Functions
     void boxButton::draw(interface::iRenderer& renderer)
     {
-        if(!_isVisible) { return; }
+        if(!_isVisible || !_hostWindow) { return; }
         graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
 
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
@@ -62,8 +59,36 @@ namespace goose::widgets::buttons
         if(evtData.type == core::types::event::eventType::leftMouseUp && _isPressed == true) { _isPressed = false; }
     }
     
-    void boxButton::setParent(iWidget* widget){ _hostParent = widget; }
-    void boxButton::removeParent(){ _hostParent = nullptr; }
+    // If a widget has a parent, we can not add or remove it from a window unless the parent is also removed - vise vera if no parent but attached to window, cannot add parent 
+    void boxButton::addToWindow(interface::iWindow* window)
+    {
+        if(!window || _hostParent){ return; }
+        _hostWindow = window;
+        _hostWindow->addWidgetToVector(this);
+        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
+    }
+    
+    void boxButton::removeFromWindow()
+    {
+        if(!_hostWindow || _hostParent){ return; }
+        _hostWindow->removeWidgetFromVector(this);
+        _hostWindow = nullptr;
+    }
+    
+    void boxButton::setParent(iWidget* widget)
+    { 
+        if(!widget || _hostWindow){ return; }
+        _hostParent = widget; _hostWindow = _hostParent->getWindow();
+        _hostWindow->addWidgetToVector(this);
+        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostParent->getWidth(), _hostParent->getHeight(), _posX, _posY, _width, _height);
+    }
+    
+    void boxButton::removeParent()
+    { 
+        if(!_hostParent){ return; }
+        _hostWindow->removeWidgetFromVector(this);
+        _hostWindow = nullptr; _hostParent = nullptr; 
+    }
 
     // Visibility
     void boxButton::show() { _isVisible = true; }
