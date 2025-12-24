@@ -35,7 +35,7 @@ namespace goose
                 std::string _label;
 
                 public:
-                boxButton(interface::iWindow* window, int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
+                boxButton(int eventID, goose::core::event::dispatcher& evtDispatcher, core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
                 ~boxButton() = default;
 
                 void setFont(const std::string& fontFilePath, int size);
@@ -48,6 +48,8 @@ namespace goose
                 void draw(interface::iRenderer& renderer) override;
                 void pollEvent(core::types::event::eventData evtData) override;
                 
+                void addToWindow(interface::iWindow* window) override;
+                void removeFromWindow() override;
                 void setParent(iWidget* widget) override;
                 void removeParent() override;
 
@@ -60,7 +62,6 @@ namespace goose
             };
 
             boxButton* createBoxButton(
-                interface::iWindow* window,
                 int eventID,
                 goose::core::event::dispatcher& evtDispatcher, 
                 core::types::componentScale componentScaleing, 

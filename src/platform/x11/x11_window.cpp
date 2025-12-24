@@ -292,8 +292,8 @@ namespace goose::platform::gX11
     void gX11_window::destroy() { XDestroyWindow(_display, _window); }
 
     // Widget Management
-    void gX11_window::addWidget(interface::iWidget* widget) { _widgets.push_back(widget); }
-    void gX11_window::removeWidget(interface::iWidget* widget)
+    void gX11_window::addWidgetToVector(interface::iWidget* widget) { _widgets.push_back(widget); }
+    void gX11_window::removeWidgetFromVector(interface::iWidget* widget)
     {
         std::vector<interface::iWidget*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
         if(target != _widgets.end()){ _widgets.erase(target); }

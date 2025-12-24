@@ -291,8 +291,8 @@ namespace goose::platform::gWin32
     void gWin32_window::destroy() { DestroyWindow(_hwnd); }
 
     // Widget Management
-    void gWin32_window::addWidget(interface::iWidget* widget) { _widgets.push_back(widget); }
-    void gWin32_window::removeWidget(interface::iWidget* widget)
+    void gWin32_window::addWidgetToVector(interface::iWidget* widget) { _widgets.push_back(widget); }
+    void gWin32_window::removeWidgetFromVector(interface::iWidget* widget)
     {
         std::vector<interface::iWidget*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
         if(target != _widgets.end()){ _widgets.erase(target); }
