@@ -71,7 +71,7 @@ namespace goose::core
             #else
 
                 #if GOOSEUI_XORG_SUPPORT
-                if(displayService == core::enumerations::displayService::x11)
+                if(displayService == types::displayService::x11)
                 {
                     int lastXfd = 0; 
                     fd_set in_fds;

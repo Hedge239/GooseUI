@@ -68,7 +68,7 @@ namespace goose::platform::gX11
 
 namespace goose::platform::gX11
 {
-    gX11_window::gX11_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBacken)
+    gX11_window::gX11_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend)
     {
         _display = XOpenDisplay(nullptr);
         if(!_display) { printf("[GooseUI] -- Faild to open xDisplay\n"); exit(1); }
@@ -305,7 +305,7 @@ namespace goose::platform::gX11
 
         #if GOOSEUI_ENABLE_OPENGL
         graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(_backend);
-        if(_context == core::types::graphicsBackend::opengl{  glXMakeCurrent(_display, _window, glBackend->getContext().glxContext); }
+        if(_context == core::types::graphicsBackend::opengl){  glXMakeCurrent(_display, _window, glBackend->getContext().glxContext); }
         #endif
 
         _backend->beginFrame(getWidth(), getHeight(), _bgColor);
@@ -340,7 +340,7 @@ namespace goose::platform::gX11
             {
                 case ClientMessage:
                 {
-                    if((Atom)event.xclient.data.l[0] == _wm_delete_window) { _isRunning = false; handelWidgets = false; }
+                    if((Atom)event.xclient.data.l[0] == _wm_delete_window) { _running = false; handelWidgets = false; }
                     break;
                 }
                 case ButtonPress:
@@ -370,7 +370,7 @@ namespace goose::platform::gX11
                 {
                     if(widget)
                     {
-                        widget->handelEvent(evtData);
+                        widget->pollEvent(evtData);
                     }
                 }
             }
@@ -383,7 +383,7 @@ namespace goose::platform::gX11
     Display* gX11_window::getDisplay() { return _display; }
     Window gX11_window::getWindow() { return _window; }
 
-    int gX11_window::getDisplayService() const { return core::types::window::displayService::x11; }
+    int gX11_window::getDisplayService() const { return core::types::displayService::x11; }
     int gX11_window::getWidth() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.width; }
     int gX11_window::getHeight() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.height; }
 }
