@@ -2,6 +2,8 @@ set(
     GOOSEUI_COREFILES
     "src/core/eventDispatcher.cpp"
     "src/core/eventloop.cpp"
+    
+    "src/interfaces/iWidget.cpp"
 
     "src/graphics/layoutCalculator.cpp"
     "src/graphics/font/font.cpp"

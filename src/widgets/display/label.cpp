@@ -33,50 +33,12 @@ namespace goose::widgets::display
     void label::draw(interface::iRenderer& renderer)
     {
         if(!_isVisible || !_hostWindow || _font == nullptr){ return; }
-        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
+        
+        const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
+        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);
         
         widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, 1, _color);
     }
 
     void label::pollEvent(core::types::event::eventData evtData){ return; }
-    
-    // If a widget has a parent, we can not add or remove it from a window unless the parent is also removed - vise vera if no parent but attached to window, cannot add parent 
-    void label::addToWindow(interface::iWindow* window)
-    {
-        if(!window || _hostParent){ return; }
-        _hostWindow = window;
-        _hostWindow->addWidgetToVector(this);
-        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
-    }
-    
-    void label::removeFromWindow()
-    {
-        if(!_hostWindow || _hostParent){ return; }
-        _hostWindow->removeWidgetFromVector(this);
-        _hostWindow = nullptr;
-    }
-    
-    void label::setParent(iWidget* widget)
-    { 
-        if(!widget || _hostWindow){ return; }
-        _hostParent = widget; _hostWindow = _hostParent->getWindow();
-        _hostWindow->addWidgetToVector(this);
-        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostParent->getWidth(), _hostParent->getHeight(), _posX, _posY, _width, _height);
-    }
-    
-    void label::removeParent()
-    { 
-        if(!_hostParent){ return; }
-        _hostWindow->removeWidgetFromVector(this);
-        _hostWindow = nullptr; _hostParent = nullptr; 
-    }
-
-    // Visibility
-    void label::show() { _isVisible = true; }
-    void label::hide() { _isVisible = false; }
-
-    // Posistioning
-    void label::setSize(int width, int height) { _width = width; _height = height;}
-    void label::setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) { _sizeRestraints.minWidth = minWidth; _sizeRestraints.minHeight = minHeight; _sizeRestraints.maxWidth = maxWidth; _sizeRestraints.maxHeight = maxHeight; }
-    void label::setPosistion(int X, int Y) { _posX = X; _posY = Y; }
 }

@@ -30,7 +30,7 @@ int main()
     panel2 = goose::widgets::containers::createPanel(
         goose::core::types::componentScale::SCALE_NONE, 
         goose::core::types::componentAlign::ALIGN_LEFT | goose::core::types::componentAlign::ALIGN_TOP | goose::core::types::componentAlign::ALIGN_RIGHT | goose::core::types::componentAlign::ALIGN_BOTTOM, 
-        200, 200, 
+        10, 10, 
         20, 20
     );
     

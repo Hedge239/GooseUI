@@ -18,7 +18,7 @@ namespace goose
             
             bool _isVisible = false;
             
-            core::types::sizeRestraints _sizeRestraints;
+            core::types::layoutRestraints _sizeRestraints;
             core::types::componentScale _scaleing;
             
             int _initalBounds[4];
@@ -34,22 +34,23 @@ namespace goose
             virtual void draw(iRenderer& renderer) = 0;
             virtual void pollEvent(core::types::event::eventData evtData) = 0;
             
-            virtual void addToWindow(iWindow* window) = 0;
-            virtual void removeFromWindow() = 0;
-            virtual void setParent(iWidget* widget) = 0;
-            virtual void removeParent() = 0;
+            // Pre-Defiend Fixed Functions - All widgets need these and my hand hurts :<
+            void addToWindow(iWindow* window);
+            void removeFromWindow();
+            void setParent(iWidget* widget);
+            void removeParent();
             
-            // Visiblity
-            virtual void show() = 0;
-            virtual void hide() = 0;
+            void show() { _isVisible = true; }
+            void hide() { _isVisible = false; }
             
-            // Posistioning
-            virtual void setSize(int width, int height) = 0;
-            virtual void setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) = 0;
-            virtual void setPosistion(int X, int Y) = 0;
+            void setSize(int width, int height) { _width = width, _height = height; };
+            void setPosistion(int X, int Y) { _posX = X, _posY = Y; };
+            void setScaleRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) { _sizeRestraints.minWidth = minWidth; _sizeRestraints.minHeight = minHeight; _sizeRestraints.maxWidth = maxWidth; _sizeRestraints.maxHeight = maxHeight; };
+            void setPosRestraints(int minX, int minY, int maxX, int maxY) { _sizeRestraints.minX = minX; _sizeRestraints.minY = minY; _sizeRestraints.maxX = maxX; _sizeRestraints.maxY = maxY; };
             
-            // Returmns
+            // Returns
             iWindow* getWindow() const { return _hostWindow; }
+            iWidget* getParent() const { return _hostParent; }
             
             bool isVisible() const { return _isVisible; }
             

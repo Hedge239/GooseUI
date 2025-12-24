@@ -34,18 +34,6 @@ namespace goose
                 // Overides
                 void draw(interface::iRenderer& renderer) override;
                 void pollEvent(core::types::event::eventData evtData) override;
-                
-                void addToWindow(interface::iWindow* window) override;
-                void removeFromWindow() override;
-                void setParent(iWidget* widget) override;
-                void removeParent() override;
-
-                void show() override;
-                void hide() override;
-                
-                void setSize(int width, int height) override;
-                void setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
-                void setPosistion(int X, int Y) override;
             };
             
             label* createLabel(
