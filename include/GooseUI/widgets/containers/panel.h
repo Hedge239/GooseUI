@@ -26,6 +26,8 @@ namespace goose
                 panel(core::types::componentScale componentScaleing, int componentAlign, int X, int Y, int Width, int Height);
                 ~panel() = default;
                 
+                void setColor(const core::types::color& color);
+                
                 // Overides
                 void draw(interface::iRenderer& renderer) override;
                 void pollEvent(core::types::event::eventData evtData) override;
