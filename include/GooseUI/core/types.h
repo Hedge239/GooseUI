@@ -56,12 +56,17 @@ namespace goose
                 ALIGN_RIGHT = 1 << 3
             };
             
-            struct sizeRestraints
+            struct layoutRestraints
             {
-                int minWidth = -1;
-                int minHeight = -1;
-                int maxWidth = -1;
-                int maxHeight = -1;
+                int minWidth = 0;
+                int minHeight = 0;
+                int maxWidth = 0;
+                int maxHeight = 0;
+                
+                int minX = 0;
+                int minY = 0;
+                int maxX = 0;
+                int maxY = 0;
             };
             
             struct color 

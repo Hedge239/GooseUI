@@ -38,8 +38,10 @@ namespace goose::widgets::buttons
     void boxButton::draw(interface::iRenderer& renderer)
     {
         if(!_isVisible || !_hostWindow) { return; }
-        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
-
+        
+        const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
+        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);
+        
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         renderer.drawRect(_posX, _posY, _width, _height, _color);
         
@@ -58,44 +60,4 @@ namespace goose::widgets::buttons
 
         if(evtData.type == core::types::event::eventType::leftMouseUp && _isPressed == true) { _isPressed = false; }
     }
-    
-    // If a widget has a parent, we can not add or remove it from a window unless the parent is also removed - vise vera if no parent but attached to window, cannot add parent 
-    void boxButton::addToWindow(interface::iWindow* window)
-    {
-        if(!window || _hostParent){ return; }
-        _hostWindow = window;
-        _hostWindow->addWidgetToVector(this);
-        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostWindow->getWidth(), _hostWindow->getHeight(), _posX, _posY, _width, _height);
-    }
-    
-    void boxButton::removeFromWindow()
-    {
-        if(!_hostWindow || _hostParent){ return; }
-        _hostWindow->removeWidgetFromVector(this);
-        _hostWindow = nullptr;
-    }
-    
-    void boxButton::setParent(iWidget* widget)
-    { 
-        if(!widget || _hostWindow){ return; }
-        _hostParent = widget; _hostWindow = _hostParent->getWindow();
-        _hostWindow->addWidgetToVector(this);
-        graphics::layout::calculator::getInitalOffsets(_initalBounds, _hostParent->getWidth(), _hostParent->getHeight(), _posX, _posY, _width, _height);
-    }
-    
-    void boxButton::removeParent()
-    { 
-        if(!_hostParent){ return; }
-        _hostWindow->removeWidgetFromVector(this);
-        _hostWindow = nullptr; _hostParent = nullptr; 
-    }
-
-    // Visibility
-    void boxButton::show() { _isVisible = true; }
-    void boxButton::hide() { _isVisible = false; }
-
-    // Posistioning
-    void boxButton::setSize(int width, int height) { _width = width; _height = height;}
-    void boxButton::setSizeRestraints(int minWidth, int minHeight, int maxWidth, int maxHeight) { _sizeRestraints.minWidth = minWidth; _sizeRestraints.minHeight = minHeight; _sizeRestraints.maxWidth = maxWidth; _sizeRestraints.maxHeight = maxHeight; }
-    void boxButton::setPosistion(int X, int Y) { _posX = X; _posY = Y; }
 }

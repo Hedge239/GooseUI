@@ -17,7 +17,7 @@ namespace goose::graphics::layout
         if(distanceArray[3] < 0) { distanceArray[3] = -distanceArray[3]; }
     }
 
-    void calculator::calculateLayout(core::types::componentScale scaleMode, int alignments, core::types::sizeRestraints sizeRestraints, int distanceArray[4], int windowWidth, int windowHeight, int &X, int &Y, int &Width, int &Height)
+    void calculator::calculateLayout(core::types::componentScale scaleMode, int alignments, core::types::layoutRestraints sizeRestraints, int distanceArray[4], int windowWidth, int windowHeight, int &X, int &Y, int &Width, int &Height)
     {
         // Determine scaleing
         bool doVerticalScaleing = false, doHorizontalScaleing = false;
@@ -43,12 +43,19 @@ namespace goose::graphics::layout
         if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && (alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
             { Y = distanceArray[3] + ((windowHeight - distanceArray[3] - distanceArray[2] - Height) / 2); }
 
-        // Clamps - For size, when the clamp is below 0 the clamp is disabled
+        // Clamps - For size, when the clamp is 0 the clamp is disabled and we default to 0
         if(sizeRestraints.minWidth > 0 && Width < sizeRestraints.minWidth) { Width = sizeRestraints.minWidth; }
         if(sizeRestraints.maxWidth > 0 && Width > sizeRestraints.maxWidth) { Width = sizeRestraints.maxWidth; }
         if(sizeRestraints.minHeight > 0 && Height < sizeRestraints.minHeight) { Height = sizeRestraints.minHeight; }
         if(sizeRestraints.maxHeight > 0 && Height > sizeRestraints.maxHeight) { Height = sizeRestraints.maxHeight; }
-
+        
+        // Clamps - For pos
+        if(sizeRestraints.minX > 0 && X < sizeRestraints.minX) { X = sizeRestraints.minX; }
+        if(sizeRestraints.maxX > 0 && X > sizeRestraints.minX) { X = sizeRestraints.maxX; }
+        if(sizeRestraints.minY > 0 && Y < sizeRestraints.minX) { Y = sizeRestraints.minY; }
+        if(sizeRestraints.maxY > 0 && Y > sizeRestraints.minX) { Y = sizeRestraints.maxY; }
+        
+        // Default Clamps - Don't go lower then zero ever
         if(X <= 0) { X = 0; }
         if(Y <= 0) { Y = 0; }
         if(Height < 0) { Height = 0; }

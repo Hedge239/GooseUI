@@ -22,9 +22,9 @@
 - [ ] TextBox  - Single-line Textbox
 - [ ] TextArea - Multi-line Textbox
 - [ ] ProgressBar
-- [x] Image
-- [x] Button(s)
-- [x] label
+- [ ] Image
+
+- [x] Text Scale rendering
 
 #### -- System --
 
