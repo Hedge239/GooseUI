@@ -33,6 +33,7 @@ namespace goose::widgets::display
     void label::draw(interface::iRenderer& renderer)
     {
         if(!_isVisible || !_hostWindow || _font == nullptr){ return; }
+        if(_hostParent){ _isVisible = _hostParent->isVisible(); }
         
         const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
         graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);

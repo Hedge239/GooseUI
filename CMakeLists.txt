@@ -9,7 +9,7 @@ option(GOOSEUI_XORG_SUPPORT "Legacy X11 Support" ON)
 option(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" OFF)
 
 option(GOOSEUI_USE_OPENGL "Use OpenGL" ON)
-option(GOOSEUI_USE_VULKAN "Use Vulkan" ON)
+option(GOOSEUI_USE_VULKAN "Use Vulkan" OFF)
 
 option(GOOSEUI_INSTALL "ExportTargets" ON)
 option(GOOSEUI_BUILD_EXAMPLES "Builds included examples & test applications" ON)
