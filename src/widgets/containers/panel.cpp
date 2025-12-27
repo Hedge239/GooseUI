@@ -27,12 +27,7 @@ namespace goose::widgets::containers
     // overides
     void panel::draw(interface::iRenderer& renderer)
     {
-        if(!_isVisible || !_hostWindow){ return; }
-        if(_hostParent){ _isVisible = _hostParent->isVisible(); }
-        
-        // pain
-        const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
-        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);
+        _preDraw();
         
         renderer.drawRect(_posX, _posY, _width, _height, _color);
     }

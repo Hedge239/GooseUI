@@ -13,7 +13,19 @@ namespace goose
             {
                 public:
                 static void getInitalOffsets(int (&distanceArray)[4], int windowWidth, int windowHeight, int X, int Y, int Width, int Height);
-                static void calculateLayout(core::types::componentScale scaleMode, int alignments, core::types::layoutRestraints sizeRestraints, int distanceArray[4], int windowWidth, int windowHeight, int& X, int& Y, int& Width, int& Height);
+                
+                static void calculateLayout(
+                    bool calulateWithPos,
+                    core::types::componentScale scaleMode, int alignments, 
+                    core::types::layoutRestraints sizeRestraints, 
+                    int distanceArray[4], 
+                    int windowWidth, int windowHeight,
+                    int windowPosX, int windowPosY,
+                    int& X, int& Y, 
+                    int& Width, int& Height
+                );
+                
+                static void calculateTextLayout(int widgetWidth, int widgetHeight, float& scale, int& textWidth, int& textHeight);
             };
         }
     }

@@ -27,6 +27,8 @@ namespace goose
             int _posX, _posY;
             int _width, _height;
             
+            void _preDraw();
+            
             public:
             virtual ~iWidget() = default;
             

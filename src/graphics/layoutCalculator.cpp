@@ -17,7 +17,7 @@ namespace goose::graphics::layout
         if(distanceArray[3] < 0) { distanceArray[3] = -distanceArray[3]; }
     }
 
-    void calculator::calculateLayout(core::types::componentScale scaleMode, int alignments, core::types::layoutRestraints sizeRestraints, int distanceArray[4], int windowWidth, int windowHeight, int &X, int &Y, int &Width, int &Height)
+    void calculator::calculateLayout(bool calulateWithPos, core::types::componentScale scaleMode, int alignments, core::types::layoutRestraints sizeRestraints, int *distanceArray, int windowWidth, int windowHeight, int windowPosX, int windowPosY, int &X, int &Y, int &Width, int &Height)
     {
         // Determine scaleing
         bool doVerticalScaleing = false, doHorizontalScaleing = false;
@@ -32,16 +32,36 @@ namespace goose::graphics::layout
             { Y = distanceArray[3]; Height = windowHeight - distanceArray[3] - distanceArray[2]; }
 
         // No Scale - Left/Right
-        if((alignments & core::types::componentAlign::ALIGN_RIGHT) && !(alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
-            { X = windowWidth - distanceArray[0] - Width; }
-        if((alignments & core::types::componentAlign::ALIGN_RIGHT) && (alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
-            { X = distanceArray[1] + ((windowWidth - distanceArray[1] - distanceArray[0] - Width) / 2); }
+        if(!calulateWithPos)
+        {
+            if((alignments & core::types::componentAlign::ALIGN_RIGHT) && !(alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
+                { X = windowWidth - distanceArray[0] - Width; }
+            if((alignments & core::types::componentAlign::ALIGN_RIGHT) && (alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
+                { X = distanceArray[1] + ((windowWidth - distanceArray[1] - distanceArray[0] - Width) / 2); }
+        }else 
+        {
+            // Add WindowPos to fix alignment
+            if((alignments & core::types::componentAlign::ALIGN_RIGHT) && !(alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
+                { X = windowPosX + windowWidth - distanceArray[0] - Width; }
+            if((alignments & core::types::componentAlign::ALIGN_RIGHT) && (alignments & core::types::componentAlign::ALIGN_LEFT) && !doHorizontalScaleing)
+                { X = windowPosX + distanceArray[1] + ((windowWidth - distanceArray[1] - distanceArray[0] - Width) / 2); }
+        }
 
         // No Scale - Top/Bottom
-        if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && !(alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
-            { Y = windowHeight - distanceArray[2] - Height; }
-        if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && (alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
-            { Y = distanceArray[3] + ((windowHeight - distanceArray[3] - distanceArray[2] - Height) / 2); }
+        if(!calulateWithPos)
+        {
+            if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && !(alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
+                { Y = windowHeight - distanceArray[2] - Height; }
+            if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && (alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
+                { Y = distanceArray[3] + ((windowHeight - distanceArray[3] - distanceArray[2] - Height) / 2); }
+        }else 
+        {
+            // Add WindowPos to fix alignment
+            if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && !(alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
+                { Y = windowPosY + windowHeight - distanceArray[2] - Height; }
+            if((alignments & core::types::componentAlign::ALIGN_BOTTOM) && (alignments & core::types::componentAlign::ALIGN_TOP) && !doVerticalScaleing)
+                { Y = windowPosY + distanceArray[3] + ((windowHeight - distanceArray[3] - distanceArray[2] - Height) / 2); }
+        }
 
         // Clamps - For size, when the clamp is 0 the clamp is disabled and we default to 0
         if(sizeRestraints.minWidth > 0 && Width < sizeRestraints.minWidth) { Width = sizeRestraints.minWidth; }
@@ -60,5 +80,14 @@ namespace goose::graphics::layout
         if(Y <= 0) { Y = 0; }
         if(Height < 0) { Height = 0; }
         if(Width < 0) { Width = 0; } 
+    }
+    
+    void calculator::calculateTextLayout(int widgetWidth, int widgetHeight, float& scale, int &textWidth, int &textHeight)
+    {
+        scale = widgetHeight / textHeight;
+        if((textWidth * scale) > widgetWidth){ scale *= (float)widgetWidth / (textWidth * scale); } // Clamp
+        
+        textWidth = (int)(textWidth * scale);
+        textHeight = (int)(textHeight * scale);
     }
 }

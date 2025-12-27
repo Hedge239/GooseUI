@@ -8,6 +8,7 @@
 #include "GooseUI/core/types.h"
 
 #include "GooseUI/widgets/base/text.h"
+#include "GooseUI/graphics/font/font.h"
 
 #include <string>
 
