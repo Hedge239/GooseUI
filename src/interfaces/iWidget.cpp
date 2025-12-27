@@ -5,6 +5,40 @@
 
 namespace goose::interface
 {
+    void iWidget::_preDraw()
+    {
+        if(_hostParent){ _isVisible = _hostParent->isVisible(); }
+        if(!_isVisible || !_hostWindow){ return; }
+        
+        if(_hostParent)
+        {
+            graphics::layout::calculator::calculateLayout(
+                true,
+                _scaleing,
+                _alignment,
+                _sizeRestraints,
+                _initalBounds,
+                _hostParent->getWidth(), _hostParent->getHeight(),
+                _hostParent->getPosX(), _hostParent->getPosY(),
+                _posX, _posY,
+                _width, _height
+            );
+        }else 
+        {
+            graphics::layout::calculator::calculateLayout(
+                false,
+                _scaleing,
+                _alignment,
+                _sizeRestraints,
+                _initalBounds,
+                _hostWindow->getWidth(), _hostWindow->getHeight(),
+                0, 0,
+                _posX, _posY,
+                _width, _height
+            );
+        }
+    }
+    
     // Parent Window
     void iWidget::addToWindow(iWindow* window)
     {
@@ -45,8 +79,8 @@ namespace goose::interface
             _initalBounds, 
             _hostParent->getWidth(), 
             _hostParent->getHeight(), 
-            _posX + _sizeRestraints.minX, 
-            _posY + _sizeRestraints.minY, 
+            _posX, 
+            _posY, 
             _width, _height
         );
     }

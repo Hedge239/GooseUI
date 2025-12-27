@@ -32,13 +32,18 @@ namespace goose::widgets::display
     // Core Functions
     void label::draw(interface::iRenderer& renderer)
     {
-        if(!_isVisible || !_hostWindow || _font == nullptr){ return; }
-        if(_hostParent){ _isVisible = _hostParent->isVisible(); }
+        _preDraw();
         
-        const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
-        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);
-        
-        widgets::base::text::draw(renderer, _font.get(), _label, _posX, _posY, 1, _color);
+        if(_label != "" && _font != nullptr)
+        {   
+            int textWidth, textHeight;
+            float textScale;
+            
+            widgets::base::text::getSize(_font.get(), _label, 1, textWidth, textHeight);
+            graphics::layout::calculator::calculateTextLayout(_width, _height, textScale, textWidth, textHeight);
+            
+            widgets::base::text::draw(renderer, _font.get(), _label, _posX + (_width - textWidth) / 2, _posY + (_height + textHeight) / 2, textScale, _color); 
+        }
     }
 
     void label::pollEvent(core::types::event::eventData evtData){ return; }

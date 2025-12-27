@@ -37,11 +37,7 @@ namespace goose::widgets::buttons
     // Core Functions
     void boxButton::draw(interface::iRenderer& renderer)
     {
-        if(!_isVisible || !_hostWindow) { return; }
-        if(_hostParent){ _isVisible = _hostParent->isVisible(); }
-        
-        const int hostWidth = _hostParent ? _hostParent->getWidth() : _hostWindow->getWidth(); const int hostHeight = _hostParent ? _hostParent->getHeight() : _hostWindow->getHeight();
-        graphics::layout::calculator::calculateLayout(_scaleing, _alignment, _sizeRestraints, _initalBounds, hostWidth, hostHeight, _posX, _posY, _width, _height);
+        _preDraw();
         
         if(!_isPressed) { renderer.drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         renderer.drawRect(_posX, _posY, _width, _height, _color);
@@ -49,8 +45,12 @@ namespace goose::widgets::buttons
         if(_label != "" && _font != nullptr)
         { 
             int textWidth, textHeight;
+            float textScale;
+            
             widgets::base::text::getSize(_font.get(), _label, 1, textWidth, textHeight);
-            widgets::base::text::draw(renderer, _font.get(), _label, _posX + (_width - textWidth) / 2, _posY + (_height + textHeight) / 2, 1, _labelColor); 
+            graphics::layout::calculator::calculateTextLayout(_width, _height, textScale, textWidth, textHeight);
+            
+            widgets::base::text::draw(renderer, _font.get(), _label, _posX + (_width  - textWidth) / 2, _posY + (_height + textHeight) / 2, textScale, _labelColor); 
         }
     }
 
