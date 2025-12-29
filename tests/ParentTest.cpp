@@ -31,14 +31,14 @@ int main()
     );
     
     panel2 = goose::widgets::containers::createPanel(
-        goose::core::types::componentScale::SCALE_NONE, 
+        goose::core::types::componentScale::SCALE_ALL, 
         goose::core::types::componentAlign::ALIGN_LEFT | goose::core::types::componentAlign::ALIGN_TOP | goose::core::types::componentAlign::ALIGN_RIGHT | goose::core::types::componentAlign::ALIGN_BOTTOM, 
         10, 10, 
         200, 200
     );
     
     label1 = goose::widgets::display::createLabel(
-        goose::core::types::componentScale::SCALE_NONE, 
+        goose::core::types::componentScale::SCALE_ALL, 
         goose::core::types::componentAlign::ALIGN_LEFT | goose::core::types::componentAlign::ALIGN_TOP | goose::core::types::componentAlign::ALIGN_RIGHT | goose::core::types::componentAlign::ALIGN_BOTTOM, 
         0, 0, 
         20, 20
