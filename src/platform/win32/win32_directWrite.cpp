@@ -39,7 +39,16 @@ namespace goose::platform::gWin32
 
     bool gWin32_DirectWrite::load(const std::string& path, int pixelSize)
     {
-        _size = (float)pixelSize;
+        _initialized = false;
+        
+        // TODO: SDF Rendering, but i hate text rendering so this works for now
+        HDC screen = GetDC(nullptr);
+        int DPIx = GetDeviceCaps(screen, LOGPIXELSX);
+        ReleaseDC(nullptr, screen);
+        
+        float scale = (DPIx / 96.0f) + 1;
+        
+        _size = pixelSize * scale;
 
         HRESULT hResult = _factory->CreateFontFileReference(std::wstring(path.begin(), path.end()).c_str(), nullptr, &_fontFile);
         if(FAILED(hResult)) { printf("GooseUI: Faild to load Font: %s \n", path.c_str()); return false; }

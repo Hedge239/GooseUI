@@ -61,6 +61,8 @@ endif()
 
 # Display Services
 if(WIN32)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+
     message(STATUS "[GooseUI] -- OS: Windows")
     message(STATUS "[GooseUI] -- Display Service: windows.h")
 
