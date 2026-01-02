@@ -45,7 +45,7 @@ namespace goose::platform::gUnix
 
     bool gUnix_FreeType::load(const std::string& path, int pixelSize)
     {
-        _size = (float)pixelSize;
+        _size = (float)pixelSize + 1;
         
         if(FT_New_Face(_library, path.c_str(), 0, &_face)){ printf("GooseUI: Faild to load font: %s \n", path.c_str()); return false; }
         if(FT_Set_Pixel_Sizes(_face, 0, pixelSize) != 0)
