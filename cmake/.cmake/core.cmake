@@ -1,13 +1,8 @@
-set(
-    GOOSEUI_COREFILES
-    "src/core/eventDispatcher.cpp"
-    "src/core/eventloop.cpp"
-    
-    "src/interfaces/iWidget.cpp"
-
-    "src/graphics/layoutCalculator.cpp"
-    "src/graphics/font/font.cpp"
-    "src/graphics/font/fontManager.cpp"
-    "src/graphics/font/fontAtlas.cpp"
-    "src/graphics/font/fontLayout.cpp"
+LIST(
+    APPEND GOOSEUI_SRC
+    "src/context.cpp"
+    "src/abstractions/iWidget.cpp"
+    "src/graphics/layout.cpp"
+    "src/events/eventDispatcher.cpp"
+    "src/events/eventLoop.cpp"
 )

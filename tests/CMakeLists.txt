@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.10.0)
-project(GooseExamples VERSION 0.0.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 4.2.0)
+PROJECT(GooseUI-tests VERSION 0.0.1)
 
-include_directories("../include")
 link_libraries(GooseUI OpenGL::GL)
 
-add_executable(EventTest EventTest.cpp)
-add_executable(ParentTest ParentTest.cpp)
+add_executable(WindowTest windowTest.cpp)
