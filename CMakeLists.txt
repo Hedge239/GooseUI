@@ -1,131 +1,39 @@
-cmake_minimum_required(VERSION 3.10.0)
-project(GooseUI VERSION 0.0.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 4.2.0)
+PROJECT(GooseUI VERSION 0.0.3)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # ------------------------------- Options -------------------------------
-option(GOOSEUI_XORG_SUPPORT "Legacy X11 Support" ON)
-option(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" OFF)
+OPTION(GOOSEUI_XORG_SUPPORT "X11 Support" ON)
+OPTION(GOOSEUI_WAYLAND_SUPPORT "Wayland Support" OFF)
 
-option(GOOSEUI_USE_OPENGL "Use OpenGL" ON)
-option(GOOSEUI_USE_VULKAN "Use Vulkan" OFF)
+OPTION(GOOSEUI_INCLUDE_OPENGL "Use OpenGL" ON)
+OPTION(GOOSEUI_INCLUDE_VULKAN "Use Vulkan" OFF)
 
-option(GOOSEUI_INSTALL "ExportTargets" ON)
-option(GOOSEUI_BUILD_EXAMPLES "Builds included examples & test applications" ON)
+OPTION(GOOSEUI_INSTALL "ExportTargets" ON)
+OPTION(GOOSEUI_TESTS "IncludeTests" ON)
 
-# ------------------------------- External Libs -------------------------------
+# -------------------------------- Files --------------------------------
 
-include("${CMAKE_SOURCE_DIR}/cmake/.cmake/core.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/.cmake/widgets.cmake")
+INCLUDE("${CMAKE_SOURCE_DIR}/cmake/.cmake/core.cmake")
+INCLUDE("${CMAKE_SOURCE_DIR}/cmake/.cmake/widgets.cmake")
+INCLUDE("${CMAKE_SOURCE_DIR}/cmake/.cmake/graphics.cmake")
+INCLUDE("${CMAKE_SOURCE_DIR}/cmake/.cmake/platform.cmake")
 
-# Graphic Services
-if(GOOSEUI_USE_OPENGL)
+# ------------------------------ Create Lib ------------------------------
+ADD_LIBRARY(${PROJECT_NAME} ${GOOSEUI_SRC} "include")
+TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC "include")
 
-    set(OpenGL_GL_PREFERENCE GLVND) # This is just so it shuts up
-    find_package(OpenGL)
+TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE ${GOOSEUI_INCLUDE})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PRIVATE ${GOOSEUI_LIBRARIES})
+TARGET_LINK_DIRECTORIES(${PROJECT_NAME} PRIVATE ${GOOSEUI_BUILD_FLAGS})
 
-    if(OPENGL_FOUND)
-        message(STATUS "[GooseUI] -- OpenGL Detected")
-        set(GooseUI_HasGraphicService true)
-    
-        list(APPEND GOOSEUI_LIBRARY "OpenGL::GL")
-        include("${CMAKE_SOURCE_DIR}/cmake/.cmake/graphics/OpenGL.cmake" REQUIRED)
-
-        add_compile_definitions(GOOSEUI_ENABLE_OPENGL)
-    endif()
-endif()
-
-if(GOOSEUI_USE_VULKAN)
-    find_package(Vulkan)
-
-    if(VULKAN_FOUND)
-        message(STATUS "[GooseUI] -- Vulkan Detected")
-        set(GooseUI_HasGraphicService true)
-
-        list(APPEND GOOSEUI_LIBRARY "Vulkan::Vulkan")
-        include("${CMAKE_SOURCE_DIR}/cmake/.cmake/graphics/vulkan.cmake" REQUIRED)
-
-        add_compile_definitions(GOOSEUI_ENABLE_VULKAN)
-    endif()
-endif()
-
-# Freetype if unix is detected
-if(UNIX OR APPLE)
-    find_package(Freetype REQUIRED)
-    message(STATUS "[GooseUI] -- Non-Windows Detected, FreeType Required")
-
-    list(APPEND GOOSEUI_LIBRARY Freetype::Freetype)
-    include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/unix.cmake" REQUIRED)
-endif()
-
-# Display Services
-if(WIN32)
-    add_definitions(-DWIN32_LEAN_AND_MEAN)
-
-    message(STATUS "[GooseUI] -- OS: Windows")
-    message(STATUS "[GooseUI] -- Display Service: windows.h")
-
-    list(APPEND GOOSEUI_LIBRARY "dwrite")
-
-    include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/win32.cmake" REQUIRED)
-endif()
-
-if(APPLE)
-    message(STATUS "[GooseUI] -- OS: MacOS")
-    message(FATAL_ERROR "[GooseUI] -- honk (Unsupported)")
-endif()
-
-if(UNIX AND NOT APPLE)
-    message(STATUS "[GooseUI] -- OS: UNIX")
-
-    if(GOOSEUI_XORG_SUPPORT)
-        message(STATUS "[GooseUI] -- Display Service: X11")
-
-        find_package(X11 REQUIRED)
-
-        list(APPEND GOOSEUI_INCLUDE "${X11_INCLUDE_DIR}")
-        list(APPEND GOOSEUI_LIBRARY "${X11_LIBRARIES}")
-        list(APPEND GOOSEUI_FLAGS "X11")
-
-        include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/xorg.cmake" REQUIRED)
-        add_compile_definitions(GOOSEUI_XORG_SUPPORT)
-    endif()
-
-    if(GOOSEUI_WAYLAND_SUPPORT)
-        message(STATUS "[GooseUI] -- Display Service: Wayland")
-
-        find_package(Wayland REQUIRED)
-
-        list(APPEND GOOSEUI_INCLUDE "${WAYLAND_CLIENT_DIR}")
-        list(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
-        list(APPEND GOOSEUI_FLAGS "wayland-client")
-
-        include("${CMAKE_SOURCE_DIR}/cmake/.cmake/platforms/wayland.cmake" REQUIRED)
-        add_compile_definitions(GOOSEUI_WAYLAND_SUPPORT)
-    endif()
-    
-endif()
-
-# ------------------------------- Create Lib -------------------------------
-
-set(GOOSEUI_SRC ${GOOSEUI_COREFILES} ${GOOSEUI_WIDGETS} ${GOOSEUI_PLATFORM})
-add_library(${PROJECT_NAME} ${GOOSEUI_SRC} "include")
-
-target_include_directories(${PROJECT_NAME} PRIVATE "include" ${GOOSEUI_INCLUDE})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${GOOSEUI_LIBRARY})
-target_link_directories(${PROJECT_NAME} PRIVATE ${GOOSEUI_FLAGS})
-
-if(GOOSEUI_BUILD_EXAMPLES)
-    add_subdirectory("tests")
+if(GOOSEUI_TESTS)
+    ADD_SUBDIRECTORY("tests")
 endif()
 
 if(GOOSEUI_INSTALL)
     # TODO
-endif()
-
-if(NOT GooseUI_HasGraphicService)
-    message(FATAL_ERROR "[GooseUI] -- No Graphic Service Detected (Vulkan, OpenGL)")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "GooseUI" VERSION ${PROJECT_VERSION} SOVERSION "0" FOLDER "GooseUI")

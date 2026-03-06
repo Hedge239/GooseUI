@@ -1,0 +1,103 @@
+#include "GooseUI/events/eventLoop.h"
+
+#include "GooseUI/abstractions/iWindow.h"
+
+#if defined(_WIN32)
+
+    #include <windows.h>
+
+#elif defined(__APPLE__)
+
+    #error Unsuported
+
+#else
+
+    #if GOOSEUI_XORG_SUPPORT
+        #include <GooseUI/platform/x11/x11_window.h>
+    #endif
+
+    #if GOOSEUI_WAYLAND_SUPPORT
+    
+    #error Unsuported
+    
+    #endif
+
+#endif
+
+
+namespace GooseUI::event
+{
+    void loop::run(std::initializer_list<absractions::iWindow*> windows)
+    {
+        displayService service = (*windows.begin())->getDisplayService();
+        bool running = false;
+
+        // Begin Loop
+        while(true)
+        {
+            running = false;
+            for(absractions::iWindow* window : windows)
+            {
+                if(!window->isRunning()) 
+                {
+                    window->destroy();
+                    continue; 
+                }
+
+                running = true;
+                window->handelEvents();
+            }
+
+            if(!running) { break; }
+
+            #if defined(_WIN32)
+            
+            MSG msg; // Fixes issue when closing window, still need to fix the unfocused window closeing all windows issue though
+            while(PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                if(msg.message == WM_QUIT) return;
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+            
+            MsgWaitForMultipleObjects(0, nullptr, FALSE, INFINITE, QS_ALLINPUT);
+            continue;
+
+            #elif defined(__APPLE__)
+
+            #error TODO
+            continue;
+
+            #else
+
+                #if GOOSEUI_XORG_SUPPORT
+                if(service == displayService::x11)
+                {
+                    int lastXfd = 0; 
+                    fd_set in_fds;
+
+                    FD_ZERO(&in_fds);
+                    for(absractions::iWindow* window : windows)
+                    {
+                        platform::gX11::gX11_window* x11Window = dynamic_cast<platform::gX11::gX11_window*>(window);
+                        int xfd = ConnectionNumber(x11Window->getDisplay());
+                        FD_SET(xfd, &in_fds); lastXfd = std::max(lastXfd, xfd);
+                    }
+
+                    struct timeval timeout { 0, 160000 }; // Temp fix for multi-window, yes I hate it too
+                    select(lastXfd + 1, &in_fds, nullptr, nullptr, &timeout);
+                    continue;
+                }
+                #endif
+
+                #if GOOSEUI_WAYLAND_SUPPORT
+                if(service == displayService::wayland)
+                {
+
+                }
+                #endif
+
+            #endif
+        }
+    }
+}

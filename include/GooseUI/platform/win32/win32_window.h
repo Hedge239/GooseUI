@@ -1,75 +1,73 @@
 #ifndef _GOOSEUI_WIN32_WINDOW_H_
 #define _GOOSEUI_WIN32_WINDOW_H_
 
-#include "GooseUI/graphics/context.h"
+#include "GooseUI/context.h"
 
-#include "GooseUI/interfaces/iWindow.h"
-#include "GooseUI/interfaces/iWidget.h"
-#include "GooseUI/interfaces/iRenderer.h"
+#include "GooseUI/abstractions/iWindow.h"
+#include "GooseUI/abstractions/iRenderer.h"
+#include "GooseUI/abstractions/iWidget.h"
 
 #include <windows.h>
 #include <cstdio>
 
-#undef interface
-
-namespace goose
+namespace GooseUI
 {
     namespace platform
     {
-        namespace gWin32
+        class win32_window : public absractions::iWindow
         {
-            class gWin32_window : public interface::iWindow
-            {
-                HWND _hwnd;
-                HINSTANCE _hInstance;
-                
-                void _gl_createContext();
-                void _gl_shareContext();
-                void _gl_destoryContext();
-                void _vk_createContext();
-                void _vk_shareContext();
+            HWND _hwnd;
+            HINSTANCE _hInstance;
+            
+            void _gl_createContext();
+            void _gl_shareContext();
+            void _gl_destoryContext();
+            void _vk_createContext();
+            void _vk_shareContext();
+            
+            void _startRenderFrame();
+            void _endRenderFrame();
+            
+            protected:
+            static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-                protected:
-                static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+            public:
+            win32_window(const std::string& title, int width, int height, screenPosistion posistion);
+            virtual ~win32_window();
+            
+            HWND getHwnd();
+            
+            // Overides
+            // Window Configuration
+            void setWindowIcon(const std::string& ICO) override;
+            void setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise) override;
+            
+            void isResizeable(bool isResizeable) override;
+            void isAllwaysOnTop(bool isOnTop) override;
 
-                public:
-                gWin32_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend);
-                virtual ~gWin32_window();
+            // Window Size
+            void setSize(int width, int height) override;
+            
+            void maximize() override;
+            void minimize() override;
+            void restoreSize() override;
 
-                HWND getHwnd();
+            // Window Visibility
+            void show() override;
+            void hide() override;
+            void destroy() override;
 
-                // Overides
-                // Window Configuration
-                void setWindowIcon(const std::string& ICO) override;
-                void setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise) override;
-                
-                void isResizeable(bool isResizeable) override;
-                void isAllwaysOnTop(bool isOnTop) override;
+            // Widget Management
+            void addWidgetToVector(absractions::iWidget* widget) override;
+            void removeWidgetFromVector(absractions::iWidget* widget) override;
+            void renderWidgets() override;
+            void handelEvents() override;
 
-                // Window Size
-                void setSize(int width, int height) override;
-                
-                void maximize() override;
-                void minimize() override;
-                void restoreSize() override;
-
-                // Window Visibility
-                void show() override;
-                void hide() override;
-                void destroy() override;
-
-                // Widget Management
-                void addWidgetToVector(interface::iWidget* widget) override;
-                void removeWidgetFromVector(interface::iWidget* widget) override;
-                void renderWidgets() override;
-                void handelEvents() override;
-
-                // Reuturns
-                int getDisplayService() const override;
-                int getWidth() override;
-                int getHeight() override;
-            };
-        }
+            // Reuturns
+            displayService getDisplayService() const override;
+            int getWidth() override;
+            int getHeight() override;
+        };
     }
 }
 

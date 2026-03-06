@@ -1,14 +1,15 @@
 #include "GooseUI/platform/win32/win32_window.h"
 
+#include "GooseUI/context.h"
+
 #include <algorithm>
-#include <filesystem>
 
 
-namespace goose::platform::gWin32
+namespace GooseUI::platform // Private
 {
-    LRESULT CALLBACK gWin32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    LRESULT CALLBACK win32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        gWin32_window* self = reinterpret_cast<gWin32_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+        win32_window* self = reinterpret_cast<win32_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
         
         switch(uMsg)
         {
@@ -28,10 +29,59 @@ namespace goose::platform::gWin32
                 return DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
     }
-
+    
+    void win32_window::_startRenderFrame()
+    {
+        switch (application::getBackendType()) 
+        {
+            #if GOOSEUI_HAS_OPENGL
+            case application::backendType::OpenGL:
+            {
+                graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
+                wglMakeCurrent(GetDC(this->getHwnd()), glBackend->getContext().hglrc);
+                break;
+            }
+            #endif
+            
+            #if GOOSEUI_ENABLE_VULKAN
+            #endif
+            
+            default:
+                printf("GooseUI: Backend Not Initilized! \n");
+                break;
+        }
+        
+        RECT rect; GetClientRect(_hwnd, &rect);
+        application::getRenderer()->beginFrame(rect.right - rect.left, rect.bottom - rect.top, _bgColor);
+    }
+    
+    void win32_window::_endRenderFrame()
+    {
+        application::getRenderer()->endFrame();
+        
+        switch (application::getBackendType()) 
+        {
+            #if GOOSEUI_HAS_OPENGL
+            case application::backendType::OpenGL:
+            {
+                graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
+                SwapBuffers(GetDC(this->getHwnd()));
+                break;
+            }
+            #endif
+            
+            #if GOOSEUI_ENABLE_VULKAN
+            #endif
+            
+            default:
+                printf("GooseUI: Backend Not Initilized! \n");
+                break;
+        }
+    }
+    
     // Graphic Dependent
-    #if GOOSEUI_ENABLE_OPENGL
-    void gWin32_window::_gl_createContext()
+    #if GOOSEUI_HAS_OPENGL
+    void win32_window::_gl_createContext()
     {
         HDC hdc = GetDC(this->getHwnd());
 
@@ -52,11 +102,11 @@ namespace goose::platform::gWin32
         if(!hglrc || !wglMakeCurrent(hdc, hglrc)) { printf("GooseUI: Failed to create WGL Context \n"); }
     }
 
-    void gWin32_window::_gl_shareContext()
+    void win32_window::_gl_shareContext()
     {
         HDC hdc = GetDC(this->getHwnd());
         HGLRC hglrc = wglGetCurrentContext();
-        graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(_backend);
+        graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
         
         if(!glBackend->hasContext())
         {
@@ -67,7 +117,7 @@ namespace goose::platform::gWin32
         }
     }
 
-    void gWin32_window::_gl_destoryContext()
+    void win32_window::_gl_destoryContext()
     {
         HDC hdc = GetDC(this->getHwnd());
         HGLRC hglrc = wglGetCurrentContext();
@@ -82,19 +132,19 @@ namespace goose::platform::gWin32
     }
     #endif
 
-    #if GOOSEUI_ENABLE_VULKAN
+    #if GOOSEUI_HAS_VULKAN
     #endif
 }
 
-namespace goose::platform::gWin32
+namespace GooseUI::platform // Public
 {
-    gWin32_window::gWin32_window(const std::string& title, int width, int height, core::types::windowPosistion posistion, core::types::graphicsBackend graphicsBackend)
+    win32_window::win32_window(const std::string& title, int width, int height, screenPosistion posistion)
     {
         _hInstance = GetModuleHandle(nullptr);
 
         // Register Window Class
         WNDCLASSW WindowClass = {0};
-        WindowClass.lpfnWndProc = gWin32_window::WindowProc;
+        WindowClass.lpfnWndProc = win32_window::WindowProc;
         WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
         WindowClass.hInstance = _hInstance;
         WindowClass.lpszClassName = L"GooseUI_Window";
@@ -112,33 +162,33 @@ namespace goose::platform::gWin32
 
         switch(posistion)
         {
-            case core::types::windowPosistion::SCREEN_TOP:
+            case SCREEN_TOP:
                 posX = (screenWidth - width) / 2;
                 break;
-            case core::types::windowPosistion::SCREEN_BOTTOM:
+            case SCREEN_BOTTOM:
                 posX = (screenWidth - width) / 2;
                 posY = screenHeight - height;
                 break;
-            case core::types::windowPosistion::SCREEN_LEFT:
+            case SCREEN_LEFT:
                 posY = (screenHeight - height) / 2;
                 break;
-            case core::types::windowPosistion::SCREEN_RIGHT:
+            case SCREEN_RIGHT:
                 posX = screenWidth - width;
                 posY = (screenHeight - height) / 2;
                 break;
-            case core::types::windowPosistion::SCREEN_TOP_LEFT:
+            case SCREEN_TOP_LEFT:
                 break;
-            case core::types::windowPosistion::SCREEN_TOP_RIGHT:
+            case SCREEN_TOP_RIGHT:
                 posX = screenWidth - width;
                 break;
-            case core::types::windowPosistion::SCREEN_BOTTOM_LEFT:
+            case SCREEN_BOTTOM_LEFT:
                 posY = screenHeight - height;
                 break;
-            case core::types::windowPosistion::SCREEN_BOTTOM_RIGHT:
+            case SCREEN_BOTTOM_RIGHT:
                 posX = screenWidth - width;
                 posY = screenHeight - height;
                 break;
-            case core::types::windowPosistion::SCREEN_CENTER:
+            case SCREEN_CENTER:
                 posX = (screenWidth - width) / 2;
                 posY = (screenHeight - height) / 2;
                 break;
@@ -182,61 +232,61 @@ namespace goose::platform::gWin32
         
         // Init Backend
         _bgColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-        switch(graphicsBackend)
+        
+        switch (application::getBackendType()) 
         {
-            #if GOOSEUI_ENABLE_OPENGL
-            case core::types::graphicsBackend::opengl:
+            #if GOOSEUI_HAS_OPENGL
+            case application::backendType::OpenGL:
                 _gl_createContext();
-                _backend = &goose::graphics::gl::glRenderer::getRenderer();
-                _context = core::types::graphicsBackend::opengl;
+                application::getRenderer()->initRenderer();
                 _gl_shareContext();
                 break;
             #endif
-
+            
             #if GOOSEUI_ENABLE_VULKAN
-            case core::types::window::graphicsBackend::vulkan:
-                break;
             #endif
-
+            
             default:
-                printf("GooseUI: Invalid backend \n");
+                printf("GooseUI: Backend Not Initilized! \n");
                 break;
         }
 
-        _running = true;
+        _isRunning = true;
     }
-
-    gWin32_window::~gWin32_window()
+    
+    win32_window::~win32_window()
     {
-        _running = false;
-
-        #if GOOSEUI_ENABLE_OPENGL
-            if(_context == core::types::graphicsBackend::opengl) { _gl_destoryContext(); }
-        #endif
-
-        #if GOOSEUI_ENABLE_VULKAN
-            if(_context == core::types::graphicsBackend::opengl) { _vk_destroyContext(); }
-        #endif
-
-        if(_backend) { delete _backend; };
+        _isRunning = false;
+        
+        switch (application::getBackendType()) 
+        {
+            #if GOOSEUI_HAS_OPENGL
+            case application::backendType::OpenGL:
+                _gl_destoryContext();
+                break;
+            #endif
+            
+            #if GOOSEUI_ENABLE_VULKAN
+            #endif
+            
+            default:
+                printf("GooseUI: Backend Not Initilized! \n");
+                break;
+        }
+        
         if(_hwnd) { DestroyWindow(_hwnd); }
     }
-
-    HWND gWin32_window::getHwnd() { return _hwnd; }
-
+    
+    HWND win32_window::getHwnd() { return _hwnd; }
+    
     // OVERIDES
     // Window Configuration
-    void gWin32_window::setWindowIcon(const std::string& ICO)
+    void win32_window::setWindowIcon(const std::string& ICO) 
     {
-        if(std::filesystem::path(ICO).extension() != ".ico"){ printf("GooseUI: Invalid Window Icon: %s \n", ICO.c_str()); }
-        
-        HICON hIcon = (HICON)LoadImageA(nullptr, ICO.c_str(), IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
-        SendMessage(_hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-        SendMessage(_hwnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
+        // TODO
     };
     
-    void gWin32_window::setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise)
+    void win32_window::setHeader(const std::string& title, bool isVisible, bool hasButtons, bool hasMinimize, bool hasMaximise)
     {
         if(!title.empty()) { SetWindowTextA(_hwnd, title.c_str()); }
 
@@ -249,8 +299,8 @@ namespace goose::platform::gWin32
         SetWindowLongPtr(_hwnd, GWL_STYLE, WindowStyle);
         SetWindowPos(_hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
     }
-
-    void gWin32_window::isResizeable(bool isResizeable)
+    
+    void win32_window::isResizeable(bool isResizeable)
     {
         // Disables Maximise button while at it, might change later
         LONG_PTR WindowStyle = GetWindowLongPtr(_hwnd, GWL_STYLE);
@@ -259,15 +309,14 @@ namespace goose::platform::gWin32
         SetWindowLongPtr(_hwnd, GWL_STYLE, WindowStyle);
         SetWindowPos(_hwnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
     }
-
-    void gWin32_window::isAllwaysOnTop(bool isOnTop)
+    
+    void win32_window::isAllwaysOnTop(bool isOnTop)
     {
         if(isOnTop) { SetWindowPos(_hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); } 
         else { SetWindowPos(_hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); }
     }
-
-    // Window Size
-    void gWin32_window::setSize(int width, int height)
+    
+    void win32_window::setSize(int width, int height)
     {
         RECT currentRect;
         RECT rect =  {0, 0, width, height};
@@ -280,52 +329,41 @@ namespace goose::platform::gWin32
 
         SetWindowPos(_hwnd, nullptr, currentRect.left, currentRect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER | SWP_NOACTIVATE);
     }
-
-    void gWin32_window::maximize() { ShowWindow(_hwnd, SW_MAXIMIZE); UpdateWindow(_hwnd);}
-    void gWin32_window::minimize() { ShowWindow(_hwnd, SW_MINIMIZE); UpdateWindow(_hwnd);}
-    void gWin32_window::restoreSize() { ShowWindow(_hwnd, SW_RESTORE); UpdateWindow(_hwnd);}
-
+    
+    void win32_window::maximize() { ShowWindow(_hwnd, SW_MAXIMIZE); UpdateWindow(_hwnd);}
+    void win32_window::minimize() { ShowWindow(_hwnd, SW_MINIMIZE); UpdateWindow(_hwnd);}
+    void win32_window::restoreSize() { ShowWindow(_hwnd, SW_RESTORE); UpdateWindow(_hwnd);}
+    
     // Window Visibility
-    void gWin32_window::show() { ShowWindow(_hwnd, SW_SHOW); UpdateWindow(_hwnd); }
-    void gWin32_window::hide() { ShowWindow(_hwnd, SW_HIDE); UpdateWindow(_hwnd); }
-    void gWin32_window::destroy() { DestroyWindow(_hwnd); }
-
+    void win32_window::show() { ShowWindow(_hwnd, SW_SHOW); UpdateWindow(_hwnd); }
+    void win32_window::hide() { ShowWindow(_hwnd, SW_HIDE); UpdateWindow(_hwnd); }
+    void win32_window::destroy() { DestroyWindow(_hwnd); }
+    
     // Widget Management
-    void gWin32_window::addWidgetToVector(interface::iWidget* widget) { _widgets.push_back(widget); }
-    void gWin32_window::removeWidgetFromVector(interface::iWidget* widget)
+    void win32_window::addWidgetToVector(absractions::iWidget* widget) { _widgets.push_back(widget); }
+    void win32_window::removeWidgetFromVector(absractions::iWidget* widget)
     {
-        std::vector<interface::iWidget*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
+        std::vector<absractions::iWidget*>::iterator target = std::find(_widgets.begin(), _widgets.end(), widget);
         if(target != _widgets.end()){ _widgets.erase(target); }
     }
     
-    void gWin32_window::renderWidgets()
+    void win32_window::renderWidgets()
     {
-        if(!_backend) return;
-
-        #if GOOSEUI_ENABLE_OPENGL
-        graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(_backend);
-        if(_context == core::types::graphicsBackend::opengl){ wglMakeCurrent(GetDC(this->getHwnd()), glBackend->getContext().hglrc); }
-        #endif
-
-        RECT rect; GetClientRect(_hwnd, &rect);
-        _backend->beginFrame(rect.right - rect.left, rect.bottom - rect.top, _bgColor);
-
-        for(interface::iWidget* widget : _widgets)
+        if(!application::getRenderer()) return;
+        _startRenderFrame();
+        
+        for(absractions::iWidget* widget : _widgets)
         {
             if(widget)
             {
-                widget->draw(*_backend);
+                widget->draw(); // Huh, guess we dont need ot pass it since it now centralized
             }
         }
-
-        _backend->endFrame();
-
-        #if GOOSEUI_ENABLE_OPENGL
-        if(_context == core::types::graphicsBackend::opengl){ SwapBuffers(GetDC(this->getHwnd())); }
-        #endif
+        
+        _endRenderFrame();
     }
-
-    void gWin32_window::handelEvents()
+    
+    void win32_window::handelEvents()
     {
         MSG msg;
         while(PeekMessage(&msg, getHwnd(), 0, 0, PM_REMOVE))
@@ -336,24 +374,24 @@ namespace goose::platform::gWin32
             // Set evtData & run event loop
             bool handelWidgets = true;
 
-            core::types::event::eventData evtData;
+            event::data evtData;
             evtData.mouseX = ((int)(short)LOWORD(msg.lParam));
             evtData.mouseY = ((int)(short)HIWORD(msg.lParam));
 
             switch(msg.message)
             {
-                case WM_QUIT: { _running = false; handelWidgets = false; break; }
+                case WM_QUIT: { _isRunning = false; handelWidgets = false; break; }
                 
-                case WM_LBUTTONDOWN: { evtData.type = core::types::event::eventType::leftMouseDown; break; }
-                case WM_LBUTTONUP: { evtData.type = core::types::event::eventType::leftMouseUp; break; }
-                case WM_RBUTTONDOWN: { evtData.type = core::types::event::eventType::rightMouseDown; break; }
+                case WM_LBUTTONDOWN: { evtData.type = event::type::leftMouseDown; break; }
+                case WM_LBUTTONUP: { evtData.type = event::type::leftMouseUp; break; }
+                case WM_RBUTTONDOWN: { evtData.type = event::type::rightMouseDown; break; }
 
                 default: { handelWidgets = false; break; }
             }
 
             if(handelWidgets)
             {
-                for(interface::iWidget* widget : _widgets)
+                for(absractions::iWidget* widget : _widgets)
                 {
                     if(widget)
                     {
@@ -365,9 +403,9 @@ namespace goose::platform::gWin32
             renderWidgets();
         }
     }
-
+    
     // Returns
-    int gWin32_window::getDisplayService() const { return core::types::displayService::win32; }
-    int gWin32_window::getWidth() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.right - rect.left; }
-    int gWin32_window::getHeight() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.bottom - rect.top; }
+    displayService win32_window::getDisplayService() const { return displayService::win32; }
+    int win32_window::getWidth() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.right - rect.left; }
+    int win32_window::getHeight() { RECT rect; GetWindowRect(_hwnd, &rect); return rect.bottom - rect.top; }
 }
