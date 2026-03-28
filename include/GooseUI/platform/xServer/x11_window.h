@@ -11,6 +11,12 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+/*
+    This is what I use for testing, I have no clue how it acts on other systems:
+    Desktop: KDE
+    Server: Through xWayland
+*/
+
 namespace GooseUI
 {
     namespace platform
@@ -27,6 +33,9 @@ namespace GooseUI
             void _gl_destoryContext();
             void _vk_createContext();
             void _vk_shareContext();
+            
+            void _startRenderFrame();
+            void _endRenderFrame();
 
             public:
             x11_window(const std::string& title, int width, int height, screenPosistion posistion);

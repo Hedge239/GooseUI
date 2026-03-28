@@ -15,7 +15,7 @@ namespace GooseUI
         
         struct data
         {
-            type type = type::none;
+            type dataType = type::none;
 
             float mouseX = 0;
             float mouseY = 0;

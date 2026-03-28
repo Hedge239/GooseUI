@@ -12,7 +12,7 @@
 
 #elif defined(__unix__) && !defined(__APPLE__)
 
-    #include "GooseUI/platform/x11/x11_window.h"
+    #include "GooseUI/platform/xServer/x11_window.h"
 
     GooseUI::absractions::iWindow* GooseUI::widgets::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
     {

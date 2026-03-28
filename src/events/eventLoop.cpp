@@ -13,7 +13,7 @@
 #else
 
     #if GOOSEUI_XORG_SUPPORT
-        #include <GooseUI/platform/x11/x11_window.h>
+        #include <GooseUI/platform/xServer/x11_window.h>
     #endif
 
     #if GOOSEUI_WAYLAND_SUPPORT
@@ -79,7 +79,7 @@ namespace GooseUI::event
                     FD_ZERO(&in_fds);
                     for(absractions::iWindow* window : windows)
                     {
-                        platform::gX11::gX11_window* x11Window = dynamic_cast<platform::gX11::gX11_window*>(window);
+                        platform::x11_window* x11Window = dynamic_cast<platform::x11_window*>(window);
                         int xfd = ConnectionNumber(x11Window->getDisplay());
                         FD_SET(xfd, &in_fds); lastXfd = std::max(lastXfd, xfd);
                     }
