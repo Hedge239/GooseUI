@@ -1,5 +1,4 @@
 #include "GooseUI/platform/win32/win32_window.h"
-
 #include "GooseUI/context.h"
 
 #include <algorithm>
@@ -382,9 +381,9 @@ namespace GooseUI::platform // Public
             {
                 case WM_QUIT: { _isRunning = false; handelWidgets = false; break; }
                 
-                case WM_LBUTTONDOWN: { evtData.type = event::type::leftMouseDown; break; }
-                case WM_LBUTTONUP: { evtData.type = event::type::leftMouseUp; break; }
-                case WM_RBUTTONDOWN: { evtData.type = event::type::rightMouseDown; break; }
+                case WM_LBUTTONDOWN: { evtData.dataType = event::type::leftMouseDown; break; }
+                case WM_LBUTTONUP: { evtData.dataType = event::type::leftMouseUp; break; }
+                case WM_RBUTTONDOWN: { evtData.dataType = event::type::rightMouseDown; break; }
 
                 default: { handelWidgets = false; break; }
             }

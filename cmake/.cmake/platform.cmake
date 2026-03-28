@@ -32,6 +32,7 @@ if(UNIX AND NOT APPLE)
         LIST(APPEND GOOSEUI_BUILD_FLAGS "X11")
         LIST(
             APPEND GOOSEUI_SRC
+            "src/platform/xServer/x11_window.cpp"
         )
         
         add_compile_definitions(GOOSEUI_XORG_SUPPORT)
