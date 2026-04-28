@@ -1,4 +1,4 @@
-#include "GooseUI/platform/win32/win32_window.h"
+#include "GooseUI/platform/win32_window.h"
 #include "GooseUI/context.h"
 
 #include <algorithm>
