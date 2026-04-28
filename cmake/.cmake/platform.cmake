@@ -8,7 +8,7 @@ if(WIN32)
     LIST(APPEND GOOSEUI_LIBRARY "dwrite")
     LIST(
         APPEND GOOSEUI_SRC
-        "src/platform/win32/win32_window.cpp"
+        "src/platform/win32_window.cpp"
     )
 endif()
 
@@ -32,7 +32,7 @@ if(UNIX AND NOT APPLE)
         LIST(APPEND GOOSEUI_BUILD_FLAGS "X11")
         LIST(
             APPEND GOOSEUI_SRC
-            "src/platform/xServer/x11_window.cpp"
+            "src/platform/x11_window.cpp"
         )
         
         add_compile_definitions(GOOSEUI_XORG_SUPPORT)

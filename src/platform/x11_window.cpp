@@ -1,4 +1,4 @@
-#include "GooseUI/platform/xServer/x11_window.h"
+#include "GooseUI/platform/x11_window.h"
 #include "GooseUI/context.h"
 
 #include <algorithm>

@@ -2,7 +2,7 @@
 
 #if defined(_WIN32)
 
-    #include "GooseUI/platform/win32/win32_window.h"
+    #include "GooseUI/platform/win32_window.h"
     #define API GooseUI::platform::win32_window(title, width, height, posistion);
 
     GooseUI::absractions::iWindow* GooseUI::widgets::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
@@ -12,7 +12,7 @@
 
 #elif defined(__unix__) && !defined(__APPLE__)
 
-    #include "GooseUI/platform/xServer/x11_window.h"
+    #include "GooseUI/platform/x11_window.h"
 
     GooseUI::absractions::iWindow* GooseUI::widgets::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
     {

@@ -1,10 +1,23 @@
 #include "GooseUI/context.h"
 
+
 namespace GooseUI // Public
 {
+    // Graphic
+    static application::backendType _backendType = application::backendType::OpenGL;
+    static absractions::iRenderer* _renderer = nullptr;
+    //static application* _instance = nullptr;
+    
+    // Font
+    static void* _fontFactory = nullptr;
+}
+
+namespace GooseUI // Public
+{
+    // Graphics
     void application::init(backendType backendType)
     {
-        if(_instance){ return; }
+        if(_renderer){ return; }
         
         #if GOOSEUI_HAS_OPENGL
         if(backendType == backendType::OpenGL)
@@ -18,7 +31,7 @@ namespace GooseUI // Public
             // TODO
         #endif
         
-        _instance = new application();
+        //_instance = new application();
     }
     
     application::backendType application::getBackendType()
@@ -26,4 +39,14 @@ namespace GooseUI // Public
     
     absractions::iRenderer* application::getRenderer()
         { return _renderer; }
+        
+    // Font
+    void application::setFontFactory(void *factory)
+    {
+        if(_fontFactory){ return; }
+        _fontFactory = factory;
+    }
+    
+    void* application::getFontFactory()
+        { return _fontFactory; }
 }

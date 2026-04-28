@@ -12,6 +12,8 @@
 /* 
     The Idea of this is too prevent people from having multiple Backends per application, which could cause future issues.
     This also simplifies adding a access point for a backendPanel to allow user access without dependence on making a custom widget
+    
+    4/27/26 - Added the fontFactory pointer here, it should also be static, but I dont need a identifier (backendType) because there only one font lib per os (Windows DWrite, Everything else FreeType)
 */
 
 namespace GooseUI
@@ -22,14 +24,14 @@ namespace GooseUI
         //enum class graphicsBackend{ OpenGL, Vulkan }; - We add VK Support later
         enum class backendType{ OpenGL };
         
+        // Graphics
         static void init(backendType backendType);
         static backendType getBackendType();
         static absractions::iRenderer* getRenderer();
         
-        private: // Hate using this, but it just easier
-        inline static backendType _backendType = application::backendType::OpenGL;
-        inline static absractions::iRenderer* _renderer = nullptr;
-        inline static application* _instance = nullptr;
+        // Font
+        static void setFontFactory(void* factory);
+        static void* getFontFactory();
     };
 }
 
