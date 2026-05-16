@@ -16,7 +16,7 @@ namespace GooseUI
             public:
             virtual ~iFont() = default;
             
-            virtual bool load(const font::fontData &fontData) = 0;
+            virtual bool load(const std::string &PathToFont, const font::fontData &fontData) = 0;
             
             virtual const font::glyph& getGlyph(uint32_t codepoint) = 0;
             virtual font::atlas* getAtlas() = 0;

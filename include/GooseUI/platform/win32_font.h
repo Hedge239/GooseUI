@@ -15,11 +15,14 @@ namespace GooseUI
             Microsoft::WRL::ComPtr<IDWriteFontFace> _face;
             Microsoft::WRL::ComPtr<IDWriteFontFile> _fontFile;
 
+            bool _initilized = false;
+            font::fontData _fontData;
+            
             public:
             win32_font();
 
             // Overides
-            bool load(const font::fontData &fontData) override;
+            bool load(const std::string &PathToFont, const font::fontData &fontData) override;
 
             const font::glyph& getGlyph(uint32_t codepoint) override;
             font::atlas* getAtlas() override;
