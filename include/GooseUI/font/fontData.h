@@ -2,6 +2,7 @@
 #define _GOOSEUI_FONTCFG_H_
 
 #include <string>
+#include <variant>
 
 namespace GooseUI
 {
@@ -32,11 +33,10 @@ namespace GooseUI
         
         struct fontData
         {
-            std::string PathToFont = "";
             int size = 0;
             
             type fontType = type::bitmap;
-            union{ cfg::bitmap bitmapCfg; cfg::SDF sdfCfg; } advanceConfiguration;
+            std::variant<cfg::bitmap, cfg::SDF> advanceConfiguration;
         };
     }
 }
