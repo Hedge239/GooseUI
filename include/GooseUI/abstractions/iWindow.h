@@ -53,6 +53,12 @@ namespace GooseUI
             virtual int getWidth() = 0;
             virtual int getHeight() = 0;
         };
+
+        absractions::iWindow* createWindow(
+            const std::string& title,
+            int width, int height,
+            screenPosistion posistion
+        );
     }
 }
 
