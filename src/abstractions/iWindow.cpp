@@ -1,11 +1,11 @@
-#include "GooseUI/widgets/window.h"
+#include "GooseUI/abstractions/iWindow.h"
 
 #if defined(_WIN32)
 
     #include "GooseUI/platform/win32_window.h"
     #define API GooseUI::platform::win32_window(title, width, height, posistion);
 
-    GooseUI::absractions::iWindow* GooseUI::widgets::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
+    GooseUI::absractions::iWindow* GooseUI::absractions::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
     {
         return new API;
     }
@@ -14,7 +14,7 @@
 
     #include "GooseUI/platform/x11_window.h"
 
-    GooseUI::absractions::iWindow* GooseUI::widgets::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
+    GooseUI::absractions::iWindow* GooseUI::absractions::createWindow(const std::string& title, int width, int height, GooseUI::screenPosistion posistion)
     {
         return new GooseUI::platform::x11_window(title, width, height, posistion);
     }

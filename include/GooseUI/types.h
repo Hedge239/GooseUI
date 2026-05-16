@@ -8,6 +8,7 @@ namespace GooseUI
         class iWindow;      //FORWARD DECLERATION
         class iWidget;      //FORWARD DECLERATION
         class iRenderer;    //FORWARD DECLERATION
+        class iFont;        //FORWARD DECLERATION
     }
         
     enum class displayService
