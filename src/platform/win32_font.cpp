@@ -61,8 +61,5 @@ namespace GooseUI::platform // Public
         
     }
 
-    font::atlas* getAtlas()
-    {
-        
-    }
+    font::atlas* win32_font::getAtlas(){ return &_atlas; }
 }
