@@ -30,15 +30,10 @@ namespace GooseUI // Public
         #if GOOSEUI_HAS_VULKAN
             // TODO
         #endif
-        
-        //_instance = new application();
     }
     
-    application::backendType application::getBackendType()
-        { return _backendType; }
-    
-    absractions::iRenderer* application::getRenderer()
-        { return _renderer; }
+    application::backendType application::getBackendType(){ return _backendType; }
+    absractions::iRenderer* application::getRenderer(){ return _renderer; }
         
     // Font
     void application::setFontFactory(void *factory)
@@ -47,6 +42,5 @@ namespace GooseUI // Public
         _fontFactory = factory;
     }
     
-    void* application::getFontFactory()
-        { return _fontFactory; }
+    void* application::getFontFactory(){ return _fontFactory; }
 }
