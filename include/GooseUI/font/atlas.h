@@ -22,10 +22,10 @@ namespace GooseUI
             atlas(int width = 1024, int height = 1024, int channels = 1);
             ~atlas();
 
+            bool addGlyphData(int width, int height, int padding, const uint8_t* data, float& u0, float& u1, float& v0, float& v1);
+
             void uploaded();
             void setid(unsigned int id);
-            
-            bool addGlyphData(int width, int height, const uint8_t* data, float& u0, float& u1, float& v0, float& v1);
 
             // Returns
             std::vector<uint8_t>& getPixels();
