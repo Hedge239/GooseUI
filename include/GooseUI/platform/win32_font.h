@@ -2,6 +2,10 @@
 #define _GOOSEUI_WIN32_FONT_H_
 
 #include "GooseUI/abstractions/iFont.h"
+#include "GooseUI/font/atlas.h"
+#include "GooseUI/font/glyph.h"
+
+#include <unordered_map>
 
 #include <dwrite.h>
 #include <wrl.h>
@@ -15,8 +19,11 @@ namespace GooseUI
             Microsoft::WRL::ComPtr<IDWriteFontFace> _face;
             Microsoft::WRL::ComPtr<IDWriteFontFile> _fontFile;
 
-            bool _initilized = false;
+            font::atlas _atlas;
             font::fontData _fontData;
+            std::unordered_map<uint32_t, font::glyph> _glyphs;
+            
+            bool _initilized = false;
             
             public:
             win32_font();

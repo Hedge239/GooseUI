@@ -14,13 +14,11 @@ namespace GooseUI
             float xOffset, yOffset;
             float width, height;
             float u0, u1, v0, v1;
-        };
 
-        struct glyphData
-        {
-            glyph metrics;
-            std::vector<uint8_t> pixels;
-            int pitch;
+            float paddingLeft   = 0.0f;
+            float paddingTop    = 0.0f;
+            float paddingRight  = 0.0f;
+            float paddingBottom = 0.0f;
         };
     }
 }
