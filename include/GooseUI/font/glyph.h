@@ -1,9 +1,6 @@
 #ifndef _GOOSEUI_GLYPH_H_
 #define _GOOSEUI_GLYPH_H_
 
-#include <cstdint>
-#include <vector>
-
 namespace GooseUI
 {
     namespace font
