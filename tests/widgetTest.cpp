@@ -1,14 +1,16 @@
 #include "GooseUI/GooseUI.h"
 
 #include "GooseUI/abstractions/iWindow.h"
-#include "GooseUI/abstractions/iFont.h"
 
 #include "GooseUI/events/eventLoop.h"
 
-#include "GooseUI/widgets/label.h"
+#include "GooseUI/widgets/boxButton.h"
+
 
 GooseUI::absractions::iWindow* _window;
-GooseUI::widgets::label* _label;
+GooseUI::widgets::boxButton* _button;
+
+GooseUI::event::dispatcher _evtDispatch;
 
 int main()
 {
@@ -18,24 +20,22 @@ int main()
     _window->isResizeable(true);
     _window->setHeader("GooseUI Window", true, true, true, true);
 
-    // Font Data
-    GooseUI::font::fontData fontData;
-    fontData.size = 12;
-
-    // Label
-    _label = GooseUI::widgets::createLable(
-        GooseUI::SCALE_ALL, 
+    // Button
+    _button = GooseUI::widgets::createBoxButton(
+        1,
+        _evtDispatch,
+        GooseUI::SCALE_NONE, 
         GooseUI::ALIGN_TOP | GooseUI::ALIGN_BOTTOM | GooseUI::ALIGN_LEFT | GooseUI::ALIGN_RIGHT,
         20, 20,
         10, 10
     );
 
-    _label->setScaleRestraints(20, 20, 0, 0);
+    _evtDispatch.add(1, [&](GooseUI::event::data evt){
+        printf("[Window1 Evt] [ID: 1] - Input Detected \n");
+    });
 
-    _label->setFont("C:/WINDOWS/FONTS/ARIAL.TTF", fontData);
-    _label->setText("Hello World");
-    _label->addToWindow(_window);
-    
+    _button->addToWindow(_window);
+
     _window->show();
     GooseUI::event::loop::run({_window});
 }
