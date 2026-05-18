@@ -12,6 +12,7 @@ __cmake_systeminformation/
 
 # CMake
 CMakePresets.json
+CMakeUser.cmake
 cmake/modules
 
 # Testing files
