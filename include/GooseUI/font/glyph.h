@@ -17,6 +17,12 @@ namespace GooseUI
             float paddingRight  = 0.0f;
             float paddingBottom = 0.0f;
         };
+
+        struct glyphPos
+        {
+            const glyph* g;
+            float x, y;
+        };
     }
 }
 

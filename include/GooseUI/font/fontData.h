@@ -1,7 +1,6 @@
 #ifndef _GOOSEUI_FONTCFG_H_
 #define _GOOSEUI_FONTCFG_H_
 
-#include <string>
 #include <variant>
 
 namespace GooseUI
