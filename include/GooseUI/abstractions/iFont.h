@@ -6,6 +6,7 @@
 #include "GooseUI/font/fontData.h"
 
 #include <cstdint>
+#include <string>
 
 namespace GooseUI
 {

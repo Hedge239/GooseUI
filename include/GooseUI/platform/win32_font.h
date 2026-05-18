@@ -24,6 +24,9 @@ namespace GooseUI
             std::unordered_map<uint32_t, font::glyph> _glyphs;
             
             bool _initilized = false;
+
+            font::glyph _getGlyphBitmap(UINT16 index, float scale, const DWRITE_GLYPH_METRICS& glyphMetrics, const DWRITE_FONT_METRICS& fontMetrics, const font::cfg::bitmap& config);
+            font::glyph _getGlyphSDF(UINT16 index, float scale, const DWRITE_GLYPH_METRICS& glyphMetrics, const DWRITE_FONT_METRICS& fontMetrics, const font::cfg::SDF& config);
             
             public:
             win32_font();

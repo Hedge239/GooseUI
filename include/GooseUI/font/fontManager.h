@@ -22,7 +22,7 @@ namespace GooseUI
 
             public:
             static manager& instance();
-            absractions::iFont* getFont(const std::string& path, type fontType, int size);
+            absractions::iFont* getFont(const std::string &PathToFont, const font::fontData &fontData);
         };
     }
 }
