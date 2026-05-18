@@ -35,6 +35,7 @@ namespace GooseUI
             bool load(const std::string &PathToFont, const font::fontData &fontData) override;
 
             const font::glyph& getGlyph(uint32_t codepoint) override;
+            const font::fontData& getFontData() override;
             font::atlas* getAtlas() override;
         };
     }

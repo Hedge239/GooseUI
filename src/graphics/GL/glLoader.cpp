@@ -85,6 +85,7 @@ namespace GooseUI::graphics::gl
     PFNGLCLEARCOLORPROC glClearColor = nullptr;
     PFNGLCLEARPROC glClear = nullptr;
     PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = nullptr;
+    PFNGLUNIFORM1FPROC glUniform1f = nullptr;
     PFNGLUNIFORM2FPROC glUniform2f = nullptr;
     PFNGLUNIFORM4FPROC glUniform4f = nullptr;
     PFNGLDRAWELEMENTSPROC glDrawElements = nullptr;
@@ -130,6 +131,7 @@ namespace GooseUI::graphics::gl
         glClearColor = (PFNGLCLEARCOLORPROC) getProcAddress("glClearColor");
         glClear = (PFNGLCLEARPROC) getProcAddress("glClear");
         glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) getProcAddress("glGetUniformLocation");
+        glUniform1f = (PFNGLUNIFORM1FPROC) getProcAddress("glUniform1f");
         glUniform2f = (PFNGLUNIFORM2FPROC) getProcAddress("glUniform2f");
         glUniform4f = (PFNGLUNIFORM4FPROC) getProcAddress("glUniform4f");
         glDrawElements = (PFNGLDRAWELEMENTSPROC) getProcAddress("glDrawElements");

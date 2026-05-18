@@ -74,6 +74,7 @@ namespace GooseUI
             typedef void(APIENTRY* PFNGLGETSHADERINFOLOGPROC)(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
             typedef void(APIENTRY* PFNGLCLEARCOLORPROC)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
             typedef void(APIENTRY* PFNGLCLEARPROC)(GLbitfield mask);
+            typedef void(APIENTRY* PFNGLUNIFORM1FPROC)(GLint location, GLfloat v0);
             typedef void(APIENTRY* PFNGLUNIFORM2FPROC)(GLint location, GLfloat v0, GLfloat v1);
             typedef void(APIENTRY* PFNGLUNIFORM4FPROC)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
             typedef void(APIENTRY* PFNGLDRAWELEMENTSPROC)(GLenum mode, GLsizei count, GLenum type, const void *indices);
@@ -97,6 +98,7 @@ namespace GooseUI
             extern PFNGLCLEARCOLORPROC glClearColor;
             extern PFNGLCLEARPROC glClear;
             extern PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+            extern PFNGLUNIFORM1FPROC glUniform1f;
             extern PFNGLUNIFORM2FPROC glUniform2f;
             extern PFNGLUNIFORM4FPROC glUniform4f;
             extern PFNGLDRAWELEMENTSPROC glDrawElements;

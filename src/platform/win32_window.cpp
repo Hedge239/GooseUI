@@ -3,7 +3,8 @@
 
 #include <algorithm>
 
-
+HGLRC _glContext = nullptr;
+HDC   _hdc = nullptr;
 namespace GooseUI::platform // Private
 {
     LRESULT CALLBACK win32_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -15,6 +16,20 @@ namespace GooseUI::platform // Private
             case WM_CLOSE:
             {
                 PostQuitMessage(0);
+                return 0;
+            }
+
+            case WM_DESTROY:
+            {
+                if(self)
+                {
+                    SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);
+                    win32_window* localSelf = self;
+                    self = nullptr;
+                    
+                    delete localSelf;
+                }
+                
                 return 0;
             }
 
@@ -83,7 +98,7 @@ namespace GooseUI::platform // Private
     void win32_window::_gl_createContext()
     {
         HDC hdc = GetDC(this->getHwnd());
-
+    
         PIXELFORMATDESCRIPTOR pfd = {};
         pfd.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
         pfd.nVersion   = 1;
@@ -93,10 +108,10 @@ namespace GooseUI::platform // Private
         pfd.cDepthBits = 24;
         pfd.cStencilBits = 8;
         pfd.iLayerType = PFD_MAIN_PLANE;
-
+    
         int pf = ChoosePixelFormat(hdc, &pfd);
         if(pf == 0 || !SetPixelFormat(hdc, pf, &pfd)) { printf("GooseUI: Failed to set pixel format \n"); }
-
+    
         HGLRC hglrc = wglCreateContext(hdc);
         if(!hglrc || !wglMakeCurrent(hdc, hglrc)) { printf("GooseUI: Failed to create WGL Context \n"); }
     }
