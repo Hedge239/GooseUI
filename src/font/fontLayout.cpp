@@ -52,7 +52,7 @@ std::u32string U8toU32(const std::string& utf8_string)
 
 namespace GooseUI::font 
 {
-    void layout::setText(const std::string& text, font* font)
+    void layout::setText(const std::string& text, absractions::iFont* font)
     {
         _glyphsPosistions.clear();
         

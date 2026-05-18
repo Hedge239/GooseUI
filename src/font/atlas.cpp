@@ -1,12 +1,13 @@
 #include "GooseUI/font/atlas.h"
 
+#include <cstdio>
 #include <cstring>
 
 
 namespace GooseUI::font
 {
     atlas::atlas(int width, int height, int channels)
-        : _width(width), _height(height), _colorChannel(channels), _x(0), _y(0), _rowHeight(0), _pixels(width* height, 0), _id(0) {}
+        : _width(width), _height(height), _colorChannel(channels), _x(0), _y(0), _rowHeight(0), _pixels(width * height * channels, 0), _id(0) {}
     atlas::~atlas() {}
 
     bool atlas::addGlyphData(int width, int height, int padding, const uint8_t* data, float &u0, float &u1, float &v0, float &v1)

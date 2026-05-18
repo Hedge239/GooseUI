@@ -35,7 +35,7 @@ namespace GooseUI
             int size = 0;
             
             type fontType = type::bitmap;
-            std::variant<cfg::bitmap, cfg::SDF> advanceConfiguration;
+            std::variant<cfg::bitmap, cfg::SDF> advanceConfiguration = cfg::bitmap();
         };
     }
 }

@@ -18,7 +18,7 @@ namespace GooseUI::platform // Private
         dRun.fontEmSize = _fontData.size;
         dRun.glyphCount = 1;
         dRun.glyphIndices = &index;
-       
+        
         HRESULT hResult = pFactory->CreateGlyphRunAnalysis(
             &dRun,
             1.0f,
@@ -101,7 +101,7 @@ namespace GooseUI::platform // Public
 {
     win32_font::win32_font()
     {
-        if(application::getFontFactory() == nullptr){ return; }
+        if(application::getFontFactory() != nullptr){ return; }
         Microsoft::WRL::ComPtr<IDWriteFactory> factory;
         
         HRESULT hResult = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &factory);
@@ -179,5 +179,6 @@ namespace GooseUI::platform // Public
         return _glyphs[codepoint];
     }
 
+    const font::fontData& win32_font::getFontData(){ return _fontData; }
     font::atlas* win32_font::getAtlas(){ return &_atlas; }
 }

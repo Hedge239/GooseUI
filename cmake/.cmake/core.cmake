@@ -6,6 +6,9 @@ LIST(
     "src/events/eventDispatcher.cpp"
     "src/events/eventLoop.cpp"
     "src/font/atlas.cpp"
+    "src/font/fontLayout.cpp"
+    "src/font/fontManager.cpp"
+    "src/graphics/text.cpp"
     "src/graphics/layout.cpp"
     "src/context.cpp"
 )

@@ -50,15 +50,10 @@ namespace GooseUI::graphics::gl // Public
     glRenderer::glRenderer() {}
     glRenderer::~glRenderer()
     {
-        glDeleteBuffers(1, &_textureShader.vbo);
-        glDeleteBuffers(1, &_textureShader.ebo);
-        glDeleteVertexArrays(1, &_textureShader.vao);
-        glDeleteProgram(_textureShader.shader);
-
-        glDeleteBuffers(1, &_textureShader.vbo);
-        glDeleteBuffers(1, &_textureShader.ebo);
-        glDeleteVertexArrays(1, &_textureShader.vao);
-        glDeleteProgram(_textureShader.shader);
+        glDeleteBuffers(1, &_sharedShader.vbo);
+        glDeleteBuffers(1, &_sharedShader.ebo);
+        glDeleteVertexArrays(1, &_sharedShader.vao);
+        glDeleteProgram(_sharedShader.shader);
     }
     
     void glRenderer::initRenderer()
@@ -68,35 +63,18 @@ namespace GooseUI::graphics::gl // Public
         // initilize Resources
         if(!_context)
         {
-            // Basic
-            glGenVertexArrays(1, &_basicShader.vao);
-            glBindVertexArray(_basicShader.vao);
+            // Texture
+            glGenVertexArrays(1, &_sharedShader.vao);
+            glBindVertexArray(_sharedShader.vao);
 
-            glGenBuffers(1, &_basicShader.vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, _basicShader.vbo);
-            glBufferData(GL_ARRAY_BUFFER, 4 * 6 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
+            glGenBuffers(1, &_sharedShader.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, _sharedShader.vbo);
+            glBufferData(GL_ARRAY_BUFFER, 6 * 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
             unsigned int indices[] = {0, 1, 2, 2, 3, 0};
-            glGenBuffers(1, &_basicShader.ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _basicShader.ebo);
+            glGenBuffers(1, &_sharedShader.ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _sharedShader.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-            glEnableVertexAttribArray(0);
-
-            glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
-            glEnableVertexAttribArray(1);
-
-            _basicShader.shader = _createShaderProgram(basic_vertexSrc, basic_fragmentSrc);
-            glBindVertexArray(0);
-
-            // Texture
-            glGenVertexArrays(1, &_textureShader.vao);
-            glBindVertexArray(_textureShader.vao);
-
-            glGenBuffers(1, &_textureShader.vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, _textureShader.vbo);
-            glBufferData(GL_ARRAY_BUFFER, 6 * 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(0);
@@ -107,7 +85,7 @@ namespace GooseUI::graphics::gl // Public
             glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
             glEnableVertexAttribArray(2);
 
-            _textureShader.shader = _createShaderProgram(texture_vertexSrc, texture_fragmentSrc);
+            _sharedShader.shader = _createShaderProgram(shared_vertexSrc, shared_fragmentSrc);
             glBindVertexArray(0);
         }
     }
@@ -116,7 +94,7 @@ namespace GooseUI::graphics::gl // Public
     {
         _windowWidth = windowWidth;
         _windowHeight = windowHeight;
-    
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
@@ -125,13 +103,45 @@ namespace GooseUI::graphics::gl // Public
 
         glViewport(0, 0, windowWidth, windowHeight);
 
-        int localResolution = glGetUniformLocation(_basicShader.shader, "uResolution");
+        int localResolution = glGetUniformLocation(_sharedShader.shader, "uResolution");
         glUniform2f(localResolution, (float)windowWidth, (float)windowHeight);
     }
     
     void glRenderer::endFrame()
     {
         // HANDELED PER WINDOW
+    }
+
+    unsigned int glRenderer::uploadTexture(const unsigned char* pixelData, int width, int height, bool crispPixels, bool grayscale)
+    {    
+        // Convert form Crossplatform API to OpenGL
+        unsigned int internalFormat = grayscale ? GL_R8 : GL_RGBA8;
+        unsigned int format = grayscale ? GL_RED : GL_RGBA;
+        unsigned int filter = crispPixels ? GL_NEAREST : GL_LINEAR;
+            
+        unsigned int id;
+        glGenTextures(1, &id);
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, id);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        if (grayscale) 
+        {
+            glTexParameteri(GL_TEXTURE_2D, 0x8E42, GL_RED);
+            glTexParameteri(GL_TEXTURE_2D, 0x8E43, GL_RED);
+            glTexParameteri(GL_TEXTURE_2D, 0x8E44, GL_RED);
+            glTexParameteri(GL_TEXTURE_2D, 0x8E45, GL_RED);
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixelData);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        return id;
     }
     
     void glRenderer::drawRect(float X, float Y, float W, float H, const color& C)
@@ -143,27 +153,26 @@ namespace GooseUI::graphics::gl // Public
         float y1 = 1.0f - 2.0f * (Y + H) / _windowHeight;
 
         float vertices[] = {
-            x0, y0, C.R, C.G, C.B, C.A,
-            x1, y0, C.R, C.G, C.B, C.A,
-            x1, y1, C.R, C.G, C.B, C.A,
-            x0, y1, C.R, C.G, C.B, C.A,
+            x0, y0, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
+            x1, y0, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
+            x1, y1, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
+            x0, y1, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
         };
 
-        glUseProgram(_basicShader.shader);
-        glBindVertexArray(_basicShader.vao);
+        glUseProgram(_sharedShader.shader);
+        glBindVertexArray(_sharedShader.vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, _basicShader.vbo);
+        int useTexLoc = glGetUniformLocation(_sharedShader.shader, "u_UseTexture");
+        glUniform1f(useTexLoc, 0.0f);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, _sharedShader.vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
     }
     
-    void glRenderer::drawTexture()
-    {
-        // TODO
-    }
-    
-    void glRenderer::drawBitmapFont(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const color& C)
+    void glRenderer::drawTexture(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const color& C)
     {
         float x0 = (2.0f * X) / _windowWidth - 1.0f;
         float x1 = (2.0f * (X + W)) / _windowWidth - 1.0f;
@@ -180,20 +189,24 @@ namespace GooseUI::graphics::gl // Public
             { x0, y1, u0, v1, C.R, C.G, C.B, C.A },
         };
 
-        glUseProgram(_textureShader.shader);
-        glBindVertexArray(_textureShader.vao);
+        glUseProgram(_sharedShader.shader);
+        glBindVertexArray(_sharedShader.vao);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ID);
     
-        GLint texLocation = glGetUniformLocation(_textureShader.shader, "text");
+        GLint texLocation = glGetUniformLocation(_sharedShader.shader, "u_Texture");
         glUniform1i(texLocation, 0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, _textureShader.vbo);
+        int useTexLoc = glGetUniformLocation(_sharedShader.shader, "u_UseTexture");
+        glUniform1f(useTexLoc, 1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, _sharedShader.vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
     }
     
     void glRenderer::drawSdfFont()

@@ -70,8 +70,8 @@ namespace GooseUI
             {
                 glContext* _context = nullptr;
                 
-                shader _basicShader;
-                shader _textureShader;
+                shader _sharedShader;
+                shader _vectorShader;
                 
                 unsigned int _windowWidth = 0;
                 unsigned int _windowHeight = 0;
@@ -91,10 +91,11 @@ namespace GooseUI
                 
                 void beginFrame(int windowWidth, int windowHeight, const color &C) override;
                 void endFrame() override;
+
+                unsigned int uploadTexture(const unsigned char* pixelData, int width, int height, bool crispPixels, bool grayscale) override;
                 
                 void drawRect(float X, float Y, float W, float H, const color &C) override;
-                void drawTexture() override;
-                void drawBitmapFont(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const color& color) override;
+                void drawTexture(unsigned int ID, float X, float Y, float W, float H, float u0, float u1, float v0, float v1, const color& color) override;
                 void drawSdfFont() override;
             };
         }
