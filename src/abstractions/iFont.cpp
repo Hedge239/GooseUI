@@ -1,0 +1,9 @@
+#include "GooseUI/abstractions/iFont.h"
+
+#if defined(_WIN32) // Use DirectWrite
+
+    #include "GooseUI/platform/win32_font.h"
+    GooseUI::absractions::iFont* GooseUI::absractions::createFont() { return new GooseUI::platform::win32_font; }
+#else // Use Freetype
+
+#endif

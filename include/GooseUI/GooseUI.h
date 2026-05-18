@@ -1,8 +1,7 @@
-#ifndef _GOOSEUI_GOOSEUI_H_
-#define _GOOSEUI_GOOSEUI_H_
+#ifndef _GOOSEUI_H_
+#define _GOOSEUI_H_
 
-#include "GooseUI/core/eventloop.h"
-#include "GooseUI/core/eventDispatcher.h"
-#include "GooseUI/core/types.h"
+#include "GooseUI/context.h"
+#include "GooseUI/types.h"
 
-#endif /*_GOOSEUI_GOOSEUI_H_*/
+#endif /*_GOOSEUI_H_*/
