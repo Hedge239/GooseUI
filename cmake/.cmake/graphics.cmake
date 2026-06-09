@@ -32,14 +32,3 @@ if(GOOSEUI_INCLUDE_VULKAN)
         ADD_COMPILE_DEFINITIONS(GOOSEUI_HAS_VULKAN)
     endif()
 endif()
-
-# FreeType
-if(UNIX OR APPLE)
-    FIND_PACKAGE(Freetype REQUIRED)
-    MESSAGE(STATUS "[GooseUI] -- Using FreeType2")
-
-    LIST(APPEND GOOSEUI_LIBRARY Freetype::Freetype)
-    LIST(
-        APPEND GOOSEUI_SRC
-    )
-endif()

@@ -13,7 +13,7 @@
 #else
 
     #if GOOSEUI_XORG_SUPPORT
-        #include <GooseUI/platform/xServer/x11_window.h>
+        #include <GooseUI/platform/x11_window.h>
     #endif
 
     #if GOOSEUI_WAYLAND_SUPPORT
@@ -73,9 +73,10 @@ namespace GooseUI::event
                 #if GOOSEUI_XORG_SUPPORT
                 if(service == displayService::x11)
                 {
+                    /* 
                     int lastXfd = 0; 
                     fd_set in_fds;
-
+                    
                     FD_ZERO(&in_fds);
                     for(absractions::iWindow* window : windows)
                     {
@@ -86,6 +87,7 @@ namespace GooseUI::event
 
                     struct timeval timeout { 0, 160000 }; // Temp fix for multi-window, yes I hate it too
                     select(lastXfd + 1, &in_fds, nullptr, nullptr, &timeout);
+                    */
                     continue;
                 }
                 #endif

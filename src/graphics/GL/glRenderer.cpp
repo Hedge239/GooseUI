@@ -158,7 +158,7 @@ namespace GooseUI::graphics::gl // Public
             x1, y1, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
             x0, y1, 0.0f, 0.0f, C.R, C.G, C.B, C.A,
         };
-
+        
         glUseProgram(_sharedShader.shader);
         glBindVertexArray(_sharedShader.vao);
 

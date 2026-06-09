@@ -23,6 +23,14 @@ endif()
 if(UNIX AND NOT APPLE)
     MESSAGE(STATUS "[GooseUI] -- OS: UNIX or Other")
 
+    # Freetype
+    FIND_PACKAGE(Freetype REQUIRED)
+    LIST(APPEND GOOSEUI_LIBRARY Freetype::Freetype)
+    LIST(
+        APPEND GOOSEUI_SRC
+        "src/platform/freetype_font.cpp"
+    )
+
     if(GOOSEUI_XORG_SUPPORT)
         MESSAGE(STATUS "[GooseUI] -- Display Service: X11")
 

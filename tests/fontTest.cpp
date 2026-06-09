@@ -8,6 +8,7 @@
 #include "GooseUI/widgets/label.h"
 
 GooseUI::absractions::iWindow* _window;
+GooseUI::absractions::iWindow* _window2;
 GooseUI::widgets::label* _label;
 
 int main()
@@ -17,6 +18,10 @@ int main()
     _window = GooseUI::absractions::createWindow("Window One", 500, 500, GooseUI::SCREEN_CENTER);
     _window->isResizeable(true);
     _window->setHeader("GooseUI Window", true, true, true, true);
+
+    //_window2 = GooseUI::absractions::createWindow("Window One", 500, 500, GooseUI::SCREEN_CENTER);
+    //_window2->isResizeable(true);
+    //_window2->setHeader("GooseUI Window", true, true, true, true);
 
     // Font Data
     GooseUI::font::fontData fontData;
@@ -32,10 +37,11 @@ int main()
 
     _label->setScaleRestraints(20, 20, 0, 0);
 
-    _label->setFont("C:/WINDOWS/FONTS/ARIAL.TTF", fontData);
+    _label->setFont("/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf", fontData);
     _label->setText("Hello World");
     _label->addToWindow(_window);
     
     _window->show();
+    //_window2->show();
     GooseUI::event::loop::run({_window});
 }

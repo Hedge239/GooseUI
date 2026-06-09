@@ -32,7 +32,7 @@ namespace GooseUI::widgets
     void boxButton::draw()
     {
         _preDraw();
-
+        
         if(!_isPressed) { application::getRenderer()->drawRect(_posX - _outlineSize, _posY - _outlineSize, _width + 2 * _outlineSize, _height + 2 * _outlineSize, { 0.0f, 0.0f, 0.0f, 1.0f }); }
         application::getRenderer()->drawRect(_posX, _posY, _width, _height, _color);
     }

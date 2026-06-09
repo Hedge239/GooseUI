@@ -5,5 +5,6 @@
     #include "GooseUI/platform/win32_font.h"
     GooseUI::absractions::iFont* GooseUI::absractions::createFont() { return new GooseUI::platform::win32_font; }
 #else // Use Freetype
-
+    #include "GooseUI/platform/freetype_font.h"
+    GooseUI::absractions::iFont* GooseUI::absractions::createFont() { return new GooseUI::platform::freetype_font; }
 #endif

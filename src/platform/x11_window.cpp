@@ -4,6 +4,8 @@
 #include <algorithm>
 
 
+typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
+
 namespace GooseUI::platform // Private
 {
     void x11_window::_startRenderFrame()
@@ -30,7 +32,7 @@ namespace GooseUI::platform // Private
         XWindowAttributes windowAtr; 
         XGetWindowAttributes(_display, _window, &windowAtr);
         
-        application::getRenderer()->beginFrame(windowAtr.width, windowAtr.height, _bgColor);
+        application::getRenderer()->beginFrame(getWidth(), getHeight(), _bgColor);
     }
     
     void x11_window::_endRenderFrame()
@@ -42,7 +44,6 @@ namespace GooseUI::platform // Private
             #if GOOSEUI_HAS_OPENGL
             case application::backendType::OpenGL:
             {
-                graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
                 glXSwapBuffers(_display, _window);
                 break;
             }
@@ -63,20 +64,20 @@ namespace GooseUI::platform // Private
     {
         static GLint glxAttribs[] = {
 		GLX_RGBA,
-            GLX_DEPTH_SIZE, 24,
-            GLX_DOUBLEBUFFER,
-            None
+        GLX_DEPTH_SIZE, 24,
+        GLX_DOUBLEBUFFER,
+        None
 	    };
-        
+
         int frameBufferCount;
         GLXFBConfig* fbc = glXChooseFBConfig(_display, DefaultScreen(_display), glxAttribs, &frameBufferCount);
-        
+
         GLXFBConfig chosenFbc = fbc[0];
         XVisualInfo* vi = glXGetVisualFromFBConfig(_display, chosenFbc);
-        
+
         GLXContext ctx = glXCreateNewContext(_display, chosenFbc, GLX_RGBA_TYPE, nullptr, True);
         glXMakeCurrent(_display, _window, ctx);
-        
+
         XFree(fbc);
     }
     
@@ -84,17 +85,17 @@ namespace GooseUI::platform // Private
     {
         static GLint glxAttribs[] = {
 		GLX_RGBA,
-                GLX_DEPTH_SIZE, 24,
-                GLX_DOUBLEBUFFER,
-                None
+        GLX_DEPTH_SIZE, 24,
+        GLX_DOUBLEBUFFER,
+        None
 	    };
-        
+
         graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
         GLXContext ctx = glXGetCurrentContext();
-        
+
         int frameBufferCount;
         GLXFBConfig* fbc = glXChooseFBConfig(_display, DefaultScreen(_display), glxAttribs, &frameBufferCount);
-        
+
         GLXFBConfig chosenFbc = fbc[0];
         
         if(!glBackend->hasContext())
@@ -105,6 +106,8 @@ namespace GooseUI::platform // Private
         {
             GLXContext sharedCtx = glXCreateNewContext(_display, chosenFbc, GLX_RGBA_TYPE, glBackend->getContext().glxContext, True);
         }
+        
+        XFlush(_display);
     }
     
     void x11_window::_gl_destoryContext()
@@ -185,6 +188,11 @@ namespace GooseUI::platform // Public
         // Forgo the proper error logic I will, thou only has error message... :3c
         if(!_window) { printf("GooseUI: Failed to create X11 Window \n"); }
         XStoreName(_display, _window, title.c_str());
+
+        // Attributes
+        XSetWindowAttributes attributes;
+        attributes.background_pixmap = None;
+        XChangeWindowAttributes(_display, _window, CWBackPixmap, &attributes);
         
         // Protocalls and input
         _wm_delete_window = XInternAtom(_display, "WM_DELETE_WINDOW", False);
@@ -212,7 +220,7 @@ namespace GooseUI::platform // Public
                 printf("GooseUI: Backend Not Initilized! \n");
                 break;
         }
-        
+
         _isRunning = true;
     }
     
@@ -436,9 +444,18 @@ namespace GooseUI::platform // Public
     void x11_window::handelEvents()
     {
         XEvent event;
-        while(XPending(_display) > 0) // FIX?
+        int events = XPending(_display);
+        
+        while(events > 0) // FIX!
         {
             XNextEvent(_display, &event);
+            events--;
+
+            if (event.xany.window != _window) 
+            {
+                XPutBackEvent(_display, &event);
+                continue;
+            }
                     
             // Set evtData & run event loop
             bool handelWidgets = true;
@@ -483,12 +500,12 @@ namespace GooseUI::platform // Public
                 }
             }
         }
-        
+  
         renderWidgets();
     }
     
     // Returns
-    displayService x11_window::getDisplayService() const { return displayService::win32; }
+    displayService x11_window::getDisplayService() const { return displayService::x11; }
     int x11_window::getWidth() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.width; }
     int x11_window::getHeight() { XWindowAttributes windowAtr; XGetWindowAttributes(_display, _window, &windowAtr); return windowAtr.height; }
 }
