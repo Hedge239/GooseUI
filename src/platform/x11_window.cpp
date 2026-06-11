@@ -4,8 +4,6 @@
 #include <algorithm>
 
 
-typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
-
 namespace GooseUI::platform // Private
 {
     void x11_window::_startRenderFrame()
@@ -16,7 +14,8 @@ namespace GooseUI::platform // Private
             case application::backendType::OpenGL:
             {
                 graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
-                glXMakeCurrent(_display, _window, glBackend->getContext().glxContext);
+                eglMakeCurrent(glBackend->getContext().display, (EGLSurface)_windowCtx, (EGLSurface)_windowCtx, glBackend->getContext().ctx);
+
                 break;
             }
             #endif
@@ -44,7 +43,11 @@ namespace GooseUI::platform // Private
             #if GOOSEUI_HAS_OPENGL
             case application::backendType::OpenGL:
             {
-                glXSwapBuffers(_display, _window);
+                graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
+                
+                eglSwapBuffers(glBackend->getContext().display, (EGLSurface)_windowCtx);
+                eglMakeCurrent(glBackend->getContext().display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+                
                 break;
             }
             #endif
@@ -62,52 +65,59 @@ namespace GooseUI::platform // Private
     #if GOOSEUI_HAS_OPENGL
     void x11_window::_gl_createContext()
     {
-        static GLint glxAttribs[] = {
-		GLX_RGBA,
-        GLX_DEPTH_SIZE, 24,
-        GLX_DOUBLEBUFFER,
-        None
-	    };
+        graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
+        EGLDisplay eglDisplay = EGL_NO_DISPLAY;
+        
+        if(!glBackend->hasContext())
+        {
+            eglDisplay = eglGetDisplay((EGLNativeDisplayType)_display);
+            eglInitialize(eglDisplay, nullptr, nullptr);
+        }else 
+        {
+            eglDisplay = glBackend->getContext().display;
+        }
 
-        int frameBufferCount;
-        GLXFBConfig* fbc = glXChooseFBConfig(_display, DefaultScreen(_display), glxAttribs, &frameBufferCount);
+        const EGLint configAttribs[] = {
+            EGL_SURFACE_TYPE,    EGL_WINDOW_BIT,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+            EGL_RED_SIZE,        8,
+            EGL_GREEN_SIZE,      8,
+            EGL_BLUE_SIZE,       8,
+            EGL_ALPHA_SIZE,      8,
+            EGL_DEPTH_SIZE,      24,
+            EGL_STENCIL_SIZE,    8,
+            EGL_NONE
+        };
 
-        GLXFBConfig chosenFbc = fbc[0];
-        XVisualInfo* vi = glXGetVisualFromFBConfig(_display, chosenFbc);
+        const EGLint contextAttribs[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 3,
+            EGL_NONE
+        };
 
-        GLXContext ctx = glXCreateNewContext(_display, chosenFbc, GLX_RGBA_TYPE, nullptr, True);
-        glXMakeCurrent(_display, _window, ctx);
+        EGLConfig config; EGLint configs;
+        eglChooseConfig(eglDisplay, configAttribs, &config, 1, &configs);
 
-        XFree(fbc);
+        eglBindAPI(EGL_OPENGL_API);
+
+        EGLSurface surface = eglCreateWindowSurface(eglDisplay, config, (EGLNativeWindowType)_window, nullptr);
+        EGLContext sharedCtx = EGL_NO_CONTEXT;
+
+        _windowCtx = surface;
+        
+        if (!glBackend->hasContext()) 
+        { 
+            sharedCtx = eglCreateContext(eglDisplay, config, EGL_NO_CONTEXT, contextAttribs);
+            glBackend->setContext(new graphics::gl::glContext{sharedCtx, eglDisplay}); 
+        } else 
+        {
+            sharedCtx = glBackend->getContext().ctx;
+        }
+
+        eglMakeCurrent(eglDisplay, surface, surface, sharedCtx);
     }
     
     void x11_window::_gl_shareContext()
     {
-        static GLint glxAttribs[] = {
-		GLX_RGBA,
-        GLX_DEPTH_SIZE, 24,
-        GLX_DOUBLEBUFFER,
-        None
-	    };
-
-        graphics::gl::glRenderer* glBackend = static_cast<graphics::gl::glRenderer*>(application::getRenderer());
-        GLXContext ctx = glXGetCurrentContext();
-
-        int frameBufferCount;
-        GLXFBConfig* fbc = glXChooseFBConfig(_display, DefaultScreen(_display), glxAttribs, &frameBufferCount);
-
-        GLXFBConfig chosenFbc = fbc[0];
-        
-        if(!glBackend->hasContext())
-        {
-            glBackend->setContext(new graphics::gl::glContext{ctx});
-            GLXContext sharedCtx = glXCreateNewContext(_display, chosenFbc, GLX_RGBA_TYPE, glBackend->getContext().glxContext, True);
-        }else 
-        {
-            GLXContext sharedCtx = glXCreateNewContext(_display, chosenFbc, GLX_RGBA_TYPE, glBackend->getContext().glxContext, True);
-        }
-        
-        XFlush(_display);
     }
     
     void x11_window::_gl_destoryContext()
@@ -446,17 +456,17 @@ namespace GooseUI::platform // Public
         XEvent event;
         int events = XPending(_display);
         
-        while(events > 0) // FIX!
+        while(events > 0) // FIX??
         {
             XNextEvent(_display, &event);
             events--;
-
+            
             if (event.xany.window != _window) 
             {
                 XPutBackEvent(_display, &event);
                 continue;
             }
-                    
+            
             // Set evtData & run event loop
             bool handelWidgets = true;
             event::data evtData;

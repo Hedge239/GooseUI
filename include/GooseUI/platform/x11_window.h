@@ -26,11 +26,14 @@ namespace GooseUI
             Display* _display = nullptr;
             ::Window _window;
 
+            void* _windowCtx;
+
             Atom _wm_delete_window;
             
             void _gl_createContext();
             void _gl_shareContext();
             void _gl_destoryContext();
+
             void _vk_createContext();
             void _vk_shareContext();
             

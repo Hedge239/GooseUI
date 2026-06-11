@@ -16,9 +16,10 @@
 
 #else
 
+    #include <EGL/egl.h>
+
     #if GOOSEUI_XORG_SUPPORT
         #include <X11/Xlib.h>
-        #include <GL/glx.h>
     #endif
 
     #if GOOSEUI_WAYLAND_SUPPORT
@@ -46,14 +47,10 @@ namespace GooseUI
                 #error Unsuported // TODO
 
                 #endif
-                #if GOOSEUI_XORG_SUPPORT
+                #if defined(__unix__) && !defined(__APPLE__)
 
-                GLXContext glxContext = nullptr;
-
-                #endif
-                #if GOOSEUI_WAYLAND_SUPPORT
-                
-                #error Unsuported // TODO
+                EGLContext ctx = EGL_NO_CONTEXT;
+                EGLDisplay display = EGL_NO_DISPLAY;
 
                 #endif
             };

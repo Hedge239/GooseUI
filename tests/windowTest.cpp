@@ -9,7 +9,7 @@
 */
 
 GooseUI::absractions::iWindow* _window1;
-//GooseUI::absractions::iWindow* _window2;
+GooseUI::absractions::iWindow* _window2;
 
 int main()
 {
@@ -19,11 +19,11 @@ int main()
     _window1->isResizeable(true);
     _window1->setHeader("Window One", true, true, true, true);
     
-    //_window2 = GooseUI::absractions::createWindow("Window Two", 100, 200, GooseUI::SCREEN_TOP_RIGHT);
-    //_window2->isResizeable(true);
-    //_window2->setHeader("Window Two", true, true, true, true);
+    _window2 = GooseUI::absractions::createWindow("Window Two", 100, 200, GooseUI::SCREEN_TOP_RIGHT);
+    _window2->isResizeable(true);
+    _window2->setHeader("Window Two", true, true, true, true);
     
     _window1->show();
-    //_window2->show();
-    GooseUI::event::loop::run({_window1});
+    _window2->show();
+    GooseUI::event::loop::run({_window1, _window2});
 }

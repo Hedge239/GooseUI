@@ -31,6 +31,10 @@ if(UNIX AND NOT APPLE)
         "src/platform/freetype_font.cpp"
     )
 
+    # EGL
+    FIND_PACKAGE(OpenGL REQUIRED COMPONENTS EGL)
+    LIST(APPEND GOOSEUI_LIBRARY "OpenGL::EGL")
+
     if(GOOSEUI_XORG_SUPPORT)
         MESSAGE(STATUS "[GooseUI] -- Display Service: X11")
 

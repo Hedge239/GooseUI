@@ -94,6 +94,7 @@ namespace GooseUI::graphics::gl
     PFNGLACTIVETEXTUREPROC glActiveTexture = nullptr;
     PFNGLUNIFORM1IPROC glUniform1i = nullptr;
     PFNGLBLENDEQUATIONPROC glBlendEquation = nullptr;
+    PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray = nullptr;
 
     int isloaded()
     {
@@ -140,6 +141,7 @@ namespace GooseUI::graphics::gl
         glActiveTexture = (PFNGLACTIVETEXTUREPROC) getProcAddress("glActiveTexture");
         glUniform1i = (PFNGLUNIFORM1IPROC) getProcAddress("glUniform1i");
         glBlendEquation = (PFNGLBLENDEQUATIONPROC) getProcAddress("glBlendEquation");
+        glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) getProcAddress("glDisableVertexAttribArray");
 
         return 1;
     }

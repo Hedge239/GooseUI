@@ -61,9 +61,8 @@ namespace GooseUI::graphics::gl // Public
         if(!gl::isloaded()) { gl::loadGL(); printf("[GooseUI] Initilizing OpenGL \n"); }
         
         // initilize Resources
-        if(!_context)
+        if(_sharedShader.vbo == 0)
         {
-            // Texture
             glGenVertexArrays(1, &_sharedShader.vao);
             glBindVertexArray(_sharedShader.vao);
 

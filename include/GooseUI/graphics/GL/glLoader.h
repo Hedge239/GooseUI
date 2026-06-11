@@ -15,7 +15,6 @@
 
 #include <dlfcn.h>
 #include <GL/gl.h>
-#include <GL/glx.h>
 
 #endif
 
@@ -83,6 +82,7 @@ namespace GooseUI
             typedef void(APIENTRY* PFNGLACTIVETEXTUREPROC)(GLenum texture);
             typedef void(APIENTRY* PFNGLUNIFORM1IPROC)(GLint location, GLint v0);
             typedef void(APIENTRY* PFNGLBLENDEQUATIONPROC)(GLenum mode);
+            typedef void (APIENTRY* PFNGLDISABLEVERTEXATTRIBARRAYPROC)(GLuint index);
 
             // OpenGL Variables
             extern PFNGLDELETESHADERPROC glDeleteShader;
@@ -116,6 +116,7 @@ namespace GooseUI
             extern PFNGLACTIVETEXTUREPROC glActiveTexture;
             extern PFNGLUNIFORM1IPROC glUniform1i;
             extern PFNGLBLENDEQUATIONPROC glBlendEquation;
+            extern PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
 
             // Loader Variables
             int isloaded();

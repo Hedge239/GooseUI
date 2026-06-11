@@ -36,23 +36,23 @@ namespace GooseUI::platform // Private
         {
             float u0, u1, v0, v1;
             _atlas.addGlyphData(bitmap.width, bitmap.rows, 0, bitmap.buffer, u0, u1, v0, v1);
-
+            
             if (config.createMipmaps && config.mipmap_amount > 0)
             {
                 // TODO: Mipmap, I wana get the main rendering code updated first
                 printf("GooseUI: Mipmap In-Development \n");
             }
-            
-            // Cache Glyph
+                        
+
             t_glyph.u0 = u0;
             t_glyph.u1 = u1;
-            t_glyph.v0 = v0;
-            t_glyph.v1 = v1;
+            t_glyph.v0 = v1;
+            t_glyph.v1 = v0; 
             t_glyph.width = (float)bitmap.width;
             t_glyph.height = (float)bitmap.rows;
             t_glyph.xAdvance = (float)(_face->glyph->advance.x * scale);
             t_glyph.xOffset = (float)(_face->glyph->bitmap_left * scale);
-            t_glyph.yOffset = -_face->glyph->bitmap_top;
+            t_glyph.yOffset = -_face->glyph->bitmap_top + (float)bitmap.rows;
         }
 
         return t_glyph;
