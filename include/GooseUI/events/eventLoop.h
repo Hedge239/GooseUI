@@ -3,7 +3,8 @@
 
 #include "GooseUI/types.h"
 
-#include <initializer_list>
+#include <vector>
+#include <algorithm>
 
 namespace GooseUI
 {
@@ -11,8 +12,13 @@ namespace GooseUI
     {
         class loop
         {
+            inline static std::vector<absractions::iWindow*> _windows;
+            
             public:
-            static void run(std::initializer_list<absractions::iWindow*> windows);
+            static void add(absractions::iWindow* window);
+            static void remove(absractions::iWindow* window);
+
+            static void run();
         };
     }
 }

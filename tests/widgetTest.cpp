@@ -62,6 +62,8 @@ int main()
 
     _window->show();
     _window2->show();
-    
-    GooseUI::event::loop::run({_window, _window2});
+
+    GooseUI::event::loop::add(_window);
+    GooseUI::event::loop::add(_window2);
+    GooseUI::event::loop::run();
 }

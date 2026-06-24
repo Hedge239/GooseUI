@@ -1,5 +1,4 @@
 #include "GooseUI/events/eventLoop.h"
-
 #include "GooseUI/abstractions/iWindow.h"
 
 #if defined(_WIN32)
@@ -27,20 +26,50 @@
 
 namespace GooseUI::event
 {
-    void loop::run(std::initializer_list<absractions::iWindow*> windows)
+    void loop::add(absractions::iWindow *window)
     {
-        displayService service = (*windows.begin())->getDisplayService();
+        if(!window){ return; }
+        _windows.push_back(window);
+    }
+
+    void loop::remove(absractions::iWindow *window)
+    {
+        for(size_t i = 0; i < _windows.size(); ++i)
+        {
+            absractions::iWindow* _window = _windows[i];
+            if(_window == window)
+            {
+                _windows[i] = _windows.back();
+                _windows.pop_back();
+                --i;
+
+                break;
+            }
+        }
+    }
+    
+    void loop::run()
+    {
+        displayService service = (*_windows.begin())->getDisplayService();
         bool running = false;
 
         // Begin Loop
         while(true)
         {
             running = false;
-            for(absractions::iWindow* window : windows)
+
+            for(size_t i = 0; i < _windows.size(); ++i)
             {
+                absractions::iWindow* window = _windows[i];
+
                 if(!window->isRunning()) 
                 {
                     window->destroy();
+
+                    _windows[i] = _windows.back();
+                    _windows.pop_back();
+                    --i;
+                    
                     continue; 
                 }
 
