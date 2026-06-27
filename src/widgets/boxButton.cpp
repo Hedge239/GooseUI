@@ -1,8 +1,7 @@
 #include "GooseUI/widgets/boxButton.h"
 
-#include "GooseUI/graphics/layout.h"
-
 #include "GooseUI/context.h"
+
 
 namespace GooseUI::widgets
 {
