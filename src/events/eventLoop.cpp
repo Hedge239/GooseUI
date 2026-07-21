@@ -106,7 +106,7 @@ namespace GooseUI::event
                     fd_set in_fds;
                     
                     FD_ZERO(&in_fds);
-                    for(absractions::iWindow* window : windows)
+                    for(absractions::iWindow* window : _windows)
                     {
                         platform::x11_window* x11Window = dynamic_cast<platform::x11_window*>(window);
                         int xfd = ConnectionNumber(x11Window->getDisplay());
