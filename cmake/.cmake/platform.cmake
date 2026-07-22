@@ -54,13 +54,26 @@ if(UNIX AND NOT APPLE)
     if(GOOSEUI_WAYLAND_SUPPORT)
         MESSAGE(STATUS "[GooseUI] -- Display Service: Wayland")
 
-        FIND_PACKAGE(Wayland REQUIRED)
+        find_path(WAYLAND_CLIENT_DIR NAMES wayland-client.h PATH_SUFFIXES wayland)
+        find_path(WAYLAND_EGL_DIR NAMES wayland-egl.h PATH_SUFFIXES wayland)
+        
+        find_library(WAYLAND_CLIENT_LIB NAMES wayland-client)
+        find_library(WAYLAND_EGL_LIB NAMES wayland-egl)
 
-        LIST(APPEND GOOSEUI_INCLUDE "${WAYLAND_CLIENT_DIR}")
-        LIST(APPEND GOOSEUI_LIBRARY "${WAYLAND_CLIENT_LIB}")
+        if(NOT WAYLAND_CLIENT_DIR AND NOT WAYLAND_CLIENT_LIB)
+          MESSAGE(FATAL_ERROR "[GooseUI] -- Faild to find wayland-client")
+        endif()
+
+        if(NOT WAYLAND_EGL_DIR AND NOT WAYLAND_EGL_LIB)
+          MESSAGE(FATAL_ERROR "[GooseUI] -- Faild to find wayland-egl")
+        endif()
+
+        LIST(APPEND GOOSEUI_INCLUDE ${WAYLAND_CLIENT_DIR} ${WAYLAND_EGL_DIR})
+        LIST(APPEND GOOSEUI_LIBRARY ${WAYLAND_CLIENT_LIB} ${WAYLAND_EGL_LIB})
         LIST(APPEND GOOSEUI_BUILD_FLAGS "wayland-client")
         LIST(
             APPEND GOOSEUI_SRC
+            "src/platform/wl_window.cpp"
         )
         
         add_compile_definitions(GOOSEUI_WAYLAND_SUPPORT)
